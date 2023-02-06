@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     font-family: Arial;
+    flex-wrap: nowrap;
 }
 
 .personalia {
@@ -72,6 +73,7 @@
 
     .page {
         flex-direction: row;
+        height:auto;
     }
 
     .person-name{
@@ -108,6 +110,124 @@
 
 /*student uitwerking*/
 
+.personalia-content__category-title{
+    color: rgba(39, 140, 39, 0.96);
+}
+
+.personalia-content__list{
+    list-style: none;
+}
+
+.personalia-content__list li::before {
+    content: "\2022";
+    color: rgba(39, 140, 39, 0.96);
+    font-weight: bold; 
+  display: inline-block;
+  width: 1em; 
+  margin-left: -1em; 
+}
+
+.star__checked {
+    color: orange;
+  }
+
+  /*gallery*/
+  .profile-content-gallery {
+    display: flex;
+  }
+
+  .profile-content-gallery__image {
+    margin: 5px;
+    border: 1px solid #ccc;
+    box-sizing:border-box
+  }
+  
+  div.profile-content-gallery__image:hover {
+    border: 1px solid #777;
+  }
+  
+  div.profile-content-gallery__image img {
+    width: 60%;
+    height: 60%;
+    margin: auto;
+    display: flex;
+  }
+  
+  div.profile-content-gallery-image_desc {
+    padding: 15px;
+    text-align: center;
+  }
+
+/* Slideshow container */
+.profile-content__slideshow {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Hide the images by default */
+.profile-content-slideshow__slides {
+  display: none;
+  animation-name: profile-content-slideshow-slides__fade;
+  animation-duration: 1.5s;
+}
+
+.profile-content-slideshow__slides img {
+    width: 100%;
+  }
+
+/* Next & previous buttons */
+.profile-content-slideshow__prev, .profile-content-slideshow__next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Position the "next button" to the right */
+.profile-content-slideshow__next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.profile-content-slideshow__prev:hover, .profile-content-slideshow__next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Caption text */
+.profile-content-slideshow-slides__text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.profile-content-slideshow-slides__numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* Fading animation */
+@keyframes profile-content-slideshow-slides__fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
 @media only screen and (min-width: 800px) {
     .personalia{
         width: 50%;
@@ -115,5 +235,17 @@
     }
     .person-logo {
         width: 30%;
+    }
+
+    .profile-content-gallery__image  {
+        width: 30%;
+    }
+
+    .profile-content-gallery  {
+        justify-content: center
+    }
+
+    .profile-content__slideshow {
+        max-width: 50%;
     }
 }
