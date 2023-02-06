@@ -108,3 +108,12 @@
 
 /*student uitwerking*/
 
+@media only screen and (min-width: 800px) {
+    .personalia{
+        width: 50%;
+        background-color: lightblue;
+    }
+    .person-logo {
+        width: 30%;
+    }
+}
