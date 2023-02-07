@@ -15,5 +15,17 @@ Overkoepelend will contain the project that merges all the assignments together 
     - Meerdere afbeeldingen toegestaan
     - Slideshow met afbeeldingen is toegestaan
 #### Niet-functionele requirements
+| Vak      | Beschrijving                                                          |
+| -------- | --------------------------------------------------------------------- |
+| Client   | 4. De gebruikte HTML-tags zijn semantisch waar dit mogelijk is        |
+|          | 5. Het design is Mobile First                                         |
+|          | 6. Het design is Responsive                                           |
+|          | 7. De profiel pagina bevat een GDPR                                   |
+|          | 8. De GDPR keuze wordt opgeslagen in een cookie (round trip )         |
+|          | 9. GDPR wordt alleen getoond als er geen consent is gegeven           |
+| Server   | 10. Er wordt gebruikgemaakt van MVC                                   |
+|          | 11. De data op de view wordt getoond met behulp van model binding     |
+|          | 12. Iedere request wordt opgeslagen als één pagina view in een cookie |
+| Security | 13. ASVS week 1                                                       |
 
 ### Additional requirements
