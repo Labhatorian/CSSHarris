@@ -13,9 +13,9 @@ namespace Webshop.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(Product product)
+        public IActionResult Index(ProductViewModel productviewmodel)
         {
-            return View(product);
+            return View(productviewmodel);
         }
 
         public IActionResult Privacy()

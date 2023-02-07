@@ -1,4 +1,4 @@
-﻿@model Product
+﻿@model ProductViewModel
 @{
 
     ViewData["Title"] = "Home Page";
@@ -10,5 +10,5 @@
     <p>@Model.Description</p>
     
     <!-- Display the formatted amount -->
-    <p>Prijs: @Model.Price</p>
+    <p>Prijs: @Model.FormattedPrice()</p>
 </div>
