@@ -17,10 +17,16 @@ namespace Setup.Controllers
 
         public IActionResult Index()
         {
+            UpdatePageViewCookie();
             return View();
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Developer()
         {
             return View();
         }

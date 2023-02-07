@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>CV Linde Eikenboom</title>
-    <link rel="stylesheet" href="stylesheets/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-</head>
-
-<body>
+﻿@{
+    ViewData["Title"] = "Harris";
+}
 
 <div class="page">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/developer.css" asp-append-version="true" />
     <section class="personalia">
 
-        <img class="person-logo" src="images/person-pasfoto.png">
+        <img class="person-logo" src="~/images/person-pasfoto.png">
         <h1 class="person-name">Linde Eikenboom</h1>
 
         <div class="personalia-content__category">
@@ -122,7 +116,7 @@
                 </div>
                 <p class="profile-content__institute">Binnenstad, Zwolle</p>
             </div>
-        
+
         <div class="profile-content__category">
             <h3 class="profile-content__category-title">Mijn afbeeldingen</h3>
             <hr>
@@ -133,34 +127,35 @@
             <!-- Full-width images with number and caption text -->
             <div class="profile-content-slideshow__slides">
               <div class="profile-content-slideshow-slides__numbertext">1 / 2</div>
-              <img src="images/classic-cars.jpg">
+              <img src="~/images/classic-cars.jpg">
               <div class="profile-content-slideshow-slides__text">Mijn auto</div>
             </div>
-          
+
             <div class="profile-content-slideshow__slides">
               <div class="profile-content-slideshow-slides__numbertext">2 / 2</div>
-              <img src="images/it-er.png">
+              <img src="~/images/it-er.png">
               <div class="profile-content-slideshow-slides__text">Meneer Eikenboom</div>
             </div>
-          
+
             <!-- Next and previous buttons -->
             <a class="profile-content-slideshow__prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="profile-content-slideshow__next" onclick="plusSlides(1)">&#10095;</a>
           </div>
           <br>
-          <script src="js/slideshow.js"></script>   
+
+          <script src="~/js/slideshow.js"></script>  
 
           <div class="profile-content-gallery">
         <div class="profile-content-gallery__image">
             <a target="_blank" href="images/classic-cars.jpg">
-              <img src="images/classic-cars.jpg" alt="Volkswagen" width="600" height="400">
+              <img src="~/images/classic-cars.jpg" alt="Volkswagen" width="600" height="400">
             </a>
             <div class="profile-content-gallery-image_desc">Mijn auto</div>
           </div>
 
           <div class="profile-content-gallery__image">
             <a target="_blank" href="images/it-er.png">
-              <img src="images/it-er.png" alt="Meneer Eikenboom" width="600" height="400">
+              <img src="~/images/it-er.png" alt="Meneer Eikenboom" width="600" height="400">
             </a>
             <div class="profile-content-gallery-image_desc">Mijn man</div>
           </div>
@@ -168,7 +163,3 @@
         </section>
     </section>
 </div>
-
-</body>
-
-</html>

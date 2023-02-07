@@ -6,4 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\js\slideshow.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\developer.css" />
+    <None Include="wwwroot\images\classic-cars.jpg" />
+    <None Include="wwwroot\images\it-er.png" />
+    <None Include="wwwroot\images\padel.jfif" />
+    <None Include="wwwroot\images\person-pasfoto.png" />
+    <None Include="wwwroot\js\slideshow.js" />
+  </ItemGroup>
+
 </Project>
