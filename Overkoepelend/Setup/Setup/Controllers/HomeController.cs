@@ -23,17 +23,20 @@ namespace Setup.Controllers
 
         public IActionResult Privacy()
         {
+            UpdatePageViewCookie();
             return View();
         }
 
         public IActionResult Developer()
         {
+            UpdatePageViewCookie();
             return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            UpdatePageViewCookie();
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
