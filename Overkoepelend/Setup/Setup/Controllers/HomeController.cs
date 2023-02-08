@@ -6,16 +6,7 @@ namespace Setup.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
         private const string PageViews = "PageViews";
-
-        private int PageViewCounter;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
 
         public IActionResult Index()
         {
@@ -56,11 +47,6 @@ namespace Setup.Controllers
 
                 Response.Cookies.Append(PageViews, newCookieValue.ToString());
             }
-        }
-
-        protected int getTargetInfo()
-        {
-            return int.Parse(Request.Cookies[PageViews]);
         }
     }
 }
