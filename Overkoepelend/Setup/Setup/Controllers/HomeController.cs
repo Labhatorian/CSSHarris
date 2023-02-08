@@ -10,6 +10,8 @@ namespace Setup.Controllers
 
         private const string PageViews = "PageViews";
 
+        private int PageViewCounter;
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -54,6 +56,11 @@ namespace Setup.Controllers
 
                 Response.Cookies.Append(PageViews, newCookieValue.ToString());
             }
+        }
+
+        protected int getTargetInfo()
+        {
+            return int.Parse(Request.Cookies[PageViews]);
         }
     }
 }

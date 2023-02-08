@@ -2,8 +2,12 @@
     ViewData["Title"] = "Home Page";
 }
 
+<script defer src="~/js/viewcounter.js"></script>
+
 <div class="text-center">
     <h1 class="display-4">Setup</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <p>Deze view is X keer bekeken</p>
+    <p class="content-gdpr-accept hide">Deze view is X keer bekeken</p>
+    <p class="content-gdpr-not-chosen hide">[Deze content kan niet worden getoond zolang cookies niet zijn geaccepteerd]</p>
+    <p class="content-gdpr-reject hide">[Deze content kan niet worden getoond omdat cookies zijn afgewezen. Van gedachten verandert? Klik hier!]</p>
 </div>
