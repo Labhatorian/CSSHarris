@@ -2,7 +2,7 @@
 {
     public class Developer
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = "Harris";
         public string ProfileDescription { get; set; }
         public string Characteristics { get; set; }
         public string Skills { get; set; }

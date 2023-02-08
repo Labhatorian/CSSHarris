@@ -27,10 +27,10 @@ namespace Setup.Controllers
             return View();
         }
 
-        public IActionResult Developer()
+        public IActionResult Developer(DeveloperViewModel developer)
         {
             UpdatePageViewCookie();
-            return View();
+            return View(developer);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

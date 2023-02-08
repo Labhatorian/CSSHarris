@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Harris";
+﻿@model DeveloperViewModel
+@{
+    ViewData["Title"] = @Model.DeveloperPerson.Name;
 }
 
 <div class="page">
@@ -8,7 +9,7 @@
     <section class="personalia">
 
         <img class="person-logo" src="~/images/person-pasfoto.png">
-        <h1 class="person-name">Linde Eikenboom</h1>
+        <h1 class="person-name">@Model.DeveloperPerson.Name</h1>
 
         <div class="personalia-content__category">
             <h3 class="personalia-content__category-title">Eigenschappen</h3>
