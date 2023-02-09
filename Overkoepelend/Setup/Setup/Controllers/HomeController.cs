@@ -33,6 +33,7 @@ namespace Setup.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        //TOdo dont do this when cookie not accepted
         public void UpdatePageViewCookie()
         {
             var currentCookieValue = Request.Cookies[PageViews];

@@ -28,7 +28,7 @@ class GDPR {
         this.resetContent();
         const status = this.cookieStatus() == null ? 'not-chosen' : this.cookieStatus();
         const element = document.querySelector(`.content-gdpr-${status}`);
-        element.classList.add('show');
+        if (element != null) element.classList.add('show');
     }
 
     resetContent(){
@@ -37,9 +37,11 @@ class GDPR {
             '.content-gdpr-not-chosen',
             '.content-gdpr-reject'];
 
-        for(const c of classes){
-            document.querySelector(c).classList.add('hide');
-            document.querySelector(c).classList.remove('show');
+        for (const c of classes) {
+            if (document.querySelector(c) != null) {
+                document.querySelector(c).classList.add('hide');
+                document.querySelector(c).classList.remove('show');
+            }
         }
     }
 
