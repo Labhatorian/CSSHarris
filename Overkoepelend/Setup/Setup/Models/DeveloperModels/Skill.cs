@@ -1,9 +1,13 @@
-﻿namespace Setup.Models.DeveloperModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Setup.Models.DeveloperModels
 {
     public class Skill
     {
         public string SkillName { get; set; }
-        public int Stars { get; set; } //TODO 0 to 5
+
+        [Range (0,5)]
+        public int Stars { get; set; }
 
         public Skill(string skillName, int stars)
         {
