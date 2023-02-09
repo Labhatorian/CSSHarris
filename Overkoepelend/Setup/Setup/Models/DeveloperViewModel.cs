@@ -1,11 +1,30 @@
-﻿namespace Setup.Models
+﻿using Setup.Models.DeveloperModels;
+
+namespace Setup.Models
 {
     public class DeveloperViewModel
     {
+        //todo fix slideshow in mobile version
         public Developer DeveloperPerson { get; set; } = new Developer();
 
-        //todo make stars
-        //todo dattimee for studies and experience
+        public void ViewCharacteristics()
+        {
 
+        }
+
+        public void ViewSkills()
+        {
+
+        }
+
+        public void ViewStudies()
+        {
+
+        }
+
+        public void ViewExperience()
+        {
+
+        }
     }
 }

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/css/developer.css" asp-append-version="true" />
     <section class="personalia">
 
-        <img class="person-logo" src="~/images/person-pasfoto.png">
+        <img class="person-logo" src="~/images/@Model.DeveloperPerson.Name/@Model.DeveloperPerson.PersonImage">
         <h1 class="person-name">@Model.DeveloperPerson.Name</h1>
 
         <div class="personalia-content__category">
@@ -78,8 +78,7 @@
                 <div class="profile-content__element-header">
                 </div>
                 <p class="profile-content__description">
-                    Als arts en developer ben ik bekwaam in het onderzoeken van
-                    de medische context en het zoeken van een technische oplossing.
+                    @Model.DeveloperPerson.ProfileDescription
                 <p>
             </div>
 
