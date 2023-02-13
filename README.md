@@ -29,7 +29,7 @@ Overkoepelend will contain the project that merges all the assignments together 
 |          | 9. GDPR wordt alleen getoond als er geen consent is gegeven           |
 | Server   | 10. Er wordt gebruikgemaakt van MVC                                   |
 |          | 11. De data op de view wordt getoond met behulp van model binding     |
-|          | 12. Iedere request wordt opgeslagen als één pagina view in een cookie |
+|          | 12. Iedere request wordt opgeslagen als ��n pagina view in een cookie |
 | Security | 13. ASVS week 1                                                       |
 
 ### Additional requirements
