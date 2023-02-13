@@ -8,7 +8,6 @@
 ## Structure
 ClientTech contains the HTML assignments on a week-to-week basis</br>
 ServerTech contains the C# assignments on a week-to-week basis</br>
-Security is empty for now</br>
 Overkoepelend will contain the project that merges all the assignments together with additional requirements added</br>
 
 ## Requirements
