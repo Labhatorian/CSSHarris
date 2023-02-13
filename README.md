@@ -46,18 +46,18 @@ Als gebruiker wil ik een bericht kunnen sturen aan de developer
 6. Het formulier bevat een captcha
 
 #### Niet-functionele requirements
-| Vak      | Beschrijving                                                          |
-| -------- | --------------------------------------------------------------------- |
-| Client   | 7. Het formulier wordt alleen verstuurd als de inputs valid zijn       |
-|          | 8. Voorwaarden voor de inputs: a. Onderwerp, niet langer dan 200 tekens, b. E-mail, valide emailadres, c. Bericht, niet langer dan 600 tekens                                   |
-|          | 9. Het formulier bevat een captcha                                        |
-| Server   | 10. Er is een API endpoint beschikbaar die de data uit het formulier afvangt                             |
-|          | 11. De data uit het formulier wordt gecontroleerd op een aantal voorwaarden. Deze voorwaarden zijn vastgelegd in een model: a. Onderwerp, niet langer dan 200 tekens, b. E-mail, valide emailadres, c. Bericht, niet langer dan 600 tekens     |
-|          | 12. Het endpoint geeft de juiste statuscode terug wanneer de waarden niet voldoen aan de voorwaarden |
-|          | 13. De gevalideerde data uit het formulier wordt opgeslagen in een database (maak zelf de keuze tussen een relationele of niet-relationele database) |
-|          | 14. Voor het versturen van de mail wordt gebruikgemaakt van een mail delivery service zoals SendGrid |
-| Security | 14. ASVS week 1                                                       |
-|          |  	16. ASVS week 2 |
+| Vak      | Beschrijving                                                                                                                                                                                                                               |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Client   | 7. Het formulier wordt alleen verstuurd als de inputs valid zijn                                                                                                                                                                           |
+|          | 8. Voorwaarden voor de inputs: a. Onderwerp, niet langer dan 200 tekens, b. E-mail, valide emailadres, c. Bericht, niet langer dan 600 tekens                                                                                              |
+|          | 9. Het formulier bevat een captcha                                                                                                                                                                                                         |
+| Server   | 10. Er is een API endpoint beschikbaar die de data uit het formulier afvangt                                                                                                                                                               |
+|          | 11. De data uit het formulier wordt gecontroleerd op een aantal voorwaarden. Deze voorwaarden zijn vastgelegd in een model: a. Onderwerp, niet langer dan 200 tekens, b. E-mail, valide emailadres, c. Bericht, niet langer dan 600 tekens |
+|          | 12. Het endpoint geeft de juiste statuscode terug wanneer de waarden niet voldoen aan de voorwaarden                                                                                                                                       |
+|          | 13. De gevalideerde data uit het formulier wordt opgeslagen in een database (maak zelf de keuze tussen een relationele of niet-relationele database)                                                                                       |
+|          | 14. Voor het versturen van de mail wordt gebruikgemaakt van een mail delivery service zoals SendGrid                                                                                                                                       |
+| Security | 15. De contactpagina mag wel een beperkte set HTML opmaak attributen toestaan zoals opsommingen, bold of headers maar in ieder geval geen scripts, verborgen tekst of tekst in de kleur van de achtergrond.                                |
+|          | 16. ASVS week 2                                                                                                                                                                                                                            |
 
 ### Additional requirements
 #### Security
