@@ -1,4 +1,4 @@
-﻿namespace Setup.Models.DeveloperModels
+﻿namespace Setup.Models.DeveloperModels.Profile
 {
     public class DevImage
     {

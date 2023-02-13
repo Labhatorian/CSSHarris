@@ -1,4 +1,5 @@
 ﻿using System.Reflection.PortableExecutable;
+using Setup.Models.DeveloperModels.Profile;
 
 namespace Setup.Models.DeveloperModels
 {
@@ -27,9 +28,9 @@ namespace Setup.Models.DeveloperModels
             Skills.Add(new Skill("Python", 3));
             Skills.Add(new Skill("JavaScript", 2));
             Skills.Add(new Skill("CSS", 2));
+            Studies.Add(new Study("HBO-ICT", "Windesheim Zwolle", new DateTime(2021, 5, 1), new DateTime(2025, 5, 1)));
             Studies.Add(new Study("Havo", "Zuyderzee Lyceum", new DateTime(2019, 9, 1), new DateTime(2021, 5, 1)));
             Studies.Add(new Study("Snel-TL", "Bonifatius Mavo", new DateTime(2016, 9, 1), new DateTime(2019, 5, 1)));
-            Studies.Add(new Study("HBO-ICT", "Windesheim Zwolle", new DateTime(2021, 5, 1), new DateTime(2025, 5, 1)));
             Images.Add(new DevImage("classic-cars.jpg", "Mijn auto"));
         }
     }

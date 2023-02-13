@@ -1,4 +1,5 @@
 ﻿using Setup.Models.DeveloperModels;
+using Setup.Models.DeveloperModels.Profile;
 using System.Reflection.PortableExecutable;
 using System.Text;
 
@@ -6,7 +7,6 @@ namespace Setup.Models
 {
     public class DeveloperViewModel
     {
-        //todo fix slideshow in mobile version
         public Developer DeveloperPerson { get; set; } = new Developer();
 
         public string ViewCharacteristics()
