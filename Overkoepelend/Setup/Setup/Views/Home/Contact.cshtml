@@ -1,0 +1,44 @@
+﻿@model DeveloperViewModel
+@{
+    ViewData["Title"] = "Contact " + @Model.DeveloperPerson.Name;  
+}
+
+<h3>Contact @Model.DeveloperPerson.Name:</h3>
+<section>
+    <div class="row">
+    <div class="col-md-4">
+        <form asp-action="View" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Onderwerp</label>
+                <input class="form-control" required/>
+                <span class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input class="form-control" required/>
+                <span class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Bericht</label>
+                <textarea class="form-control" required></textarea>
+                <span class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <br>
+                [CAPTCHA HIER]
+            </div>
+
+            <div class="form-group">
+                <br>
+                <input type="submit" value="Verzend" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+</section>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

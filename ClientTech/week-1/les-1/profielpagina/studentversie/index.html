@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CV Sandra van Gennep</title>
+    <title>CV Linde Eikenboom</title>
     <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
 
@@ -15,6 +16,58 @@
         <img class="person-logo" src="images/person-pasfoto.png">
         <h1 class="person-name">Linde Eikenboom</h1>
 
+        <div class="personalia-content__category">
+            <h3 class="personalia-content__category-title">Eigenschappen</h3>
+            <hr>
+            <ul class="personalia-content__list">
+                <li>Secuur werken</li>
+                <li>Flexibel</li>
+                <li>Goed omgaan met medicijnen</li>
+              </ul> 
+        </div>
+
+        <div class="personalia-content__category">
+            <h3 class="personalia-content__category-title">Skills</h3>
+            <hr>
+            <ul class="personalia-content__list">
+                <li>HTML
+                    <div class="personalia-content-list__stars">
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star"></span>
+                    </div>
+                </li>
+                <li>CSS
+                    <div class="personalia-content-list__stars">
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                    </div>
+                </li>
+                <li>JavaScript
+                    <div class="personalia-content-list__stars">
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                    </div>
+                </li>
+                <li>English
+                    <div class="personalia-content-list__stars">
+                        <span class="fa fa-star star__checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                    </div>
+                </li>
+              </ul> 
+        </div>
     </section>
 
     <section class="profile">
@@ -56,8 +109,63 @@
                 </div>
                 <p class="profile-content__institute">Lindeboom instituut, Utrecht</p>
             </div>
-        </section>
 
+            <div class="profile-content__category">
+                <h3 class="profile-content__category-title">Werkervaring</h3>
+                <hr>
+            </div>
+
+            <div class="profile-content__element">
+                <div class="profile-content__element-header">
+                    <h4 class="profile-content__title">Apotheker specialist</h4>
+                    <p class="profile-content__period">nov 2017 - mei 2021</p>
+                </div>
+                <p class="profile-content__institute">Binnenstad, Zwolle</p>
+            </div>
+        
+        <div class="profile-content__category">
+            <h3 class="profile-content__category-title">Mijn afbeeldingen</h3>
+            <hr>
+        </div>
+
+        <div class="profile-content__slideshow">
+
+            <!-- Full-width images with number and caption text -->
+            <div class="profile-content-slideshow__slides">
+              <div class="profile-content-slideshow-slides__numbertext">1 / 2</div>
+              <img src="images/classic-cars.jpg">
+              <div class="profile-content-slideshow-slides__text">Mijn auto</div>
+            </div>
+          
+            <div class="profile-content-slideshow__slides">
+              <div class="profile-content-slideshow-slides__numbertext">2 / 2</div>
+              <img src="images/it-er.png">
+              <div class="profile-content-slideshow-slides__text">Meneer Eikenboom</div>
+            </div>
+          
+            <!-- Next and previous buttons -->
+            <a class="profile-content-slideshow__prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="profile-content-slideshow__next" onclick="plusSlides(1)">&#10095;</a>
+          </div>
+          <br>
+          <script src="js/slideshow.js"></script>   
+
+          <div class="profile-content-gallery">
+        <div class="profile-content-gallery__image">
+            <a target="_blank" href="images/classic-cars.jpg">
+              <img src="images/classic-cars.jpg" alt="Volkswagen" width="600" height="400">
+            </a>
+            <div class="profile-content-gallery-image_desc">Mijn auto</div>
+          </div>
+
+          <div class="profile-content-gallery__image">
+            <a target="_blank" href="images/it-er.png">
+              <img src="images/it-er.png" alt="Meneer Eikenboom" width="600" height="400">
+            </a>
+            <div class="profile-content-gallery-image_desc">Mijn man</div>
+          </div>
+        </div>
+        </section>
     </section>
 </div>
 

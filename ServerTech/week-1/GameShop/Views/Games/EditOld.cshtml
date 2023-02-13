@@ -1,0 +1,27 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model GameShop.Data.Game
+
+@{
+}
+
+ <form>
+  <h3>GameID: @Model.Id</h3>
+  <label for="ftitle">Title:</label><br>
+  <input type="text" id="ftitle" name="ftitle" value="@Model.Title"><br>
+  <label for="ldesc">Description:</label><br>
+  <input type="text" id="ldesc" name="ldesc" value="@Model.Description"><br>
+  <input type="submit" value="Submit">
+</form> 
+<br>
+ <form>
+  <label asp-for="Title" class="control-label"></label>
+  <input asp-for="Title" class="form-control" />
+
+  <label asp-for="Description" class="control-label"></label>
+  <input asp-for="Description" class="form-control" />
+  <br>
+  <input type="submit" value="Save" class="btn btn-primary" />
+  </form> 
