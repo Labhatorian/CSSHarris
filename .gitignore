@@ -467,3 +467,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Overkoepelend/Setup/Setup/Views/_AppStart.cshtml
