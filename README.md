@@ -48,17 +48,16 @@ Als gebruiker wil ik een bericht kunnen sturen aan de developer
 #### Niet-functionele requirements
 | Vak      | Beschrijving                                                          |
 | -------- | --------------------------------------------------------------------- |
-| Client   | 4. De gebruikte HTML-tags zijn semantisch waar dit mogelijk is        |
-|          | 5. Het design is Mobile First                                         |
-|          | 6. Het design is Responsive                                           |
-|          | 7. De profiel pagina bevat een GDPR                                   |
-|          | 8. De GDPR keuze wordt opgeslagen in een cookie (round trip )         |
-|          | 9. GDPR wordt alleen getoond als er geen consent is gegeven           |
-|          | 10. Styling GDPR past bij pagina                                      |
-| Server   | 11. Er wordt gebruikgemaakt van MVC                                   |
-|          | 12. De data op de view wordt getoond met behulp van model binding     |
-|          | 13. Iedere request wordt opgeslagen als ��n pagina view in een cookie |
+| Client   | 7. Het formulier wordt alleen verstuurd als de inputs valid zijn       |
+|          | 8. Voorwaarden voor de inputs: a. Onderwerp, niet langer dan 200 tekens, b. E-mail, valide emailadres, c. Bericht, niet langer dan 600 tekens                                   |
+|          | 9. Het formulier bevat een captcha                                        |
+| Server   | 10. Er is een API endpoint beschikbaar die de data uit het formulier afvangt                             |
+|          | 11. De data uit het formulier wordt gecontroleerd op een aantal voorwaarden. Deze voorwaarden zijn vastgelegd in een model: a. Onderwerp, niet langer dan 200 tekens, b. E-mail, valide emailadres, c. Bericht, niet langer dan 600 tekens     |
+|          | 12. Het endpoint geeft de juiste statuscode terug wanneer de waarden niet voldoen aan de voorwaarden |
+|          | 13. De gevalideerde data uit het formulier wordt opgeslagen in een database (maak zelf de keuze tussen een relationele of niet-relationele database) |
+|          | 14. Voor het versturen van de mail wordt gebruikgemaakt van een mail delivery service zoals SendGrid |
 | Security | 14. ASVS week 1                                                       |
+|          |  	16. ASVS week 2 |
 
 ### Additional requirements
 #### Security
