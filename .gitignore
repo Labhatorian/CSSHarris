@@ -467,4 +467,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# API-keys for captcha
 /Overkoepelend/Setup/Setup/Views/_AppStart.cshtml

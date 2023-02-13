@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -22,6 +22,10 @@
     <None Include="wwwroot\images\person-pasfoto.png" />
     <None Include="wwwroot\js\gdpr.js" />
     <None Include="wwwroot\js\slideshow.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebHelpers" Version="3.2.9" />
   </ItemGroup>
 
 </Project>

@@ -6,6 +6,8 @@
 <div class="page">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/developer.css" asp-append-version="true" />
+    <script defer src="~/js/slideshow.js"></script> 
+
     <section class="personalia">
 
         <img class="person-logo" src="~/images/@Model.DeveloperPerson.Name/@Model.DeveloperPerson.PersonImage">
@@ -38,7 +40,6 @@
             @Html.Raw(@Model.ViewExperience())
 
             @Html.Raw(@Model.ViewImages())
-            <script src="~/js/slideshow.js"></script> 
         </section>
     </section>
 </div>

@@ -7,6 +7,7 @@ namespace Setup.Controllers
     public class HomeController : Controller
     {
         private const string PageViews = "PageViews";
+        private DeveloperViewModel developer = new();
 
         public IActionResult Index()
         {
@@ -20,7 +21,13 @@ namespace Setup.Controllers
             return View();
         }
 
-        public IActionResult Developer(DeveloperViewModel developer)
+        public IActionResult Developer()
+        {
+            UpdatePageViewCookie();
+            return View(developer);
+        }
+
+        public IActionResult Contact()
         {
             UpdatePageViewCookie();
             return View(developer);
