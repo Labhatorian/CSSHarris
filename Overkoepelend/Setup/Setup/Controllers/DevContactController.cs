@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Setup.Models.DeveloperModels;
@@ -10,8 +11,8 @@ namespace Setup.Controllers
     [ApiController]
     public class DevContactController : ControllerBase
     {
-        private readonly string CaptchaPrivateKey = "6LedxnkkAAAAAB7HjANzV8h9lB08kJYYedyaJ3da";
-        private readonly string EmailPrivateKey = "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";
+        private readonly string CaptchaPrivateKey = "";
+        private readonly string EmailPrivateKey = "";
 
         private readonly string GoogleCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
 
@@ -36,7 +37,6 @@ namespace Setup.Controllers
 
         private async Task VerifyCaptcha(string ResponseUser)
         {
-            //UNDONE
             string content = null;
             AcceptCaptcha = false;
             using (var client = new HttpClient())
@@ -52,9 +52,10 @@ namespace Setup.Controllers
 
                 HttpResponseMessage resp = await client.SendAsync(req);
                 content = await resp.Content.ReadAsStringAsync();
+                content = content.Replace("\n", "").Replace("\r", "");
+                dynamic json = JsonConvert.DeserializeObject(content);
 
-                //TODO check code
-                if (content != null)
+                if ((bool)json["success"])
                 {
                     AcceptCaptcha = true;
                 }
