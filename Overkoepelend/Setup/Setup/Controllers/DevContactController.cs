@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Setup.Models.DeveloperModels;
-using System.Text;
 
 namespace Setup.Controllers
 {
@@ -9,7 +8,7 @@ namespace Setup.Controllers
     [ApiController]
     public class DevContactController : ControllerBase
     {
-        private readonly string PrivateKey = "OBFUSCATED";
+        private readonly string PrivateKey = "6LedxnkkAAAAAB7HjANzV8h9lB08kJYYedyaJ3da";
         private readonly string GoogleCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
 
         //todo verify captcha in html and js too
@@ -29,12 +28,17 @@ namespace Setup.Controllers
             string content = null;
             using (var client = new HttpClient())
             {
-                string requestJson = "{secret: " + PrivateKey + ", response: " + ResponseUser + "}";
-                HttpContent httpContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+                var req = new HttpRequestMessage(HttpMethod.Post, GoogleCaptchaUrl);
+                req.Headers.Add("Accept", "application/x-www-form-urlencoded");
 
-                var response = await client.PostAsync(GoogleCaptchaUrl, httpContent);
+                req.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    { "secret", PrivateKey },
+                    { "response", ResponseUser }
+                });
 
-                content = await response.Content.ReadAsStringAsync();
+                HttpResponseMessage resp = await client.SendAsync(req);
+                content = await resp.Content.ReadAsStringAsync();
             }
         }
     }
