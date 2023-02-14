@@ -4,17 +4,20 @@ const subject = document.getElementById("subject");
 const email = document.getElementById("email");
 const message = document.getElementById("message");
 
-var ResponseKey;
+var ResponseKey = "a";
 
 form.addEventListener("submit", async (event) => {
-    // Then we prevent the form from being sent by canceling the event
-    //TODO check input
     event.preventDefault();
 
-    let response = await fetch('/api/DevContact', {
+   //TODO check input
+
+    let response = await fetch('/api/DevContact/Validate', {
         method: 'post',
-        body: JSON.stringify({ Response: ResponseKey, Subject: subject.value, EmailAddress: email.value, Message: message.value }),
-        contentType: 'application/json; charset=utf-8',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ Response: ResponseKey, Subject: subject.value, EmailAddress: email.value, Message: message.value })
     })
 
     let data = await response.json();
