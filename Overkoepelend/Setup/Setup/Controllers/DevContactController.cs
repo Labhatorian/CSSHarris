@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using Setup.Models;
 using Setup.Models.DeveloperModels;
 
 namespace Setup.Controllers
@@ -18,6 +19,13 @@ namespace Setup.Controllers
 
         private bool AcceptCaptcha = false;
 
+        private EmailContext db;
+
+        public DevContactController(EmailContext db)
+        {
+            this.db = db;
+        }
+
         [HttpPost("Validate")]
         public IActionResult ValidatePost([FromBody] Email email)
         {
@@ -29,6 +37,10 @@ namespace Setup.Controllers
                 //TODO use forbid?
                 return Unauthorized();
             }
+
+            //todo secure database
+            var allEmails = db.Email.Where(e => e.EmailAddress != null).ToList();
+
             //TODO put data in database (mongodb?)
             //TODO send email and check response unauthorize too then(or forbid)
 
