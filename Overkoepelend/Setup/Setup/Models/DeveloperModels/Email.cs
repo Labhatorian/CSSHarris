@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Setup.Models.DeveloperModels
 {
-    [Keyless]
     public class Email
     {
+        [Key]
+        public int idEmail { get; set; }
+
         [NotMapped]
         public string Response { get; set; }
 

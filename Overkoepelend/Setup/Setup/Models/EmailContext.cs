@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Setup.Models.DeveloperModels;
 
 namespace Setup.Models

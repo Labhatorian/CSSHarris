@@ -1,5 +1,4 @@
-﻿using System.Reflection.PortableExecutable;
-using Setup.Models.DeveloperModels.Profile;
+﻿using Setup.Models.DeveloperModels.Profile;
 
 namespace Setup.Models.DeveloperModels
 {
@@ -24,7 +23,7 @@ namespace Setup.Models.DeveloperModels
             Characteristics.Add("Goed");
             Skills.Add(new Skill("C#", 4));
             Skills.Add(new Skill("Java", 4));
-            Skills.Add( new Skill("HTML", 3));
+            Skills.Add(new Skill("HTML", 3));
             Skills.Add(new Skill("Python", 3));
             Skills.Add(new Skill("JavaScript", 2));
             Skills.Add(new Skill("CSS", 2));

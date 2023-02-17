@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+﻿using Mailjet.Client;
+using Mailjet.Client.TransactionalEmails;
+using Microsoft.AspNetCore.Mvc;
 using Setup.Models;
 using Setup.Models.DeveloperModels;
 
@@ -13,11 +12,10 @@ namespace Setup.Controllers
     public class DevContactController : ControllerBase
     {
         private readonly string CaptchaPrivateKey = "";
-        private readonly string EmailPrivateKey = "";
-
         private readonly string GoogleCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
 
         private bool AcceptCaptcha = false;
+        private bool AcceptEmail = false;
 
         private EmailContext db;
 
@@ -32,56 +30,56 @@ namespace Setup.Controllers
             Task captchatask = VerifyCaptcha(email.Response);
             captchatask.Wait();
 
-            if (!AcceptCaptcha)
-            {
-                //TODO use forbid?
-                return Unauthorized();
-            }
+            if (!AcceptCaptcha) return Unauthorized(); //TODO use forbid?
 
             //todo secure database
-            var allEmails = db.Email.Where(e => e.EmailAddress != null).ToList();
 
-            //TODO put data in database (mongodb?)
-            //TODO send email and check response unauthorize too then(or forbid)
+            db.Add(email);
+            db.SaveChanges();
+
+            SendEmail(email).Wait();
+
+            if (!AcceptEmail) return Unauthorized(); //TODO use forbid?
 
             return Ok("Message: " + email.Message + ", Subject: " + email.Subject);
         }
 
         private async Task VerifyCaptcha(string ResponseUser)
         {
-            string content = null;
             AcceptCaptcha = false;
-            using (var client = new HttpClient())
-            {
-                var req = new HttpRequestMessage(HttpMethod.Post, GoogleCaptchaUrl);
-                req.Headers.Add("Accept", "application/x-www-form-urlencoded");
 
-                req.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+            using HttpClient client = new();
+            var req = new HttpRequestMessage(HttpMethod.Post, GoogleCaptchaUrl);
+            req.Headers.Add("Accept", "application/x-www-form-urlencoded");
+
+            req.Content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     { "secret", CaptchaPrivateKey },
                     { "response", ResponseUser }
                 });
 
-                HttpResponseMessage resp = await client.SendAsync(req);
-                content = await resp.Content.ReadAsStringAsync();
-                content = content.Replace("\n", "").Replace("\r", "");
-                dynamic json = JsonConvert.DeserializeObject(content);
-
-                if ((bool)json["success"])
-                {
-                    AcceptCaptcha = true;
-                }
-            }
+            HttpResponseMessage resp = await client.SendAsync(req);
+            AcceptCaptcha = (bool)resp.IsSuccessStatusCode;
         }
 
         private async Task SendEmail(Email email)
         {
-            var client = new SendGridClient(EmailPrivateKey);
-            var from = new EmailAddress(email.EmailAddress);
-            var to = new EmailAddress("", "");
-            var msg = MailHelper.CreateSingleEmail(from, to, email.Subject, email.Message, "");
-            var response = await client.SendEmailAsync(msg);
-            //TODO check respones for OK
+            AcceptEmail = false;
+
+            MailjetClient client = new MailjetClient("36be74da033eb5679d2a9d9901c79dbd", "");
+
+            // construct your email with builder
+            var emailtosend = new TransactionalEmailBuilder()
+                   .WithFrom(new SendContact("s1168716@student.windesheim.nl"))
+                   .WithSubject(email.Subject)
+                   .WithHtmlPart(email.Message + "<br><br>" + "Dit email is afkomstig van: " + email.EmailAddress)
+                   .WithTo(new SendContact("s1168716@student.windesheim.nl"))
+                   .Build();
+
+            // invoke API to send email
+            var response = await client.SendTransactionalEmailAsync(emailtosend);
+
+            AcceptEmail = response.Messages[0].Errors is null ? true : false;
         }
     }
 }

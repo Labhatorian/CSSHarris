@@ -1,6 +1,5 @@
 ﻿using Setup.Models.DeveloperModels;
 using Setup.Models.DeveloperModels.Profile;
-using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace Setup.Models
@@ -40,15 +39,15 @@ namespace Setup.Models
             sb.Append("<hr>");
             sb.Append("<ul class=\"personalia-content__list\">");
 
-            foreach(Skill skill in DeveloperPerson.Skills)
+            foreach (Skill skill in DeveloperPerson.Skills)
             {
                 sb.Append("<li>" + skill.SkillName);
                 sb.Append("<div class=\"personalia-content-list__stars\">");
 
-                for(int i = 0; i <= 5; i++)
+                for (int i = 0; i <= 5; i++)
                 {
                     string append = skill.Stars >= i ? "star__checked" : "";
-                    sb.Append("<span class=\"fa fa-star "+ append +"\"></span>");
+                    sb.Append("<span class=\"fa fa-star " + append + "\"></span>");
                 }
                 sb.Append("</div>");
             }
@@ -68,14 +67,14 @@ namespace Setup.Models
                 "<hr>" +
                 "</div>");
 
-            foreach(Study study in DeveloperPerson.Studies)
+            foreach (Study study in DeveloperPerson.Studies)
             {
                 sb.Append("<div class=\"profile-content__element\">" +
                     "<div class=\"profile-content__element-header\">" +
-                    "<h4 class=\"profile-content__title\">"+ study.StudyName +"</h4>" +
+                    "<h4 class=\"profile-content__title\">" + study.StudyName + "</h4>" +
                     "<p class=\"profile-content__period\">" + study.StartStudy.ToShortDateString() + " - " + study.EndStudy.ToShortDateString() + "</p>" +
                     "</div>" +
-                    "<p class=\"profile-content__institute\">"+ study.StudyPlace +"</p>" +
+                    "<p class=\"profile-content__institute\">" + study.StudyPlace + "</p>" +
                     "</div>");
             }
 
@@ -92,7 +91,7 @@ namespace Setup.Models
                 "<hr>" +
                 "</div>");
 
-            foreach(Experience experience in DeveloperPerson.WorkExperience)
+            foreach (Experience experience in DeveloperPerson.WorkExperience)
             {
                 sb.Append("<div class=\"profile-content__element\">" +
                     "<div class=\"profile-content__element-header\">" +
@@ -119,11 +118,11 @@ namespace Setup.Models
             //Slideshow
             sb.Append("<div class=\"profile-content__slideshow\">");
 
-            for(int i = 1; i <= DeveloperPerson.Images.Count(); i++)
+            for (int i = 1; i <= DeveloperPerson.Images.Count(); i++)
             {
                 sb.Append("<div class=\"profile-content-slideshow__slides\">" +
                     "<div class=\"profile-content-slideshow-slides__numbertext\"> " + i + " / " + DeveloperPerson.Images.Count() + " </div>" +
-                    "<img src=\"/images/" + DeveloperPerson.Name + "/" + DeveloperPerson.Images[i-1].FilePath + "\">" +
+                    "<img src=\"/images/" + DeveloperPerson.Name + "/" + DeveloperPerson.Images[i - 1].FilePath + "\">" +
                     "<div class=\"profile-content-slideshow-slides__text\">" + DeveloperPerson.Images[i - 1].Name + "</div>" +
                     "</div>");
             }

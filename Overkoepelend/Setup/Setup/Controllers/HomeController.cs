@@ -7,7 +7,7 @@ namespace Setup.Controllers
     public class HomeController : Controller
     {
         private const string PageViews = "PageViews";
-        private DeveloperViewModel developer = new();
+        private readonly DeveloperViewModel developer = new();
 
         public IActionResult Index()
         {
