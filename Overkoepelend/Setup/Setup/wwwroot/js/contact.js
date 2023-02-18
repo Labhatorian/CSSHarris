@@ -10,14 +10,12 @@ form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     ToggleInputs();
-    const element = document.getElementById("spinningcircle");
-    if (element != null) element.classList.remove('hide');
 
     let valide = ValidateInputs();
 
     if (valide) {
 
-        let response = await fetch('/api/DevContact/Validate', {
+        let response = await fetch('/api/DevContact/Contact', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -26,15 +24,22 @@ form.addEventListener("submit", async (event) => {
             body: JSON.stringify({ Response: ResponseKey, Subject: subject.value, EmailAddress: email.value.toLowerCase(), Message: message.value })
         })
 
-        let data = await response.json();
+        let resp = await response;
+        let data = await resp.json();
+        data = await JSON.parse(data);
 
-        alert(JSON.stringify(data))
-        //todo change page based on data received
-
-    } else {
-        alert("You have not put in everything correctly");
-    }
-    if (element != null) element.classList.add('hide');
+        if (resp.ok) {
+            alert("Uw bericht is succesvol verzonden!\n Email: " + data["Email"] + "\n Onderwerp: " + data["Subject"] + "\n Bericht: " + data["Message"]);
+        } else if (resp.status == 403) {
+            if (data == 0) alert("Het is niet gelukt de captcha te checken");
+            if (data == 1) alert("Het is niet gelukt de mail te verzenden");
+            ToggleInputs();
+            return;
+        } else {
+            alert("Er is een onbekende fout opgetreden");
+        }
+        window.location.reload();
+    } 
     ToggleInputs();
 });
 
@@ -45,28 +50,41 @@ function ToggleInputs() {
 
     const submitbutton = document.getElementById("submitbutton");
     submitbutton.disabled = !submitbutton.disabled;
+
+    //Loading circle
+    const element = document.getElementById("spinningcircle");
+    if (element != null && submitbutton.disabled) {
+        element.classList.remove('hide');
+    } else {
+        element.classList.add('hide');
+    }
 }
 
 function ValidateInputs() {
-    //todo show constrains on page
+    let fail = false;
+
     if (subject.value >= 200 && subject.value <= 0) {
-        return false;
+        document.getElementById("ErrorSubject").classList.remove('hide');;
+        fail = true;
     }
 
     let emailstring = email.value.toLowerCase();
     if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(emailstring) && emailstring >= 200 && emailstring <= 0) {
-        return false;
+        document.getElementById("ErrorEmail").classList.remove('hide');;
+        fail = true;
     }
 
     if (message.value >= 600 && message.value <= 0) {
-        return false;
+        document.getElementById("ErrorMessage").classList.remove('hide');;
+        fail = true;
     }
 
     if (ResponseKey == null) {
-        return false;
+        document.getElementById("ErrorCaptcha").classList.remove('hide');;
+        fail = true;
     }
 
-    return true;
+    return !fail;
 }
 
 //ReCaptcha

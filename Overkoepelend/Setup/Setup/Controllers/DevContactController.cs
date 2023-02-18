@@ -2,24 +2,23 @@
 using Mailjet.Client;
 using Mailjet.Client.TransactionalEmails;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Setup.Models;
 using Setup.Models.DeveloperModels;
 
 namespace Setup.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class DevContactController : ControllerBase
     {
         private readonly IConfiguration Configuration;
+        private EmailContext db;
 
         private readonly string GoogleCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
 
         private bool AcceptCaptcha = false;
         private bool AcceptEmail = false;
-
-        private EmailContext db;
 
         public DevContactController(EmailContext db, IConfiguration configuration)
         {
@@ -27,8 +26,8 @@ namespace Setup.Controllers
             Configuration = configuration;
         }
 
-        [HttpPost("Validate")]
-        public IActionResult ValidatePost([FromBody] Email email)
+        [HttpPost("Contact")]
+        public IActionResult ContactDeveloper([FromBody] Email email)
         {
             //Prevent XSS
             var sanitizer = new HtmlSanitizer();
@@ -38,7 +37,7 @@ namespace Setup.Controllers
             Task captchatask = VerifyCaptcha(email.Response);
             captchatask.Wait();
 
-            if (!AcceptCaptcha) return Unauthorized(); //TODO use forbid?
+            if (!AcceptCaptcha) return StatusCode(403, 0);
 
             //todo secure database
             //todo use migrations?
@@ -48,9 +47,9 @@ namespace Setup.Controllers
 
             SendEmail(email).Wait();
 
-            if (!AcceptEmail) return Unauthorized(); //TODO use forbid?
+            if (!AcceptEmail) return StatusCode(403, 1);
 
-            return Ok("Message: " + email.Message + ", Subject: " + email.Subject);
+            return Ok("{\"Email\": \"" + email.EmailAddress + "\", \"Subject\": \"" + email.Subject + "\", \"Message\": \"" + email.Message + "\"}");
         }
 
         private async Task VerifyCaptcha(string ResponseUser)
