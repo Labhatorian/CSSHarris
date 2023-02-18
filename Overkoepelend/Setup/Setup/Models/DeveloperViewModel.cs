@@ -8,7 +8,11 @@ namespace Setup.Models
     {
         public Developer DeveloperPerson { get; set; } = new Developer();
 
-        public string ViewCharacteristics()
+        /// <summary>
+        /// Generates HTML for each charactistic
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewCharacteristics()
         {
             if (DeveloperPerson.Characteristics is null) return null;
 
@@ -29,7 +33,11 @@ namespace Setup.Models
             return sb.ToString();
         }
 
-        public string ViewSkills()
+        /// <summary>
+        /// Generates HTML for every skill
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewSkills()
         {
             if (DeveloperPerson.Skills is null) return null;
 
@@ -57,7 +65,11 @@ namespace Setup.Models
             return sb.ToString();
         }
 
-        public string ViewStudies()
+        /// <summary>
+        /// Generates HTML for every study
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewStudies()
         {
             if (DeveloperPerson.Studies is null) return null;
             StringBuilder sb = new StringBuilder();
@@ -81,7 +93,11 @@ namespace Setup.Models
             return sb.ToString();
         }
 
-        public string ViewExperience()
+        /// <summary>
+        /// Generates HTML for every experience
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewExperience()
         {
             if (DeveloperPerson.WorkExperience is null) return null;
             StringBuilder sb = new StringBuilder();
@@ -105,7 +121,11 @@ namespace Setup.Models
             return sb.ToString();
         }
 
-        public string ViewImages()
+        /// <summary>
+        /// Generates the gallery and slideshow for every image
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewImages()
         {
             if (DeveloperPerson.WorkExperience is null) return null;
             StringBuilder sb = new StringBuilder();

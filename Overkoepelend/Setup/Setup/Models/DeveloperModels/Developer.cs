@@ -13,6 +13,9 @@ namespace Setup.Models.DeveloperModels
         public List<Experience> WorkExperience { get; set; } = new();
         public List<DevImage> Images { get; set; } = new();
 
+        /// <summary>
+        /// Generates developer's profile
+        /// </summary>
         public Developer()
         {
             Name = "Harris";

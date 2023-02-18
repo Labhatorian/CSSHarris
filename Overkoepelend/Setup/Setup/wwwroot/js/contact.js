@@ -4,8 +4,9 @@ const subject = document.getElementById("subject");
 const email = document.getElementById("email");
 const message = document.getElementById("message");
 
-var ResponseKey;
+var ResponseKey; //Captcha
 
+//When submit gets pressed, send and receive data to API
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -43,6 +44,7 @@ form.addEventListener("submit", async (event) => {
     ToggleInputs();
 });
 
+//Toggle form inputs and loading circle
 function ToggleInputs() {
     subject.disabled = !subject.disabled;
     email.disabled = !email.disabled;
@@ -60,6 +62,7 @@ function ToggleInputs() {
     }
 }
 
+//Validation with error messages
 function ValidateInputs() {
     let fail = false;
 

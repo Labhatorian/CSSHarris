@@ -3,6 +3,7 @@ using Setup.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Set connectionstring for the EmailContext
 builder.Services.AddDbContext<EmailContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("CSSWindesheim")));
 
