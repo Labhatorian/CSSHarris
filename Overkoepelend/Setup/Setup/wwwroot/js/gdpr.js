@@ -47,6 +47,7 @@ class GDPR {
 
     cookieStatus(status) {
         if (status) localStorage.setItem('gdpr-consent-choice', status);
+        if (status == 'accept') document.cookie = 'gdpr=accept'
         return localStorage.getItem('gdpr-consent-choice');
     }
 

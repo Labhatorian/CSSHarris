@@ -5,15 +5,14 @@
 
 <script defer src="~/js/contact.js"></script> 
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<link rel="stylesheet" href="~/css/contact.css" asp-append-version="true" />
 
 <h3>Contact @Model.DeveloperPerson.Name:</h3>
 <h6>Stuur een bericht naar de developer</h6>
 <section>
     <div class="row">
     <div class="col-md-4">
-        <form id="ContactForm" asp-action="View" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+            <form id="ContactForm" asp-action="View" method="post">
             <div class="form-group">
                 <label class="control-label">Onderwerp</label>
                 <input type="text" id="subject" class="form-control" required maxlength="200"/>
@@ -33,14 +32,13 @@
             </div>
 
             <br />
-            <div class="g-recaptcha" data-sitekey="6LedxnkkAAAAAPc8bFYCHeDbwj6vLVCtuagvZG2o" data-callback="GetResponseKey" data-expired-callback="ClearResponseKey" data-error-callback="ClearResponseKey"></div>
+                <div class="g-recaptcha" data-sitekey="6LdiaZIkAAAAACtxhDrL-lNmcpWpjcwvWEttM15R" data-callback="GetResponseKey" data-expired-callback="ClearResponseKey" data-error-callback="ClearResponseKey"></div>
 
-            <div class="form-group">
+                <div class="form-group contact-content-loading__divoffset">
                 <br>
-                <input type="submit" value="Verzend" class="btn btn-primary"/>
-            </div>
-
-    </label>
+                <input id="submitbutton" type="submit" value="Verzend" class="btn btn-primary contact-content__submit"/>
+                    <div id="spinningcircle" class="loader contact-content__loading hide"></div>
+                </div>
         </form>
     </div>
 </div>

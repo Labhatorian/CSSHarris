@@ -40,13 +40,20 @@ namespace Setup.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        //TOdo dont do this when cookie not accepted
         public void UpdatePageViewCookie()
         {
             var currentCookieValue = Request.Cookies[PageViews];
+            var acceptedGDRP = Request.Cookies["gdpr"];
 
+            if (acceptedGDRP is null || !acceptedGDRP.Equals("accept"))
+            {
+                //Delete cookie if it exists and return
+                Response.Cookies.Delete(PageViews);
+                return;
+            }
             if (currentCookieValue == null)
             {
+
                 Response.Cookies.Append(PageViews, "1");
             }
             else

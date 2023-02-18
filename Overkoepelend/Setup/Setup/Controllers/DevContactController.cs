@@ -1,4 +1,5 @@
-﻿using Mailjet.Client;
+﻿using Ganss.Xss;
+using Mailjet.Client;
 using Mailjet.Client.TransactionalEmails;
 using Microsoft.AspNetCore.Mvc;
 using Setup.Models;
@@ -11,7 +12,8 @@ namespace Setup.Controllers
     [ApiController]
     public class DevContactController : ControllerBase
     {
-        private readonly string CaptchaPrivateKey = "";
+        private readonly IConfiguration Configuration;
+
         private readonly string GoogleCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
 
         private bool AcceptCaptcha = false;
@@ -19,20 +21,27 @@ namespace Setup.Controllers
 
         private EmailContext db;
 
-        public DevContactController(EmailContext db)
+        public DevContactController(EmailContext db, IConfiguration configuration)
         {
             this.db = db;
+            Configuration = configuration;
         }
 
         [HttpPost("Validate")]
         public IActionResult ValidatePost([FromBody] Email email)
         {
+            //Prevent XSS
+            var sanitizer = new HtmlSanitizer();
+            email.Message = sanitizer.Sanitize(email.Message);
+            email.Subject = sanitizer.Sanitize(email.Subject);
+
             Task captchatask = VerifyCaptcha(email.Response);
             captchatask.Wait();
 
             if (!AcceptCaptcha) return Unauthorized(); //TODO use forbid?
 
             //todo secure database
+            //todo use migrations?
 
             db.Add(email);
             db.SaveChanges();
@@ -54,7 +63,7 @@ namespace Setup.Controllers
 
             req.Content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
-                    { "secret", CaptchaPrivateKey },
+                    { "secret", Configuration["SecretKeys:CaptchaSecret"] },
                     { "response", ResponseUser }
                 });
 
@@ -66,7 +75,7 @@ namespace Setup.Controllers
         {
             AcceptEmail = false;
 
-            MailjetClient client = new MailjetClient("36be74da033eb5679d2a9d9901c79dbd", "");
+            MailjetClient client = new MailjetClient(Configuration["PublicKeys:MailJetPublicKey"], Configuration["SecretKeys:MailJetSecret"]);
 
             // construct your email with builder
             var emailtosend = new TransactionalEmailBuilder()

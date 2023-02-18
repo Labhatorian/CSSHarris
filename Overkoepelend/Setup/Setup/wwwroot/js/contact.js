@@ -9,6 +9,10 @@ var ResponseKey;
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    ToggleInputs();
+    const element = document.getElementById("spinningcircle");
+    if (element != null) element.classList.remove('hide');
+
     let valide = ValidateInputs();
 
     if (valide) {
@@ -19,24 +23,38 @@ form.addEventListener("submit", async (event) => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Response: ResponseKey, Subject: subject.value, EmailAddress: email.value, Message: message.value })
+            body: JSON.stringify({ Response: ResponseKey, Subject: subject.value, EmailAddress: email.value.toLowerCase(), Message: message.value })
         })
 
         let data = await response.json();
+
         alert(JSON.stringify(data))
         //todo change page based on data received
-        //todo show constrains on page
+
     } else {
         alert("You have not put in everything correctly");
     }
+    if (element != null) element.classList.add('hide');
+    ToggleInputs();
 });
 
+function ToggleInputs() {
+    subject.disabled = !subject.disabled;
+    email.disabled = !email.disabled;
+    message.disabled = !message.disabled; 
+
+    const submitbutton = document.getElementById("submitbutton");
+    submitbutton.disabled = !submitbutton.disabled;
+}
+
 function ValidateInputs() {
+    //todo show constrains on page
     if (subject.value >= 200 && subject.value <= 0) {
         return false;
     }
 
-    if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email.value) && email.value >= 200 && email.value <= 0) {
+    let emailstring = email.value.toLowerCase();
+    if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(emailstring) && emailstring >= 200 && emailstring <= 0) {
         return false;
     }
 
@@ -50,8 +68,6 @@ function ValidateInputs() {
 
     return true;
 }
-
-//todo Prevent XSS
 
 //ReCaptcha
 function GetResponseKey(UserResponseKey) {
