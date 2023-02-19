@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 
 
 app.post('/form', (req, res) => {
+
     let naam = req.body.naam;
     let email = req.body.email;
     let pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

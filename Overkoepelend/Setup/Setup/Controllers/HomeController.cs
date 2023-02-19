@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GameShop.Models;
+using Microsoft.AspNetCore.Mvc;
 using Setup.Models;
 using System.Diagnostics;
 
@@ -6,6 +7,14 @@ namespace Setup.Controllers
 {
     public class HomeController : Controller
     {
+<<<<<<<< HEAD:ServerTech/week-1/GameShop/Controllers/HomeController.cs
+        private readonly ILogger<HomeController> _logger;
+
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
+========
         private const string PageViews = "PageViews";
         private readonly DeveloperViewModel developer = new();
 
@@ -59,6 +68,8 @@ namespace Setup.Controllers
             UpdatePageViewCookie();
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+<<<<<<<< HEAD:ServerTech/week-1/GameShop/Controllers/HomeController.cs
+========
 
         /// <summary>
         /// Updates pageview cookie and checks for GDPR
@@ -86,5 +97,6 @@ namespace Setup.Controllers
                 Response.Cookies.Append(PageViews, newCookieValue.ToString());
             }
         }
+>>>>>>>> 54d668273f4a0e9f814c243107ff3ada037718c5:Overkoepelend/Setup/Setup/Controllers/HomeController.cs
     }
 }
