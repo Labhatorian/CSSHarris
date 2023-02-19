@@ -7,6 +7,7 @@ class GDPR {
         if(this.cookieStatus() !== 'accept') this.showGDPR();
     }
 
+    //Button events
     bindEvents() {
         let buttonAccept = document.querySelector('.gdpr-consent__button--accept');
         buttonAccept.addEventListener('click', () => {
@@ -24,6 +25,7 @@ class GDPR {
         });
     }
 
+    //Content
     showContent() {
         this.resetContent();
         const status = this.cookieStatus() == null ? 'not-chosen' : this.cookieStatus();
@@ -45,11 +47,14 @@ class GDPR {
         }
     }
 
+    //Set and get cookie status
     cookieStatus(status) {
         if (status) localStorage.setItem('gdpr-consent-choice', status);
+        if (status == 'accept') document.cookie = 'gdpr=accept'
         return localStorage.getItem('gdpr-consent-choice');
     }
 
+    //GDPR box
     hideGDPR(){
         document.querySelector(`.gdpr-consent`).classList.add('hide');
         document.querySelector(`.gdpr-consent`).classList.remove('show');

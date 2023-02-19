@@ -1,15 +1,18 @@
 ﻿using Setup.Models.DeveloperModels;
-using System.Reflection.PortableExecutable;
+using Setup.Models.DeveloperModels.Profile;
 using System.Text;
 
 namespace Setup.Models
 {
     public class DeveloperViewModel
     {
-        //todo fix slideshow in mobile version
         public Developer DeveloperPerson { get; set; } = new Developer();
 
-        public string ViewCharacteristics()
+        /// <summary>
+        /// Generates HTML for each charactistic
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewCharacteristics()
         {
             if (DeveloperPerson.Characteristics is null) return null;
 
@@ -30,7 +33,11 @@ namespace Setup.Models
             return sb.ToString();
         }
 
-        public string ViewSkills()
+        /// <summary>
+        /// Generates HTML for every skill
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewSkills()
         {
             if (DeveloperPerson.Skills is null) return null;
 
@@ -40,15 +47,15 @@ namespace Setup.Models
             sb.Append("<hr>");
             sb.Append("<ul class=\"personalia-content__list\">");
 
-            foreach(Skill skill in DeveloperPerson.Skills)
+            foreach (Skill skill in DeveloperPerson.Skills)
             {
                 sb.Append("<li>" + skill.SkillName);
                 sb.Append("<div class=\"personalia-content-list__stars\">");
 
-                for(int i = 0; i <= 5; i++)
+                for (int i = 0; i <= 5; i++)
                 {
                     string append = skill.Stars >= i ? "star__checked" : "";
-                    sb.Append("<span class=\"fa fa-star "+ append +"\"></span>");
+                    sb.Append("<span class=\"fa fa-star " + append + "\"></span>");
                 }
                 sb.Append("</div>");
             }
@@ -58,7 +65,11 @@ namespace Setup.Models
             return sb.ToString();
         }
 
-        public string ViewStudies()
+        /// <summary>
+        /// Generates HTML for every study
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewStudies()
         {
             if (DeveloperPerson.Studies is null) return null;
             StringBuilder sb = new StringBuilder();
@@ -68,21 +79,25 @@ namespace Setup.Models
                 "<hr>" +
                 "</div>");
 
-            foreach(Study study in DeveloperPerson.Studies)
+            foreach (Study study in DeveloperPerson.Studies)
             {
                 sb.Append("<div class=\"profile-content__element\">" +
                     "<div class=\"profile-content__element-header\">" +
-                    "<h4 class=\"profile-content__title\">"+ study.StudyName +"</h4>" +
+                    "<h4 class=\"profile-content__title\">" + study.StudyName + "</h4>" +
                     "<p class=\"profile-content__period\">" + study.StartStudy.ToShortDateString() + " - " + study.EndStudy.ToShortDateString() + "</p>" +
                     "</div>" +
-                    "<p class=\"profile-content__institute\">"+ study.StudyPlace +"</p>" +
+                    "<p class=\"profile-content__institute\">" + study.StudyPlace + "</p>" +
                     "</div>");
             }
 
             return sb.ToString();
         }
 
-        public string ViewExperience()
+        /// <summary>
+        /// Generates HTML for every experience
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewExperience()
         {
             if (DeveloperPerson.WorkExperience is null) return null;
             StringBuilder sb = new StringBuilder();
@@ -92,7 +107,7 @@ namespace Setup.Models
                 "<hr>" +
                 "</div>");
 
-            foreach(Experience experience in DeveloperPerson.WorkExperience)
+            foreach (Experience experience in DeveloperPerson.WorkExperience)
             {
                 sb.Append("<div class=\"profile-content__element\">" +
                     "<div class=\"profile-content__element-header\">" +
@@ -106,7 +121,11 @@ namespace Setup.Models
             return sb.ToString();
         }
 
-        public string ViewImages()
+        /// <summary>
+        /// Generates the gallery and slideshow for every image
+        /// </summary>
+        /// <returns></returns>
+        public string? ViewImages()
         {
             if (DeveloperPerson.WorkExperience is null) return null;
             StringBuilder sb = new StringBuilder();
@@ -119,11 +138,11 @@ namespace Setup.Models
             //Slideshow
             sb.Append("<div class=\"profile-content__slideshow\">");
 
-            for(int i = 1; i <= DeveloperPerson.Images.Count(); i++)
+            for (int i = 1; i <= DeveloperPerson.Images.Count(); i++)
             {
                 sb.Append("<div class=\"profile-content-slideshow__slides\">" +
                     "<div class=\"profile-content-slideshow-slides__numbertext\"> " + i + " / " + DeveloperPerson.Images.Count() + " </div>" +
-                    "<img src=\"/images/" + DeveloperPerson.Name + "/" + DeveloperPerson.Images[i-1].FilePath + "\">" +
+                    "<img src=\"/images/" + DeveloperPerson.Name + "/" + DeveloperPerson.Images[i - 1].FilePath + "\">" +
                     "<div class=\"profile-content-slideshow-slides__text\">" + DeveloperPerson.Images[i - 1].Name + "</div>" +
                     "</div>");
             }

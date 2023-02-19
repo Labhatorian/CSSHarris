@@ -2,11 +2,13 @@
     DisplayViewcounter();
 };
 
+//Replace text with viewcounter
 function DisplayViewcounter() {
     let counter = getCookie("PageViews");
     document.getElementsByClassName("content-gdpr-accept")[0].innerHTML = "Deze view is " + counter.toString() + " keer bekeken";
 }
 
+//Get cookie from browser (why isnt this native in JS?)
 function getCookie(cookieName) {
     var name = cookieName + "=";
     var ca = document.cookie.split(';');
