@@ -20,7 +20,8 @@ form.addEventListener("submit", async (event) => {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-Content-Type-Options': 'nosniff'
             },
             body: JSON.stringify({ Response: ResponseKey, Subject: subject.value, EmailAddress: email.value.toLowerCase(), Message: message.value })
         })
