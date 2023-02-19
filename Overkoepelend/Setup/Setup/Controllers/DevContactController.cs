@@ -53,9 +53,6 @@ namespace Setup.Controllers
 
             if (!AcceptCaptcha) return StatusCode(403, 0);
 
-            //todo secure database
-            //todo use migrations?
-
             db.Add(email);
             db.SaveChanges();
 
