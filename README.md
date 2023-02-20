@@ -58,5 +58,19 @@ Als gebruiker wil ik een bericht kunnen sturen aan de developer
 | Security | 15. De contactpagina mag wel een beperkte set HTML opmaak attributen toestaan zoals opsommingen, bold of headers maar in ieder geval geen scripts, verborgen tekst of tekst in de kleur van de achtergrond.                                |
 |          | 16. ASVS week 2                                                                                                                                                                                                                            |
 
+### Userstory 3: Showcase
+Als developer wil ik mijn skills laten zien
+
+#### Niet-functionele requirements
+| Vak      | Beschrijving                                                         |
+| -------- | -------------------------------------------------------------------- |
+| Client   | 1. WIP                                                               |
+| Server   | 2. WIP                                                               |
+|          | 3. Er wordt tenminste één tabel in de database geseed met (test)data |
+|          | 4. Asynchroon programmeren is toegepast waar nodig                   |                                                                                                                               
+| Security | 5. ASVS week 3                                                       |
+|          | 6. ASVS week 4                                                       |
+|          | 7. ASVS week 5                                                       |
+
 ### Additional requirements
 #### Security
