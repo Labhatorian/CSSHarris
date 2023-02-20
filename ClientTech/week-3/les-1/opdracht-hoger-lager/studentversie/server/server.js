@@ -22,16 +22,17 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-const getalOmTeRaden = getRandomInt(100);
 
+let getalOmTeRaden = getRandomInt(100);
 app.get('/getal', (req, res) => {
-
+    
     if(req.query.gok > getalOmTeRaden){
         res.json({result: "lager"});
     }else if(req.query.gok < getalOmTeRaden){
         res.json({result: "hoger"});
     }else{
         res.json({result: "juist"});
+        getalOmTeRaden = getRandomInt(100);
     }
 
 });

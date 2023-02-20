@@ -8,18 +8,46 @@
 
 <script>
   //Vanilla JS
-  // const Shell = {};
-  // Shell.FeatureX = {};
-  // Shell.FeatureY = {};
-  // Shell.Model = {};
-  // Shell.Data = {};
-  //
-  // Shell;
+  //Iedereen kan bij FeatureX en FeatureY met shell in console
+  //const Shell = {};
+  //Shell.FeatureX = {};
+  //Shell.FeatureY = {};
+  //Shell.Model = {};
+  //Shell.Data = {};
+  
+  //Shell;
 
+  //Oplossing - Dubbele haakjes
+  //Self executing function - direct uitvoeren en je kan er niet meer bij
+  //Vanuit deze eigen scope kan je iets terug geven, geen global meer
+  //Module?
+  const Shell2 = (function(naam){ //Parameters
+    console.log('shell');
+    console.log(naam);
 
+    const privateFunction= () => {
+      console.log('private function');
+    }
+
+    const publicFunction= () => {
+      console.log('public function');
+      privateFunction();
+    }
+
+    //dit kan je doen
+    const configMap = {
+      url: 'localhost:blabla'
+    }
+
+    return {
+      publicFunction,
+      configMap
+    }
+  })('sandor') //Paramaters
 
   // Module Pattern
 
+  //Dit is een module
   const Shell = (function () {
     const init = () => {
       console.log('Shell init');
@@ -30,6 +58,7 @@
     };
   })();
 
+  //Dit is een module
   Shell.FeatureX = (function () {
     const init = () => {
       console.log('FeatureX init');
