@@ -50,7 +50,10 @@ class GDPR {
     //Set and get cookie status
     cookieStatus(status) {
         if (status) localStorage.setItem('gdpr-consent-choice', status);
-        if (status == 'accept') document.cookie = 'gdpr=accept'
+
+        //For the server
+        document.cookie = 'gdpr=' + localStorage.getItem('gdpr-consent-choice')+ ';';
+
         return localStorage.getItem('gdpr-consent-choice');
     }
 
