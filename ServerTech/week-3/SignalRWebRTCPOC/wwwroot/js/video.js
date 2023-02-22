@@ -1,12 +1,79 @@
 ﻿"use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("/videoHub").build();
+var peerConnection;
 var myConnectionId;
 
 const initializeSignalR = () => {
     connection.start().then(() => { console.log("SignalR: Connected"); generateRandomUsername(); }).catch(err => console.log(err));
 };
 
+$(document).ready(function
+    () {
+    initializeSignalR();
+
+    //Get mediadevices
+    try {
+        const stream = openMediaDevices({ 'video': true, 'audio': true });
+        console.log('Got MediaStream:', stream);
+    } catch (error) {
+        console.error('Error accessing media devices.', error);
+    }
+
+    //Check media devices
+    const videoCameras = getConnectedDevices('videoinput');
+    console.log('Cameras found:', videoCameras);
+
+    playVideoFromCamera();
+
+    //Create peer connection
+    //Specify turn server here too 
+    const config = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] };
+    peerConnection = new RTCPeerConnection(config);
+
+    // Add click handler to users in the "Users" pane
+    $(document).on('click', '.user', async function () {
+        console.log('calling user... ');
+        // Find the target user's SignalR client id
+        var targetConnectionId = $(this).attr('data-cid');
+
+        //Create offer
+        var offer = await CreateOffer();
+
+        // Listen for connectionstatechange on the local RTCPeerConnection
+        peerConnection.addEventListener('connectionstatechange', event => {
+            if (peerConnection.connectionState === 'connected') {
+                // Peers connected!
+            }
+        });
+
+        connection.invoke('CallUserVideo', { "connectionId": targetConnectionId }, offer);
+        // UI in calling mode
+        $('body').attr('data-mode', 'calling');
+        $("#callstatus").text('Calling...');
+    });
+
+    // Add handler for the hangup button
+    $('.hangup').click(function () {
+        console.log('hangup....');
+        // Only allow hangup if we are not idle
+        //localStream.getTracks().forEach(track => track.stop());
+        if ($('body').attr("data-mode") !== "idle") {
+            connection.invoke('hangUp');
+            $('body').attr('data-mode', 'idle');
+            $("#callstatus").text('Idle');
+        }
+    });
+});
+
+async function CreateOffer() {
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+
+    return offer;
+}
+
+//User
 const setUsername = (username) => {
     connection.invoke("Join", username)
 
@@ -34,16 +101,31 @@ connection.on('updateUserList', (userList) => {
     });
 });
 
+//SignalR Handeling
 // Hub Callback: Call Accepted
-connection.on('callAccepted', (acceptingUser) => {
+connection.on('callAccepted', async function(acceptingUser, answer) {
     console.log('SignalR: call accepted from: ' + JSON.stringify(acceptingUser) + '.  Initiating WebRTC call and offering my stream up...');
 
     // Callee accepted our call, so start chat
+    await StartPeer(answer);
+
+    //Stream remote video
+    const remoteVideo = document.querySelector('#remoteVideo');
+
+    peerConnection.addEventListener('track', async (event) => {
+        const [remoteStream] = event.streams;
+        remoteVideo.srcObject = remoteStream;
+    });
 
     // Set UI into call mode
     $('body').attr('data-mode', 'incall');
     $("#callstatus").text('In Call');
 });
+
+async function StartPeer(answer) {
+    const remoteDesc = new RTCSessionDescription(answer);
+    await peerConnection.setRemoteDescription(remoteDesc);
+}
 
 // Hub Callback: Call Declined
 connection.on('callDeclined', (decliningUser, reason) => {
@@ -69,13 +151,23 @@ connection.on('callEnded', (signalingUser, signal) => {
 });
 
 // Hub Callback: Incoming Call
-connection.on('incomingCall', (callingUser) => {
+connection.on('incomingCall', async function(callingUser, offer) {
     console.log('SignalR: incoming call from: ' + JSON.stringify(callingUser));
 
     // Ask if we want to talk
     if (confirm(callingUser.username + ' is calling.  Do you want to chat?') == true) {
         // I want to chat
-        connection.invoke('AnswerCall', true, callingUser).catch(err => console.log(err));
+
+        const answer = await RespondPeer(offer);
+        connection.invoke('AnswerVideo', true, callingUser, answer).catch(err => console.log(err));
+
+        //Remote video
+        const remoteVideo = document.querySelector('#remoteVideo');
+
+        peerConnection.addEventListener('track', async (event) => {
+            const [remoteStream] = event.streams;
+            remoteVideo.srcObject = remoteStream;
+        });
 
         // So lets go into call mode on the UI
         $('body').attr('data-mode', 'incall');
@@ -86,69 +178,12 @@ connection.on('incomingCall', (callingUser) => {
     }
 });
 
-$(document).ready(function
-    () {
-    initializeSignalR();
-
-    //Get mediadevices
-    try {
-        const stream = openMediaDevices({ 'video': true, 'audio': true });
-        console.log('Got MediaStream:', stream);
-    } catch (error) {
-        console.error('Error accessing media devices.', error);
-    }
-
-   //Check media devices
-    const videoCameras = getConnectedDevices('videoinput');
-    console.log('Cameras found:', videoCameras);
-
-    playVideoFromCamera();
-
-    // Add click handler to users in the "Users" pane
-    $(document).on('click', '.user', function () {
-        console.log('calling user... ');
-        // Find the target user's SignalR client id
-        var targetConnectionId = $(this).attr('data-cid');
-
-        connection.invoke('callUser', { "connectionId": targetConnectionId });
-
-        // UI in calling mode
-        $('body').attr('data-mode', 'calling');
-        $("#callstatus").text('Calling...');
-    });
-
-    // Add handler for the hangup button
-    $('.hangup').click(function () {
-        console.log('hangup....');
-        // Only allow hangup if we are not idle
-        //localStream.getTracks().forEach(track => track.stop());
-        if ($('body').attr("data-mode") !== "idle") {
-            connection.invoke('hangUp');
-            $('body').attr('data-mode', 'idle');
-            $("#callstatus").text('Idle');
-        }
-    });
-});
-
-//Chat
-connection.on("ReceiveMessage", function (user, message) {
-    var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you 
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
-});
-
-document.getElementById("sendButton").addEventListener("click", function (event) {
-
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", myConnectionId, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});
-
+async function RespondPeer(offer) {
+    peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    return answer;
+}
 //Media
 const openMediaDevices = async (constraints) => {
     return await navigator.mediaDevices.getUserMedia(constraints);
@@ -180,6 +215,12 @@ async function playVideoFromCamera() {
     try {
         const constraints = { 'video': true, 'audio': true };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+        //Send to peer
+        stream.getTracks().forEach(track => {
+            peerConnection.addTrack(track, stream);
+        });
+
         const videoElement = document.querySelector('video#localVideo');
         videoElement.srcObject = stream;
     } catch (error) {
