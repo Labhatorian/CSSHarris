@@ -27,9 +27,29 @@ $(document).ready(function
     playVideoFromCamera();
 
     //Create peer connection
-    //Specify turn server here too 
-    const config = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] };
-    peerConnection = new RTCPeerConnection(config);
+    //FAILED Unable to FIX, will not be done
+    peerConnection = new RTCPeerConnection({
+        iceServers: [
+            {
+                urls: "stun:relay.metered.ca:80",
+            },
+            {
+                urls: "turn:relay.metered.ca:80",
+                username: "0456",
+                credential: "V",
+            },
+            {
+                urls: "turn:relay.metered.ca:443",
+                username: "06",
+                credential: "/",
+            },
+            {
+                urls: "turn:relay.metered.ca:443?transport=tcp",
+                username: "",
+                credential: "",
+            },
+        ],
+    });
 
     // Add click handler to users in the "Users" pane
     $(document).on('click', '.user', async function () {
