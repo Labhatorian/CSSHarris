@@ -9,7 +9,10 @@ builder.Services.AddDbContext<EmailContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("CSSWindesheim")));
 
 //SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(o =>
+{
+    o.EnableDetailedErrors = true;
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
