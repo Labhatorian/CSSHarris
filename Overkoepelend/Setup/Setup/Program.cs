@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Setup.Hubs;
 using Setup.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 //Set connectionstring for the EmailContext
 builder.Services.AddDbContext<EmailContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("CSSWindesheim")));
+
+//SignalR
+builder.Services.AddSignalR();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -19,6 +23,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
