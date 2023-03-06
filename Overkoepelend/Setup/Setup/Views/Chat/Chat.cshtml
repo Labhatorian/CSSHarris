@@ -6,9 +6,11 @@
 <div class="text-center">
     <h1 class="display-4">Chat with SignalR</h1>
 
+    <!--TODO USE WEBCOMPONENTS-->
+
             <div class="card card-body bg-light user-list">
             <ul id="usersdata" class="list-group">
-                <li class="list-group-item">Online Users <small id="usersLength"></small></li>
+                <li class="list-group-item">Online Users: <small id="usersLength"></small></li>
                 <!-- ko foreach: Users -->
                 <li class="list-group-item user" data-cid="" data-username="">
                     <a href="#">
@@ -19,12 +21,27 @@
                 </li>
                 <!-- /ko -->
             </ul>
+
+        <ul id="roomsdata" class="list-group">
+            <li class="list-group-item">Available Rooms: <small id="roomsLength"></small></li>
+            <!-- ko foreach: Users -->
+            <li class="list-group-item room" data-rid="" data-title="">
+                <a href="#">
+                    <!-- only using an a here for bootstrap styling -->
+                    <div class="title"></div>
+                </a>
+            </li>
+            <!-- /ko -->
+        </ul>
         </div>
 
+    <div class="card card-body bg-light actions">
+        <button class="btn createroom">Create Room</button>
+    </div>
                 <!-- In Call Actions -->
         <div class="card card-body bg-light actions">
             <div id="callstatus" class="status">Idle</div>
-            <button class="btn btn-danger hangup">Hang Up</button>
+            <button class="btn btn-danger hangup hide">Leave</button>
         </div>
 
     <div class="container card card-body bg-light user-list">

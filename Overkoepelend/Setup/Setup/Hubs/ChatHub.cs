@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Setup.Models;
+using Setup.Models.ChatModels;
 
 namespace Setup.Hubs
 {
@@ -9,14 +10,14 @@ namespace Setup.Hubs
         private static readonly List<UserCall> _UsersInCall = new();
         private static readonly List<CallOffer> _CallOffers = new();
 
-        public async Task SendMessage(string signallinguserID, string message)
-        {
-            User signallingUser = _Users.Where(item => item.ConnectionId == signallinguserID).FirstOrDefault();
-            UserCall targetCall = GetUserCall(signallinguserID);
-            User targetUser = targetCall.Users.Where(user => user.ConnectionId != signallinguserID).FirstOrDefault();
+        private static readonly List<Room> Rooms = new();
 
-            await Clients.Client(signallinguserID).ReceiveMessage(signallingUser.Username, message);
-            await Clients.Client(targetUser.ConnectionId).ReceiveMessage(signallingUser.Username, message);
+        public async Task SendMessage(string roomID, string message)
+        {
+            User signallingUser = _Users.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
+            Room room = Rooms.SingleOrDefault(u => u.ID == roomID);
+
+            await Clients.Group(roomID).ReceiveMessage(signallingUser.Username, message);
         }
 
         public async Task Join(string username)
@@ -30,8 +31,24 @@ namespace Setup.Hubs
 
             _Users.Add(newUser);
 
+            //Get rooms
+            await Clients.Caller.UpdateRoomList(Rooms);
+        }
+
+        public async Task CreateRoom(string title)
+        {
+            // Create room
+            Room room = new()
+            {
+                Owner = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId),
+                Title = title,
+                ID = Context.ConnectionId + 1
+             };
+
+            Rooms.Add(room);
+
             // Send down the new list to all clients
-            await SendUserListUpdate();
+            await SendRoomListUpdate();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -40,17 +57,25 @@ namespace Setup.Hubs
             _Users.RemoveAll(u => u.ConnectionId == Context.ConnectionId);
 
             // Send down the new user list to all clients
-            await SendUserListUpdate();
+            //await SendUserListUpdate();
 
             await base.OnDisconnectedAsync(exception);
         }
 
-        private async Task SendUserListUpdate()
+        private async Task SendUserListUpdate(Room room)
         {
             //_Users.ForEach(u => u.InCall = (GetUserCall(u.ConnectionId) != null));
 
-            await Clients.All.UpdateUserList(_Users);
+            await Clients.All.UpdateUserList(room.UsersInRoom);
         }
+
+        private async Task SendRoomListUpdate()
+        {
+            //_Users.ForEach(u => u.InCall = (GetUserCall(u.ConnectionId) != null));
+
+            await Clients.All.UpdateRoomList(Rooms);
+        }
+
         private UserCall GetUserCall(string connectionId)
         {
             var matchingCall =
@@ -87,6 +112,19 @@ namespace Setup.Hubs
                 Caller = callingUser,
                 Callee = targetUser
             });
+        }
+
+        public async Task JoinRoom(string RoomID)
+        {
+            var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
+            var roomToJoin = Rooms.SingleOrDefault(u => u.ID == RoomID);
+            
+            //Join room
+            roomToJoin.UsersInRoom.Add(callingUser);
+            await AddToGroup(RoomID);
+            await Clients.Group(RoomID).UpdateUserList(roomToJoin.UsersInRoom);
+
+            await Clients.Caller.RoomJoined(roomToJoin.Title);
         }
 
         public async Task AnswerCall(bool acceptCall, User targetConnectionId)
@@ -145,7 +183,7 @@ namespace Setup.Hubs
             await Clients.Client(targetConnectionId.ConnectionId).CallAccepted(callingUser);
 
             // Update the user list, since thes two are now in a call
-            await SendUserListUpdate();
+            //await SendUserListUpdate();
         }
 
         public async Task HangUp()
@@ -179,8 +217,21 @@ namespace Setup.Hubs
             // Remove all offers initiating from the caller
             _CallOffers.RemoveAll(c => c.Caller.ConnectionId == callingUser.ConnectionId);
 
-            await SendUserListUpdate();
+            //await SendUserListUpdate();
         }
 
+        public async Task AddToGroup(string groupName)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+
+           // await Clients.Group(groupName).SendAsync( $"{Context.ConnectionId} has joined the group {groupName}.");
+        }
+
+        public async Task RemoveFromGroup(string groupName)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+
+            //await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has left the group {groupName}.");
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 var myConnectionId;
+var currentRoomId;
 
 const initializeSignalR = () => {
     connection.start().then(() => { console.log("SignalR: Connected"); generateRandomUsername(); }).catch(err => console.log(err));
@@ -11,7 +12,6 @@ const setUsername = (username) => {
     connection.invoke("Join", username)
 
     $("#upperUsername").text(username);
-    $('div.username').text(username);
 };
 
 const generateRandomUsername = () => {
@@ -34,15 +34,24 @@ connection.on('updateUserList', (userList) => {
     });
 });
 
-// Hub Callback: Call Accepted
-connection.on('callAccepted', (acceptingUser) => {
-    console.log('SignalR: call accepted from: ' + JSON.stringify(acceptingUser) + '.  Initiating WebRTC call and offering my stream up...');
+connection.on('updateRoomList', (roomList) => {
+    $("#roomsLength").text(roomList.length);
+    $('#usersdata li.room').remove();
 
-    // Callee accepted our call, so start chat
+    $.each(roomList, function (index) {
+        var listString = '<li class="list-group-item room" data-rid=' + roomList[index].id + '>';
+        listString += '<a href="#"><div class="title"> ' + roomList[index].title + '</div>';
+        $('#roomsdata').append(listString);
+    });
+});
+
+// Hub Callback: Room joined
+connection.on('roomJoined', (RoomTitle) => {
+    console.log('Room joined');
 
     // Set UI into call mode
     $('body').attr('data-mode', 'incall');
-    $("#callstatus").text('In Call');
+    $("#callstatus").text('Joined: ' + RoomTitle);
 });
 
 // Hub Callback: Call Declined
@@ -89,17 +98,17 @@ connection.on('incomingCall', (callingUser) => {
 $(document).ready(function () {
     initializeSignalR();
 
-    // Add click handler to users in the "Users" pane
-    $(document).on('click', '.user', function () {
-        console.log('calling user... ');
-        // Find the target user's SignalR client id
-        var targetConnectionId = $(this).attr('data-cid');
+    // Add click handler to rooms in the "Rooms" pane
+    $(document).on('click', '.room', function () {
+        console.log('Joining room ');
+        var targetRoomId = $(this).attr('data-rid');
 
-        connection.invoke('callUser', { "connectionId": targetConnectionId });
+        connection.invoke('joinRoom', targetRoomId);
+        currentRoomId = targetRoomId;
 
-        // UI in calling mode
+        // UI in joining mode
         $('body').attr('data-mode', 'calling');
-        $("#callstatus").text('Calling...');
+        $("#callstatus").text('Joining...');
     });
 
     // Add handler for the hangup button
@@ -112,6 +121,13 @@ $(document).ready(function () {
             $('body').attr('data-mode', 'idle');
             $("#callstatus").text('Idle');
         }
+    });
+
+    //Add handler for create room button
+    $('.createroom').click(function () {
+        var title = prompt("Hoe moet de kamer heten?");
+        console.log('Creating room...');
+        connection.invoke('createRoom', title);
     });
 });
 
@@ -128,7 +144,7 @@ connection.on("ReceiveMessage", function (user, message) {
 document.getElementById("sendButton").addEventListener("click", function (event) {
 
     var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", myConnectionId, message).catch(function (err) {
+    connection.invoke("SendMessage", currentRoomId, message).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
