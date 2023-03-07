@@ -51,6 +51,28 @@ namespace Setup.Hubs
             await SendRoomListUpdate();
         }
 
+        public async Task DeleteRoom(string roomID)
+        {
+            var roomToDelete = Rooms.SingleOrDefault(u => u.ID == roomID);
+            User signallingUser = _Users.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
+
+            if(signallingUser != roomToDelete.Owner) return;
+
+
+            await Clients.Group(roomID).UpdateUserList(null);
+            await Clients.Group(roomID).RoomDeleted();
+
+            foreach (User user in roomToDelete.UsersInRoom)
+            {
+                Groups.RemoveFromGroupAsync(user.ConnectionId, roomID);
+            }
+
+            Rooms.Remove(roomToDelete);
+
+            // Send down the new list to all clients
+            await SendRoomListUpdate();
+        }
+
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
@@ -136,13 +158,15 @@ namespace Setup.Hubs
         {
             var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
             var roomToJoin = Rooms.SingleOrDefault(u => u.ID == RoomID);
-            
+
+            bool IsOwner = roomToJoin.Owner == callingUser ? true : false;
+
             //Join room
             roomToJoin.UsersInRoom.Add(callingUser);
             await AddToGroup(RoomID);
             await Clients.Group(RoomID).UpdateUserList(roomToJoin.UsersInRoom);
 
-            await Clients.Caller.RoomJoined(roomToJoin.Title);
+            await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner);
             await Clients.Caller.UpdateRoomList(Rooms);
         }
 

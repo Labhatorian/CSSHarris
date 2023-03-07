@@ -15,6 +15,7 @@ namespace Setup.Hubs
         Task SendAsync(User signalingUser, string signal);
         Task ReceiveMessage(string user, string message);
         Task UpdateRoomList(List<Room> rooms);
-        Task RoomJoined(string roomtitle);
+        Task RoomJoined(string roomtitle, bool isOwner);
+        Task RoomDeleted();
     }
 }

@@ -21,7 +21,11 @@ const generateRandomUsername = () => {
 
 connection.on('updateUserList', (userList) => {   
     $('#usersdata li.user').remove();
-    if (userList === null) return;
+    if (userList === null) {
+        $("#usersLength").text(0);
+        return;
+    }
+
     $("#usersLength").text(userList.length - 1);
 
     $.each(userList, function (index) {
@@ -49,7 +53,7 @@ connection.on('updateRoomList', (roomList) => {
 });
 
 // Hub Callback: Room joined
-connection.on('roomJoined', (RoomTitle) => {
+connection.on('roomJoined', (RoomTitle, IsOwner) => {
     console.log('Room joined');
 
     // Set UI into call mode
@@ -60,7 +64,19 @@ connection.on('roomJoined', (RoomTitle) => {
     $("#leavebutton").removeClass('hide')
 
     //Enable delete button
-   // $("#callstatus").text('In Call');
+    if (IsOwner) $("#deletebutton").removeClass('hide')
+});
+
+// Hub Callback: Room Deleted
+connection.on('roomDeleted', () => {
+    console.log('Room is being deleted...');
+    currentRoomId = "";
+    alert("Room has been deleted :(");
+    if ($('body').attr("data-mode") !== "idle") {
+        $('body').attr('data-mode', 'idle');
+        $("#callstatus").text('Idle');
+        $("#leavebutton").addClass('hide')
+    }
 });
 
 // Hub Callback: Call Declined
@@ -139,6 +155,20 @@ $(document).ready(function () {
         var title = prompt("Hoe moet de kamer heten?");
         console.log('Creating room...');
         connection.invoke('createRoom', title);
+    });
+
+    // Add handler for the hangup button
+    $('.delete').click(function () {
+        console.log('deleting....');
+        
+        if ($('body').attr("data-mode") !== "idle") {
+            connection.invoke('deleteRoom', currentRoomId);
+            currentRoomId = "";
+            $('body').attr('data-mode', 'idle');
+            $("#callstatus").text('Idle');
+            $("#leavebutton").addClass('hide')
+            $("#deletebutton").addClass('hide')
+        }
     });
 });
 
