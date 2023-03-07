@@ -3,13 +3,63 @@
 }
 <div class="text-center">
     <h1 class="display-4">Global Chat</h1>
-    <div class="navbar-text">
-        You are <span id="upperUsername"></span>
-    </div>
 
     <!--TODO USE WEBCOMPONENTS-->
 
-            <div class="card card-body bg-light user-list">
+    <section id="roomslist">
+        <div class="card card-body bg-light user-list">
+            <ul id="roomsdata" class="list-group">
+                <li class="list-group-item">Available Rooms: <small id="roomsLength"></small></li>
+                <!-- ko foreach: Users -->
+                <li class="list-group-item room" data-rid="" data-title="">
+                    <a href="#">
+                        <!-- only using an a here for bootstrap styling -->
+                        <div class="title"></div>
+                    </a>
+                </li>
+                <!-- /ko -->
+            </ul>
+</div>
+        <div class="card card-body bg-light actions">
+            <button class="btn createroom">Create Room</button>
+        </div>
+        <!-- In Call Actions -->
+        <div class="card card-body bg-light actions">
+            <div id="callstatus" class="status">Idle</div>
+            <button id="leavebutton" class="btn btn-danger hangup hide">Leave</button>
+            <br />
+            <button id="deletebutton" class="btn btn-danger delete hide">Delete Room</button>
+        </div>
+    </section>
+
+    <section id="chatpane">
+        <div class="container card card-body bg-light user-list">
+            <div class="row p-1">
+                <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+            </div>
+            <div class="row p-1">
+                <div class="col-6 text-end">
+                    <input type="button" id="sendButton" value="Send Message" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-6">
+                    <hr />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-6">
+                    <ul id="messagesList"></ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="userslist">
+        <div class="card card-body bg-light user-list">
+            <div class="navbar-text">
+                You are <span id="upperUsername"></span>
+            </div>
             <ul id="usersdata" class="list-group">
                 <li class="list-group-item">Online Users: <small id="usersLength"></small></li>
                 <!-- ko foreach: Users -->
@@ -22,51 +72,9 @@
                 </li>
                 <!-- /ko -->
             </ul>
+        </div>
+    </section>
 
-        <ul id="roomsdata" class="list-group">
-            <li class="list-group-item">Available Rooms: <small id="roomsLength"></small></li>
-            <!-- ko foreach: Users -->
-            <li class="list-group-item room" data-rid="" data-title="">
-                <a href="#">
-                    <!-- only using an a here for bootstrap styling -->
-                    <div class="title"></div>
-                </a>
-            </li>
-            <!-- /ko -->
-        </ul>
-        </div>
-
-    <div class="card card-body bg-light actions">
-        <button class="btn createroom">Create Room</button>
-    </div>
-                <!-- In Call Actions -->
-        <div class="card card-body bg-light actions">
-            <div id="callstatus" class="status">Idle</div>
-            <button id="leavebutton" class="btn btn-danger hangup hide">Leave</button>
-            <br />
-            <button id="deletebutton" class="btn btn-danger delete hide">Delete Room</button>
-        </div>
-
-    <div class="container card card-body bg-light user-list">
-        <div class="row p-1">
-            <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
-        </div>
-        <div class="row p-1">
-            <div class="col-6 text-end">
-                <input type="button" id="sendButton" value="Send Message" />
-            </div>
-        </div>
-        <div class="row p-1">
-            <div class="col-6">
-                <hr />
-            </div>
-        </div>
-        <div class="row p-1">
-            <div class="col-6">
-                <ul id="messagesList"></ul>
-            </div>
-        </div>
-    </div>
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script defer src="~/js/chat.js"></script>
 
