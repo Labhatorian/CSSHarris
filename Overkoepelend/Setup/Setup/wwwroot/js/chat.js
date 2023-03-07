@@ -19,9 +19,10 @@ const generateRandomUsername = () => {
     setUsername(username);
 };
 
-connection.on('updateUserList', (userList) => {
-    $("#usersLength").text(userList.length-1);
+connection.on('updateUserList', (userList) => {   
     $('#usersdata li.user').remove();
+    if (userList === null) return;
+    $("#usersLength").text(userList.length - 1);
 
     $.each(userList, function (index) {
         if (userList[index].username === $("#upperUsername").text()) {
@@ -36,12 +37,14 @@ connection.on('updateUserList', (userList) => {
 
 connection.on('updateRoomList', (roomList) => {
     $("#roomsLength").text(roomList.length);
-    $('#usersdata li.room').remove();
+    $('#roomsdata li.room').remove();
 
     $.each(roomList, function (index) {
-        var listString = '<li class="list-group-item room" data-rid=' + roomList[index].id + '>';
-        listString += '<a href="#"><div class="title"> ' + roomList[index].title + '</div>';
-        $('#roomsdata').append(listString);
+        if (roomList[index].id != currentRoomId) {
+            var listString = '<li class="list-group-item room" data-rid=' + roomList[index].id + '>';
+            listString += '<a href="#"><div class="title"> ' + roomList[index].title + '</div>';
+            $('#roomsdata').append(listString);
+        }
     });
 });
 
@@ -52,6 +55,12 @@ connection.on('roomJoined', (RoomTitle) => {
     // Set UI into call mode
     $('body').attr('data-mode', 'incall');
     $("#callstatus").text('Joined: ' + RoomTitle);
+
+    //Enable leave button
+    $("#leavebutton").removeClass('hide')
+
+    //Enable delete button
+   // $("#callstatus").text('In Call');
 });
 
 // Hub Callback: Call Declined
@@ -114,12 +123,14 @@ $(document).ready(function () {
     // Add handler for the hangup button
     $('.hangup').click(function () {
         console.log('hangup....');
+        currentRoomId = "";
         // Only allow hangup if we are not idle
         //localStream.getTracks().forEach(track => track.stop());
         if ($('body').attr("data-mode") !== "idle") {
-            connection.invoke('hangUp');
+            connection.invoke('leaveRoom');
             $('body').attr('data-mode', 'idle');
             $("#callstatus").text('Idle');
+            $("#leavebutton").addClass('hide')
         }
     });
 

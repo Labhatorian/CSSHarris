@@ -53,13 +53,31 @@ namespace Setup.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
+            var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
+
+            if (callingUser == null)
+            {
+                return;
+            }
+
             // Remove the user
             _Users.RemoveAll(u => u.ConnectionId == Context.ConnectionId);
 
-            // Send down the new user list to all clients
-            //await SendUserListUpdate();
-
             await base.OnDisconnectedAsync(exception);
+
+            //Leave room
+            var roomToLeave = Rooms.SingleOrDefault(u => u.UsersInRoom.Contains(callingUser));
+
+            if (roomToLeave == null)
+            {
+                return;
+            }
+            roomToLeave.UsersInRoom.Remove(callingUser);
+
+            await RemoveFromGroup(roomToLeave.ID);
+            await Clients.Group(roomToLeave.ID).UpdateUserList(roomToLeave.UsersInRoom);
+            await Clients.Caller.UpdateUserList(null);
+            await Clients.Caller.UpdateRoomList(Rooms);
         }
 
         private async Task SendUserListUpdate(Room room)
@@ -125,68 +143,10 @@ namespace Setup.Hubs
             await Clients.Group(RoomID).UpdateUserList(roomToJoin.UsersInRoom);
 
             await Clients.Caller.RoomJoined(roomToJoin.Title);
+            await Clients.Caller.UpdateRoomList(Rooms);
         }
 
-        public async Task AnswerCall(bool acceptCall, User targetConnectionId)
-        {
-            var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
-            var targetUser = _Users.SingleOrDefault(u => u.ConnectionId == targetConnectionId.ConnectionId);
-
-            // This can only happen if the server-side came down and clients were cleared, while the user
-            // still held their browser session.
-            if (callingUser == null)
-            {
-                return;
-            }
-
-            // Make sure the original caller has not left the page yet
-            if (targetUser == null)
-            {
-                await Clients.Caller.CallEnded(targetConnectionId, "The other user in your call has left.");
-                return;
-            }
-
-            // Send a decline message if the callee said no
-            if (acceptCall == false)
-            {
-                await Clients.Client(targetConnectionId.ConnectionId).CallDeclined(callingUser, string.Format("{0} did not accept your call.", callingUser.Username));
-                return;
-            }
-
-            // Make sure there is still an active offer.  If there isn't, then the other use hung up before the Callee answered.
-            var offerCount = _CallOffers.RemoveAll(c => c.Callee.ConnectionId == callingUser.ConnectionId
-                                                  && c.Caller.ConnectionId == targetUser.ConnectionId);
-            if (offerCount < 1)
-            {
-                await Clients.Caller.CallEnded(targetConnectionId, string.Format("{0} has already hung up.", targetUser.Username));
-                return;
-            }
-
-            // And finally... make sure the user hasn't accepted another call already
-            if (GetUserCall(targetUser.ConnectionId) != null)
-            {
-                // And that they aren't already in a call
-                await Clients.Caller.CallDeclined(targetConnectionId, string.Format("{0} chose to accept someone elses call instead of yours :(", targetUser.Username));
-                return;
-            }
-
-            // Remove all the other offers for the call initiator, in case they have multiple calls out
-            _CallOffers.RemoveAll(c => c.Caller.ConnectionId == targetUser.ConnectionId);
-
-            // Create a new call to match these folks up
-            _UsersInCall.Add(new UserCall
-            {
-                Users = new List<User> { callingUser, targetUser }
-            });
-
-            // Tell the original caller that the call was accepted
-            await Clients.Client(targetConnectionId.ConnectionId).CallAccepted(callingUser);
-
-            // Update the user list, since thes two are now in a call
-            //await SendUserListUpdate();
-        }
-
-        public async Task HangUp()
+        public async Task LeaveRoom()
         {
             var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
 
@@ -195,29 +155,15 @@ namespace Setup.Hubs
                 return;
             }
 
-            var currentCall = GetUserCall(callingUser.ConnectionId);
+            //Join room
+            var roomToLeave = Rooms.SingleOrDefault(u => u.UsersInRoom.Contains(callingUser));
 
-            // Send a hang up message to each user in the call, if there is one
-            if (currentCall != null)
-            {
-                foreach (var user in currentCall.Users.Where(u => u.ConnectionId != callingUser.ConnectionId))
-                {
-                    await Clients.Client(user.ConnectionId).CallEnded(callingUser, string.Format("{0} has hung up.", callingUser.Username));
-                }
+            roomToLeave.UsersInRoom.Remove(callingUser);
 
-                // Remove the call from the list if there is only one (or none) person left.  This should
-                // always trigger now, but will be useful when we implement conferencing.
-                currentCall.Users.RemoveAll(u => u.ConnectionId == callingUser.ConnectionId);
-                if (currentCall.Users.Count < 2)
-                {
-                    _UsersInCall.Remove(currentCall);
-                }
-            }
-
-            // Remove all offers initiating from the caller
-            _CallOffers.RemoveAll(c => c.Caller.ConnectionId == callingUser.ConnectionId);
-
-            //await SendUserListUpdate();
+            await RemoveFromGroup(roomToLeave.ID);
+            await Clients.Group(roomToLeave.ID).UpdateUserList(roomToLeave.UsersInRoom);
+            await Clients.Caller.UpdateUserList(null);
+            await Clients.Caller.UpdateRoomList(Rooms);
         }
 
         public async Task AddToGroup(string groupName)
