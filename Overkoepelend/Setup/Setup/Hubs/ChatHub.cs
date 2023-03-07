@@ -1,6 +1,4 @@
-﻿using Mailjet.Client.Resources;
-using Microsoft.AspNetCore.SignalR;
-using Setup.Models;
+﻿using Microsoft.AspNetCore.SignalR;
 using Setup.Models.ChatModels;
 using User = Setup.Models.User;
 
