@@ -1,9 +1,11 @@
-﻿using AAAA.Models;
+﻿using IdentityTest.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace AAAA.Controllers
+namespace IdentityTest.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -13,10 +15,9 @@ namespace AAAA.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
-            var x = this.HttpContext.Request.Cookies["dddd"];
-
             return View();
         }
 
