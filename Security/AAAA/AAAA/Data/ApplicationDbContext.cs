@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using AAAA.Models;
 
 namespace AAAA.Data
 {
@@ -9,5 +10,6 @@ namespace AAAA.Data
             : base(options)
         {
         }
+        public DbSet<AAAA.Models.User> User { get; set; }
     }
 }

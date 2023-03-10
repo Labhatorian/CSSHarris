@@ -1,4 +1,6 @@
-﻿namespace Setup.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Setup.Models
 {
     public class User
     {

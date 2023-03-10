@@ -14,6 +14,8 @@ namespace Setup.Hubs
             User signallingUser = _Users.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
             Room room = Rooms.SingleOrDefault(u => u.ID == roomID);
 
+            room.Chatlog.Messages.Add(new Message(signallingUser, DateTime.Now, message));
+
             await Clients.Group(roomID).ReceiveMessage(signallingUser.Username, message);
         }
 
@@ -116,7 +118,8 @@ namespace Setup.Hubs
             await AddToGroup(RoomID);
             await Clients.Group(RoomID).UpdateUserList(roomToJoin.UsersInRoom);
 
-            await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner);
+            //TODO do not send full user data
+            await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner, roomToJoin.Chatlog.Messages);
             await Clients.Caller.UpdateRoomList(Rooms);
         }
 

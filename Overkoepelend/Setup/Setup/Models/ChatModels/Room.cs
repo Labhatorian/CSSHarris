@@ -6,6 +6,6 @@
         public User Owner { get; set; }
         public string Title { get; set; }
         public List<User> UsersInRoom { get; set; } = new();
-        public List<Message> Messages { get; set; } = new();
+        public Chatlog Chatlog { get; set; } = new();
     }
 }

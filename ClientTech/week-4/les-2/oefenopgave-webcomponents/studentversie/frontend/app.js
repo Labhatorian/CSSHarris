@@ -40,6 +40,7 @@ class App extends HTMLElement {
 
     applyEventlisteners() {
         this.addEventListener('cirkelClick', this.cirkelClickedHandler);
+       
         const self = this;
         console.log(`app.applyEventlisteners
             hint:
@@ -48,7 +49,9 @@ class App extends HTMLElement {
         `)
 
 //student uitwerking
-
+        this.shadowRoot.querySelector('button').addEventListener('click', () => {
+            self.shadowRoot.querySelectorAll("click-cirkel").forEach(n => {n.remove()});
+        });
     }
 
     cirkelClickedHandler(event) {
@@ -58,6 +61,8 @@ class App extends HTMLElement {
         voeg het element toe aan de shadowroot: this.shadowRoot...
         `)
 
+       var cirkel =  document.createElement("click-cirkel");
+       this.shadowRoot.querySelector('.container').appendChild(cirkel);
 //student uitwerking
 
     }

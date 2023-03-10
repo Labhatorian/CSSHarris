@@ -28,6 +28,7 @@ $(document).ready(function () {
 
         connection.invoke('joinRoom', targetRoomId);
         currentRoomId = targetRoomId;
+        $('#messageslist').empty();
 
         // UI in joining mode
         $('body').attr('data-mode', 'calling');
@@ -42,8 +43,10 @@ $(document).ready(function () {
             connection.invoke('leaveRoom');
             $('body').attr('data-mode', 'idle');
             $("#callstatus").text('Idle');
-            $("#leavebutton").addClass('hide')
-            $("#deletebutton").addClass('hide')
+            $("#leavebutton").addClass('hide');
+            $("#deletebutton").addClass('hide');
+            $("#createbutton").removeClass('hide');
+            $('#messagesList').empty();
         }
     });
 
@@ -63,8 +66,10 @@ $(document).ready(function () {
             currentRoomId = "";
             $('body').attr('data-mode', 'idle');
             $("#callstatus").text('Idle');
-            $("#leavebutton").addClass('hide')
-            $("#deletebutton").addClass('hide')
+            $("#leavebutton").addClass('hide');
+            $("#deletebutton").addClass('hide');
+            $("#createbutton").removeClass('hide');
+            $('#messagesList').empty();
         }
     });
 });
@@ -103,7 +108,7 @@ connection.on('updateRoomList', (roomList) => {
 });
 
 // Hub Callback: Room joined
-connection.on('roomJoined', (RoomTitle, IsOwner) => {
+connection.on('roomJoined', (RoomTitle, IsOwner, Messages) => {
     console.log('Room joined');
 
     // Set UI into call mode
@@ -111,10 +116,15 @@ connection.on('roomJoined', (RoomTitle, IsOwner) => {
     $("#callstatus").text('Joined: ' + RoomTitle);
 
     //Enable leave button
-    $("#leavebutton").removeClass('hide')
+    $("#leavebutton").removeClass('hide');
+
+    //disable create button
+    $("#createbutton").addClass('hide');
 
     //Enable delete button
     if (IsOwner) $("#deletebutton").removeClass('hide')
+
+    Messages.forEach(message => CreateMessage(message.username, message.content));
 });
 
 // Hub Callback: Room Deleted
@@ -125,18 +135,15 @@ connection.on('roomDeleted', () => {
     if ($('body').attr("data-mode") !== "idle") {
         $('body').attr('data-mode', 'idle');
         $("#callstatus").text('Idle');
-        $("#leavebutton").addClass('hide')
+        $("#leavebutton").addClass('hide');
+        $("#createbutton").removeClass('hide');
+        $('#messagesList').empty();
     }
 });
 
 //Chat
 connection.on("ReceiveMessage", function (user, message) {
-    var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you 
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
+    CreateMessage(user, message);
 });
 
 document.getElementById("sendButton").addEventListener("click", function (event) {
@@ -146,3 +153,15 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     });
     event.preventDefault();
 });
+
+function CreateMessage(user, message) {
+    var li = document.createElement("li");
+    var list = document.getElementById("messagesList");
+    var chat = document.getElementById("chatpane");
+    list.appendChild(li);
+    // We can assign user-supplied strings to an element's textContent because it
+    // is not interpreted as markup. If you're assigning in any other way, you 
+    // should be aware of possible script injection concerns.
+    li.textContent = `${user} says ${message}`;
+    chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+}

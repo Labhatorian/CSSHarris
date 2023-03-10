@@ -39,7 +39,7 @@ class Cirkel extends HTMLElement {
 
     applyEventlisteners(){
         console.log('Click event in cirkel.js nog niet ingeschakeld.');
-        // this.addEventListener('click', this.sendEvent);
+         this.addEventListener('click', this.sendEvent);
     }
 
     sendEvent(){
