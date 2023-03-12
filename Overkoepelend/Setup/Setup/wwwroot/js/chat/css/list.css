@@ -9,6 +9,6 @@
     overflow-y: auto;
 }
 
-component1, component2{
+#component1{
     border-bottom: 1px solid;
 }
