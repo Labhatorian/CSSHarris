@@ -39,42 +39,21 @@ $(document).ready(function () {
         $("#callstatus").text('Joining...');
     });
 
-    // Add handler for the hangup button
-    $('.hangup').click(function () {
-        console.log('hangup....');
+    //Handler create new room
+    this.addEventListener("createroom", function (e) {
+        connection.invoke('createRoom', e.newroom);
+    });
+
+    //Handler delete room as owner
+    this.addEventListener("deleteroom", function (e) {
+        connection.invoke('deleteRoom', currentRoomId);
         currentRoomId = "";
-        if ($('body').attr("data-mode") !== "idle") {
-            connection.invoke('leaveRoom');
-            $('body').attr('data-mode', 'idle');
-            $("#callstatus").text('Idle');
-            $("#leavebutton").addClass('hide');
-            $("#deletebutton").addClass('hide');
-            $("#createbutton").removeClass('hide');
-            $('#messagesList').empty();
-        }
     });
 
-    //Add handler for create room button
-    $('.createroom').click(function () {
-        var title = prompt("Hoe moet de kamer heten?");
-        console.log('Creating room...');
-        connection.invoke('createRoom', title);
-    });
-
-    // Add handler for the hangup button
-    $('.delete').click(function () {
-        console.log('deleting....');
-
-        if ($('body').attr("data-mode") !== "idle") {
-            connection.invoke('deleteRoom', currentRoomId);
-            currentRoomId = "";
-            $('body').attr('data-mode', 'idle');
-            $("#callstatus").text('Idle');
-            $("#leavebutton").addClass('hide');
-            $("#deletebutton").addClass('hide');
-            $("#createbutton").removeClass('hide');
-            $('#messagesList').empty();
-        }
+    //Handler leave room
+    this.addEventListener("leaveroom", function (e) {
+        currentRoomId = "";
+        connection.invoke('leaveRoom');
     });
 });
 

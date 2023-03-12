@@ -8,13 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Chat\Friends.cshtml" />
     <Content Remove="wwwroot\images\Harris\classic-cars.jpg" />
     <Content Remove="wwwroot\images\Harris\person-pasfoto.png" />
     <Content Remove="wwwroot\js\slideshow.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Chat\Chat.cshtml" />
+    <None Include="Views\Chat\Friends.cshtml" />
+    <None Include="Views\Chat\Global.cshtml" />
     <None Include="wwwroot\css\developer.css" />
     <None Include="wwwroot\images\classic-cars.jpg" />
     <None Include="wwwroot\images\Harris\classic-cars.jpg" />

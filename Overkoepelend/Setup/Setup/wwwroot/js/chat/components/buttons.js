@@ -50,11 +50,60 @@ class RoomButtons extends HTMLElement {
     }
 
     applyEventlisteners() {
-        this.addEventListener('leftclick', this.sendEvent);
-    }
+        this.shadowRoot.querySelector("#createbutton").addEventListener('click', () => {
+            var title = prompt("Hoe moet de kamer heten?");
+            console.log('Creating room...');
 
-    sendEvent() {
-        this.shadowRoot.dispatchEvent(new Event('userLeftClick', { composed: true }));
+            var event = new CustomEvent("createroom", {
+                composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
+                bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+            });
+            event.newroom = title;
+
+            this.shadowRoot.dispatchEvent(event);
+        });
+
+        this.shadowRoot.querySelector("#leavebutton").addEventListener('click', () => {
+            console.log('leaving....');
+
+            if ($('body').attr("data-mode") !== "idle") {
+
+                $('body').attr('data-mode', 'idle');
+                $("#callstatus").text('Idle');
+                $("#leavebutton").addClass('hide');
+                $("#deletebutton").addClass('hide');
+                $("#createbutton").removeClass('hide');
+                $('#messagesList').empty();
+            }
+
+            var event = new CustomEvent("leaveroom", {
+                composed: true,
+                bubbles: true,
+            });
+
+            this.shadowRoot.dispatchEvent(event);
+        });
+
+        this.shadowRoot.querySelector("#deletebutton").addEventListener('click', () => {
+            console.log('deleting....');
+
+            if ($('body').attr("data-mode") !== "idle") {
+
+                $('body').attr('data-mode', 'idle');
+                $("#callstatus").text('Idle');
+                $("#leavebutton").addClass('hide');
+                $("#deletebutton").addClass('hide');
+                $("#createbutton").removeClass('hide');
+                $('#messagesList').empty();
+            }
+
+            var event = new CustomEvent("deleteroom", {
+                composed: true,
+                bubbles: true,
+            });
+
+            this.shadowRoot.dispatchEvent(event);
+        });
     }
 }
 

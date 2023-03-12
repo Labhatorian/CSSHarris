@@ -42,6 +42,8 @@ class ChatList extends HTMLElement {
         } else if (type === "user") {
             this.initUser();
         }
+
+        this.applyEventlisteners();
     }
 
     init() {
@@ -73,6 +75,10 @@ class ChatList extends HTMLElement {
 
     initUser() {
         this.shadowRoot.querySelector("#component1").appendChild(document.createElement("additional-info"));
+    }
+
+    applyEventlisteners() {
+        
     }
 }
 

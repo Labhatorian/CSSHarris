@@ -16,4 +16,6 @@ chat-pane {
     display: flex;
     flex-direction: column;
     flex: 2;
+    border-left: 1px solid;
+    border-right: 1px solid;
 }

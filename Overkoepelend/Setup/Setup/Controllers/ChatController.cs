@@ -1,10 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Setup.Controllers
 {
+    [Authorize]
     public class ChatController : Controller
     {
-        public IActionResult Chat()
+        [AllowAnonymous]
+        public IActionResult Global()
+        {
+            return View();
+        }
+        
+        public IActionResult Friends()
         {
             return View();
         }
