@@ -8,10 +8,11 @@ const listTemplate = {
     id: 'list-tpl',
     template: `
      <section id="chatlist">
-            <div id="component1">
+            <div class="bg-light room-list" id="chatlistdata">
+            <div class="list-group-item item" id="component1">
          
             </div>
-            <div class="bg-light room-list" id="chatlistdata">
+
             <ul class="list-group">
                 <li class="list-group-item item" data-id="" data-title="">
                     <a href="#">
@@ -69,12 +70,18 @@ class ChatList extends HTMLElement {
     }
 
     initRoom() {
-        this.shadowRoot.querySelector("#component1").appendChild(document.createElement("additional-info"));
+        const info = document.createElement("additional-info");
+        info.setAttribute("maintext", "Online Rooms: ");
+        info.setAttribute("amount", 0);
+        this.shadowRoot.querySelector("#component1").appendChild(info);
         this.shadowRoot.querySelector("#component2").appendChild(document.createElement("room-buttons"));
     }
 
     initUser() {
-        this.shadowRoot.querySelector("#component1").appendChild(document.createElement("additional-info"));
+        const users = document.createElement("additional-info");
+        users.setAttribute("maintext", "Online Users: ")
+        users.setAttribute("amount", 0);
+        this.shadowRoot.querySelector("#component1").appendChild(users);
     }
 
     applyEventlisteners() {
