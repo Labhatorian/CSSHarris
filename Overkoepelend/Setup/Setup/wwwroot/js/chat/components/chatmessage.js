@@ -1,7 +1,14 @@
-﻿class ChatMessage extends HTMLElement {
+﻿const messageTemplate = {
+    id: 'chatmessage-tpl',
+    template: `
+    <li>test</li>
+    `
+}
+
+class ChatMessage extends HTMLElement {
 
     shadowRoot;
-    templateId = 'chatmessage-tpl';
+    templateId = 'chat-pane-tpl';
     elementId = 'chatmessage';
 
     constructor() {
@@ -13,21 +20,15 @@
             datetime: ""
         };
         this.applyTemplate();
-        this.attachStyling();
         this.applyEventlisteners();
     }
 
     applyTemplate() {
-        let template = document.getElementById(this.templateId);
-        let clone = template.content.cloneNode(true);
-        this.shadowRoot.appendChild(clone);
-    }
-
-    attachStyling() {
-        const linkElem = document.createElement("link");
-        linkElem.setAttribute("rel", "stylesheet");
-        linkElem.setAttribute("href", "stylesheets/components/chatmessage.css");
-        this.shadowRoot.appendChild(linkElem);
+        const templateNode = document.createElement('chatMessage');
+        templateNode.id = messageTemplate.id;
+        templateNode.innerHTML = messageTemplate.template;
+        const body = document.querySelector('body');
+        body.appendChild(templateNode);
     }
 
     applyEventlisteners() {
@@ -39,6 +40,4 @@
     }
 }
 
-customElements.define('chatmessage', ChatMessage);
-
-export { ChatMessage };
+customElements.define('chat-message', ChatMessage);

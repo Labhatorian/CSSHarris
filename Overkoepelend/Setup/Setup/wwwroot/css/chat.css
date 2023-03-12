@@ -6,39 +6,14 @@
     max-height: 75vh;
 }
 
-
-#roomslist {
+chat-list {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-#roomsdata {
-    flex: 1;
-    overflow-y: auto;
-}
-
-
-#chat {
+chat-pane {
     display: flex;
     flex-direction: column;
     flex: 2;
 }
-
-#chatpane {
-    flex: 1;
-    overflow-y: auto;
-}
-
-
-#userslist {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-#usersdata {
-    flex: 1;
-    overflow-y: auto;
-}
-

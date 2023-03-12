@@ -1,4 +1,8 @@
-﻿"use strict";
+﻿import { ChatPane } from "./maincomponents/chatpane.js";
+import { ChatList } from "./maincomponents/listcomponent.js";
+
+customElements.define('chat-pane', ChatPane);
+customElements.define('chat-list', ChatList);
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 var myConnectionId;
@@ -146,13 +150,13 @@ connection.on("ReceiveMessage", function (user, message) {
     CreateMessage(user, message);
 });
 
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", currentRoomId, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});
+//document.getElementById("sendButton").addEventListener("click", function (event) {
+//    var message = document.getElementById("messageInput").value;
+//    connection.invoke("SendMessage", currentRoomId, message).catch(function (err) {
+//        return console.error(err.toString());
+//    });
+//    event.preventDefault();
+//});
 
 function CreateMessage(user, message) {
     var li = document.createElement("li");
