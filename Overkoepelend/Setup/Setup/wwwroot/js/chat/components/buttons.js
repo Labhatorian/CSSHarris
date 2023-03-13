@@ -1,11 +1,8 @@
 ﻿const buttonsTemplate = {
     id: 'buttons-tpl',
     template: `
-    <div class="card card-body bg-light actions">
-            <button id="createbutton" class="btn createroom">Create Room</button>
-        </div>
-
         <div class="card card-body bg-light actions">
+            <button id="createbutton" class="btn btn-primary createroom">Create Room</button>
             <div id="callstatus" class="status">Idle</div>
             <button id="leavebutton" class="btn btn-danger hangup hide">Leave</button>
             <button id="deletebutton" class="btn btn-danger delete hide">Delete Room</button>
@@ -22,9 +19,6 @@ class RoomButtons extends HTMLElement {
     constructor() {
         super(); // always call super() first in the ctor.
         this.shadowRoot = this.attachShadow({ mode: 'open' });
-        this.state = {
-            username: "",
-        };
 
         const linkElemBootstrap = document.createElement("link");
         linkElemBootstrap.setAttribute("rel", "stylesheet");
@@ -49,6 +43,26 @@ class RoomButtons extends HTMLElement {
         this.applyEventlisteners();
     }
 
+    JoinRoom(RoomTitle, IsOwner) {
+        if ($(this.shadowRoot).find('body').attr("data-mode") !== "idle") {
+            $(this.shadowRoot).find('body').attr('data-mode', 'inroom');
+            $(this.shadowRoot).find("#callstatus").text('In Room: '+ RoomTitle);
+            $(this.shadowRoot).find("#leavebutton").removeClass('hide');
+            $(this.shadowRoot).find("#createbutton").addClass('hide');
+            if (IsOwner) $(this.shadowRoot).find("#deletebutton").removeClass('hide');
+        }
+    }
+
+    LeaveRoom() {
+        if ($(this.shadowRoot).find('body').attr("data-mode") !== "idle") {
+            $(this.shadowRoot).find('body').attr('data-mode', 'inroom');
+            $(this.shadowRoot).find("#callstatus").text('Idle');
+            $(this.shadowRoot).find("#leavebutton").addClass('hide');
+            $(this.shadowRoot).find("#createbutton").removeClass('hide');
+            $(this.shadowRoot).find("#deletebutton").addClass('hide');
+        }
+    }
+
     applyEventlisteners() {
         this.shadowRoot.querySelector("#createbutton").addEventListener('click', () => {
             var title = prompt("Hoe moet de kamer heten?");
@@ -65,16 +79,7 @@ class RoomButtons extends HTMLElement {
 
         this.shadowRoot.querySelector("#leavebutton").addEventListener('click', () => {
             console.log('leaving....');
-
-            if ($('body').attr("data-mode") !== "idle") {
-
-                $('body').attr('data-mode', 'idle');
-                $("#callstatus").text('Idle');
-                $("#leavebutton").addClass('hide');
-                $("#deletebutton").addClass('hide');
-                $("#createbutton").removeClass('hide');
-                $('#messagesList').empty();
-            }
+            this.LeaveRoom();
 
             var event = new CustomEvent("leaveroom", {
                 composed: true,
@@ -86,16 +91,7 @@ class RoomButtons extends HTMLElement {
 
         this.shadowRoot.querySelector("#deletebutton").addEventListener('click', () => {
             console.log('deleting....');
-
-            if ($('body').attr("data-mode") !== "idle") {
-
-                $('body').attr('data-mode', 'idle');
-                $("#callstatus").text('Idle');
-                $("#leavebutton").addClass('hide');
-                $("#deletebutton").addClass('hide');
-                $("#createbutton").removeClass('hide');
-                $('#messagesList').empty();
-            }
+            this.LeaveRoom();
 
             var event = new CustomEvent("deleteroom", {
                 composed: true,

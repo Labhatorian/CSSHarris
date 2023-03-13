@@ -1,4 +1,5 @@
-﻿import { ChatPane } from "./maincomponents/chatpane.js";
+﻿//TODO convert o module
+import { ChatPane } from "./maincomponents/chatpane.js";
 import { ChatList } from "./maincomponents/listcomponent.js";
 
 customElements.define('chat-pane', ChatPane);
@@ -25,18 +26,10 @@ const generateRandomUsername = () => {
 $(document).ready(function () {
     initializeSignalR();
 
-    // Add click handler to rooms in the "Rooms" pane
-    $(document).on('click', '.room', function () {
-        console.log('Joining room ');
-        var targetRoomId = $(this).attr('data-rid');
-
-        connection.invoke('joinRoom', targetRoomId);
-        currentRoomId = targetRoomId;
-        $('#messageslist').empty();
-
-        // UI in joining mode
-        $('body').attr('data-mode', 'calling');
-        $("#callstatus").text('Joining...');
+    //Handler create join room
+    this.addEventListener("joinroom", function (e) {
+        currentRoomId = e.roomid;
+        connection.invoke('joinRoom', e.roomid);
     });
 
     //Handler create new room
@@ -58,56 +51,18 @@ $(document).ready(function () {
 });
 
 connection.on('updateUserList', (userList) => {   
-    $('#usersdata li.user').remove();
-    if (userList === null) {
-        $("#usersLength").text(0);
-        return;
-    }
-
-    $("#usersLength").text(userList.length - 1);
-
-    $.each(userList, function (index) {
-        if (userList[index].username === $("#upperUsername").text()) {
-            myConnectionId = userList[index].connectionId;
-        } else {
-            var listString = '<li class="list-group-item user" data-cid=' + userList[index].connectionId + ' data-username=' + userList[index].username + '>';
-            listString += '<a href="#"><div class="username"> ' + userList[index].username + '</div>';
-            $('#usersdata').append(listString);
-        }
-    });
+    document.querySelector("chat-list[type = 'room']").updateRooms(userList, myConnectionId);
 });
 
 connection.on('updateRoomList', (roomList) => {
-    $("#roomsLength").text(roomList.length);
-    $('#roomsdata li.room').remove();
-
-    $.each(roomList, function (index) {
-        if (roomList[index].id != currentRoomId) {
-            var listString = '<li class="list-group-item room" data-rid=' + roomList[index].id + '>';
-            listString += '<a href="#"><div class="title"> ' + roomList[index].title + '</div>';
-            $('#roomsdata').append(listString);
-        }
-    });
+    document.querySelector("chat-list[type = 'room']").updateRooms(roomList, currentRoomId);
 });
 
 // Hub Callback: Room joined
 connection.on('roomJoined', (RoomTitle, IsOwner, Messages) => {
     console.log('Room joined');
-
-    // Set UI into call mode
-    $('body').attr('data-mode', 'incall');
-    $("#callstatus").text('Joined: ' + RoomTitle);
-
-    //Enable leave button
-    $("#leavebutton").removeClass('hide');
-
-    //disable create button
-    $("#createbutton").addClass('hide');
-
-    //Enable delete button
-    if (IsOwner) $("#deletebutton").removeClass('hide')
-
-    Messages.forEach(message => CreateMessage(message.username, message.content));
+    document.querySelector("chat-list[type = 'room']").updateButtons(currentRoomId, IsOwner, RoomTitle);
+    //todo add messages to chatpane and enable sendbutton
 });
 
 // Hub Callback: Room Deleted
@@ -115,17 +70,12 @@ connection.on('roomDeleted', () => {
     console.log('Room is being deleted...');
     currentRoomId = "";
     alert("Room has been deleted :(");
-    if ($('body').attr("data-mode") !== "idle") {
-        $('body').attr('data-mode', 'idle');
-        $("#callstatus").text('Idle');
-        $("#leavebutton").addClass('hide');
-        $("#createbutton").removeClass('hide');
-        $('#messagesList').empty();
-    }
+    //todo update buttons, clear messages, disale sendbutton
 });
 
 //Chat
 connection.on("ReceiveMessage", function (user, message) {
+    //todo add webcomponent to chatpane
     CreateMessage(user, message);
 });
 
