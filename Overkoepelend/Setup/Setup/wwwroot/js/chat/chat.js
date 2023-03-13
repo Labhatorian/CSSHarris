@@ -33,6 +33,7 @@ $(document).ready(function () {
         if (currentRoomId != "") connection.invoke('leaveRoom', currentRoomId);
         currentRoomId = e.roomid;
         connection.invoke('joinRoom', e.roomid);
+        document.querySelector("chat-pane").DeleteMessages();
     });
 
     //Handler create new room
@@ -43,6 +44,7 @@ $(document).ready(function () {
     //Handler delete room as owner
     this.addEventListener("deleteroom", function (e) {
         connection.invoke('deleteRoom', currentRoomId);
+        document.querySelector("chat-pane").DeleteMessages();
         currentRoomId = "";
     });
 
@@ -50,6 +52,7 @@ $(document).ready(function () {
     this.addEventListener("leaveroom", function (e) {
         currentRoomId = "";
         connection.invoke('leaveRoom');
+        document.querySelector("chat-pane").DeleteMessages();
     });
 
     //Handler send message
@@ -72,6 +75,7 @@ connection.on('updateRoomList', (roomList) => {
 connection.on('roomJoined', (RoomTitle, IsOwner, Messages) => {
     console.log('Room joined');
     document.querySelector("chat-list[type = 'room']").updateButtons(currentRoomId, IsOwner, RoomTitle);
+    document.querySelector("chat-pane").ShowMessages(Messages);
 });
 
 // Hub Callback: Room Deleted
@@ -79,6 +83,7 @@ connection.on('roomDeleted', () => {
     console.log('Room is being deleted...');
     currentRoomId = "";
     document.querySelector("chat-list[type = 'room']").DeletedRoomButtons();
+    document.querySelector("chat-pane").DeleteMessages();
     alert("Room has been deleted :(");
 });
 

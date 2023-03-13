@@ -74,7 +74,14 @@ class ChatPane extends HTMLElement {
     }
 
     ShowMessages(Messages) {
+        const self = this;
+        $.each(Messages, function (index) {
+            self.NewMessage(Messages[index].user.username, Messages[index].content)
+        });
+    }
 
+    DeleteMessages() {
+        this.shadowRoot.querySelector('#messagesList').innerHTML = "";
     }
 }
 
