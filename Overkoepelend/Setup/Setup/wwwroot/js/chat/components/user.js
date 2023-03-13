@@ -65,7 +65,7 @@ class User extends HTMLElement {
     // a callback for when an attribute changes
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === "data-username") {
-            this.title = newValue; // update the property as well
+            this.username = newValue; // update the property as well
         }
     }
 

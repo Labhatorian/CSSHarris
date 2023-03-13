@@ -1,4 +1,5 @@
 ﻿//TODO convert o module
+import { User } from "./components/user.js";
 import { ChatPane } from "./maincomponents/chatpane.js";
 import { ChatList } from "./maincomponents/listcomponent.js";
 
@@ -6,8 +7,8 @@ customElements.define('chat-pane', ChatPane);
 customElements.define('chat-list', ChatList);
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-var myConnectionId;
-var currentRoomId;
+var myUsername;
+var currentRoomId = "";
 
 const initializeSignalR = () => {
     connection.start().then(() => { console.log("SignalR: Connected"); generateRandomUsername(); }).catch(err => console.log(err));
@@ -15,7 +16,8 @@ const initializeSignalR = () => {
 
 const setUsername = (username) => {
     connection.invoke("Join", username)
-    $("#upperUsername").text(username);
+    myUsername = username;
+    document.querySelector("chat-list[type = 'user']").setUser(username);
 };
 
 const generateRandomUsername = () => {
@@ -28,6 +30,7 @@ $(document).ready(function () {
 
     //Handler create join room
     this.addEventListener("joinroom", function (e) {
+        if (currentRoomId != "") connection.invoke('leaveRoom', currentRoomId);
         currentRoomId = e.roomid;
         connection.invoke('joinRoom', e.roomid);
     });
@@ -48,12 +51,19 @@ $(document).ready(function () {
         currentRoomId = "";
         connection.invoke('leaveRoom');
     });
+
+    //Handler send message
+    this.addEventListener("sendmessage", function (e) {
+       if(currentRoomId != '' && currentRoomId != undefined) connection.invoke("SendMessage", currentRoomId, e.message);
+    });
 });
 
+// Hub Callback: Update users
 connection.on('updateUserList', (userList) => {   
-    document.querySelector("chat-list[type = 'room']").updateRooms(userList, myConnectionId);
+    document.querySelector("chat-list[type = 'user']").updateUsers(userList, myUsername);
 });
 
+// Hub Callback: Update rooms
 connection.on('updateRoomList', (roomList) => {
     document.querySelector("chat-list[type = 'room']").updateRooms(roomList, currentRoomId);
 });
@@ -62,39 +72,17 @@ connection.on('updateRoomList', (roomList) => {
 connection.on('roomJoined', (RoomTitle, IsOwner, Messages) => {
     console.log('Room joined');
     document.querySelector("chat-list[type = 'room']").updateButtons(currentRoomId, IsOwner, RoomTitle);
-    //todo add messages to chatpane and enable sendbutton
 });
 
 // Hub Callback: Room Deleted
 connection.on('roomDeleted', () => {
     console.log('Room is being deleted...');
     currentRoomId = "";
+    document.querySelector("chat-list[type = 'room']").DeletedRoomButtons();
     alert("Room has been deleted :(");
-    //todo update buttons, clear messages, disale sendbutton
 });
 
-//Chat
+// Hub Callback: Receive message
 connection.on("ReceiveMessage", function (user, message) {
-    //todo add webcomponent to chatpane
-    CreateMessage(user, message);
+    document.querySelector("chat-pane").NewMessage(user, message);
 });
-
-//document.getElementById("sendButton").addEventListener("click", function (event) {
-//    var message = document.getElementById("messageInput").value;
-//    connection.invoke("SendMessage", currentRoomId, message).catch(function (err) {
-//        return console.error(err.toString());
-//    });
-//    event.preventDefault();
-//});
-
-function CreateMessage(user, message) {
-    var li = document.createElement("li");
-    var list = document.getElementById("messagesList");
-    var chat = document.getElementById("chatpane");
-    list.appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you 
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
-    chat.scrollTop = chat.scrollHeight - chat.clientHeight;
-}

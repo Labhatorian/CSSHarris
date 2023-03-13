@@ -2,11 +2,13 @@
 import { AdditionalInfo } from "../components/additionalinfo.js";
 
 import { Room } from "../components/room.js";
+import { User } from "../components/user.js";
 
 customElements.define('room-buttons', RoomButtons);
 customElements.define('additional-info', AdditionalInfo);
 
 customElements.define('chat-room', Room);
+customElements.define('chat-user', User);
 
 const listTemplate = {
     id: 'list-tpl',
@@ -31,7 +33,7 @@ const listTemplate = {
 class ChatList extends HTMLElement {
     shadowRoot;
 
-    constructor() {
+    constructor(Username) {
         super(); // always call super() first in the ctor.
         this.shadowRoot = this.attachShadow({ mode: 'open' })
         this.init();
@@ -79,6 +81,16 @@ class ChatList extends HTMLElement {
         users.setAttribute("maintext", "Online Users: ")
         users.setAttribute("amount", 0);
         this.shadowRoot.querySelector("#component1").appendChild(users);
+
+        const info = document.createElement("additional-info");
+        info.setAttribute("maintext", "You are: ");
+        info.setAttribute("amount", "");
+        this.shadowRoot.querySelector("#component2").appendChild(info);
+    }
+
+    setUser(username) {
+        const info = this.shadowRoot.querySelector("#component2").querySelector("additional-info");
+        info.amount = username;
     }
 
     updateButtons(RoomTitle, IsOwner, currentRoomId) {
@@ -88,15 +100,21 @@ class ChatList extends HTMLElement {
         }
     }
 
+    DeletedRoomButtons() {
+        this.shadowRoot.querySelector('#component2').querySelector("room-buttons").LeaveRoom()
+    }
+
     updateRooms(roomList, currentRoomId) {
         var type = this.getAttribute("type");
         if (type === "room") {
             const roominfo = this.shadowRoot.querySelector('#component1').querySelector('additional-info');
-            roominfo.setAttribute("amount", roomList.length);
 
             const self = this;
-
             self.shadowRoot.querySelector('#chatlistdata').innerHTML = "";
+            roominfo.setAttribute("amount", 0);
+
+            roominfo.setAttribute("amount", roomList.length);
+
             $.each(roomList, function (index) {
                 if (roomList[index].id != currentRoomId) {
                     const roomNode = document.createElement('chat-room');
@@ -108,20 +126,23 @@ class ChatList extends HTMLElement {
         }
     }
 
-    updateUsers(userList, currentUserId) {
+    //todo secure connection ids
+    updateUsers(userList, myUsername) {
         var type = this.getAttribute("type");
         if (type === "user") {
             const userinfo = this.shadowRoot.querySelector('#component1').querySelector('additional-info');
-            userinfo.setAttribute("amount", userList.length-1);
 
             const self = this;
-
             self.shadowRoot.querySelector('#chatlistdata').innerHTML = "";
+            userinfo.setAttribute("amount", 0);
+
+            userinfo.setAttribute("amount", userList.length-1);
+
             $.each(userList, function (index) {
-                if (userList[index].id != currentUserId) {
+                if (userList[index].username != myUsername) {
                     const userNode = document.createElement('chat-user');
-                    userNode.setAttribute("data-id", roomList[index].id);
-                    userNode.setAttribute("data-username", userList[index].title);
+                    userNode.setAttribute("data-id", userList[index].connectionId);
+                    userNode.setAttribute("data-username", userList[index].username);
                     self.shadowRoot.querySelector('#chatlistdata').append(userNode);
                 }
             });

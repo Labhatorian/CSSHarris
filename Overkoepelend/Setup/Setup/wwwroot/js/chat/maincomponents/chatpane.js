@@ -1,17 +1,15 @@
-﻿
+﻿import { ChatMessage } from "../components/chatmessage.js";
+
+customElements.define('chat-message', ChatMessage);
+
 const chatpaneTemplate = {
     id: 'chat-pane-tpl',
     template: `
     <section id="chat">
             <div class="bg-light user-list" id="chatpane">
-            <div class="">
-                <div class="">
-                    <ul id="messagesList">
-                        <chat-message></chat-message>
+                    <ul id="messagesList">  
                     </ul>
                 </div>
-            </div>
-        </div>
             <br />
             <div class="bg-light" id="chatinput">
                 <div class=""><input type="text" class="w-100" id="messageInput" /></div>
@@ -51,6 +49,32 @@ class ChatPane extends HTMLElement {
         const template = document.querySelector('#chat-pane-tpl');
         const clone = document.importNode(template.content, true);
         this.shadowRoot.appendChild(clone);
+
+        this.applyEventlisteners();
+    }
+
+    applyEventlisteners() {
+        this.shadowRoot.querySelector("#sendButton").addEventListener('click', (event) => {
+            event.preventDefault();
+            var message = this.shadowRoot.getElementById("messageInput").value;
+
+            var messageevent = new CustomEvent("sendmessage", {
+                composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
+                bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+            });
+            messageevent.message = message;
+
+            this.shadowRoot.dispatchEvent(messageevent);
+        });
+    }
+
+    NewMessage(user, message) {
+        let msg = new ChatMessage(user, message);
+        this.shadowRoot.querySelector('#messagesList').append(msg);
+    }
+
+    ShowMessages(Messages) {
+
     }
 }
 
