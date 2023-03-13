@@ -1,0 +1,45 @@
+﻿@model DeveloperViewModel
+@{
+    ViewData["Title"] = @Model.DeveloperPerson.Name;
+}
+
+<div class="page">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/developer.css" asp-append-version="true" />
+    <script defer src="~/js/slideshow.js"></script> 
+
+    <section class="personalia">
+
+        <img class="person-logo" src="~/images/@Model.DeveloperPerson.Name/@Model.DeveloperPerson.PersonImage">
+        <h1 class="person-name">@Model.DeveloperPerson.Name</h1>
+
+        @Html.Raw(@Model.ViewCharacteristics())
+
+        @Html.Raw(@Model.ViewSkills())
+    </section>
+
+    <section class="profile">
+
+        <section class="profile-content">
+
+            <div class="profile-content__category--hidden-mobile">
+                <h3 class="profile-content__category-title">Profiel</h3>
+                <hr>
+            </div>
+
+            <div class="profile-content__element--hidden-mobile">
+                <div class="profile-content__element-header">
+                </div>
+                <p class="profile-content__description">
+                    @Model.DeveloperPerson.ProfileDescription
+                <p>
+            </div>
+
+            @Html.Raw(@Model.ViewStudies())
+
+            @Html.Raw(@Model.ViewExperience())
+
+            @Html.Raw(@Model.ViewImages())
+        </section>
+    </section>
+</div>

@@ -1,0 +1,12 @@
+﻿.contact-content__submit {
+    float: left;
+}
+
+.contact-content__loading {
+    float: left;
+    margin-left: 10px;
+}
+
+.contact-content-loading__divoffset {
+    padding-bottom: 60px;
+}
