@@ -1,4 +1,5 @@
-﻿using CSSHarris.Models;
+﻿using CSSHarris.Data;
+using CSSHarris.Models;
 using CSSHarris.Models.DeveloperModels;
 using Ganss.Xss;
 using Mailjet.Client;
@@ -13,7 +14,7 @@ namespace CSSHarris.Controllers
     public class DevContactController : ControllerBase
     {
         private readonly IConfiguration Configuration;
-        private readonly EmailContext db;
+        private readonly ApplicationDbContext db;
 
         private readonly string GoogleCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
 
@@ -25,7 +26,7 @@ namespace CSSHarris.Controllers
         /// </summary>
         /// <param name="db"></param>
         /// <param name="configuration"></param>
-        public DevContactController(EmailContext db, IConfiguration configuration)
+        public DevContactController(ApplicationDbContext db, IConfiguration configuration)
         {
             this.db = db;
             Configuration = configuration;
