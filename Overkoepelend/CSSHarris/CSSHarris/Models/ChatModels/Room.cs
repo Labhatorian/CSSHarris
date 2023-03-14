@@ -3,9 +3,9 @@
     public class Room
     {
         public string ID { get; set; }
-        public User Owner { get; set; }
+        public ChatUser Owner { get; set; }
         public string Title { get; set; }
-        public List<User> UsersInRoom { get; set; } = new();
+        public List<ChatUser> UsersInRoom { get; set; } = new();
         public Chatlog Chatlog { get; set; } = new();
     }
 }

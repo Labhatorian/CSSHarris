@@ -1,20 +1,24 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using CSSHarris.Models.ChatModels;
-using User = CSSHarris.Models.User;
+using ChatUser = CSSHarris.Models.ChatUser;
 
 namespace CSSHarris.Hubs
 {
     public class ChatHub : Hub<IConnectionHub>
     {
-        private static readonly List<User> _Users = new();
+        private static readonly List<ChatUser> _Users = new();
         private static readonly List<Room> Rooms = new();
 
         public async Task SendMessage(string roomID, string message)
         {
-            User signallingUser = _Users.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
+            ChatUser signallingUser = _Users.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
             Room room = Rooms.SingleOrDefault(u => u.ID == roomID);
 
-            room.Chatlog.Messages.Add(new Message(signallingUser, DateTime.Now, message));
+            room.Chatlog.Messages.Add(new Message() {
+                ChatUser = signallingUser,
+                DateTime= DateTime.Now,
+                Content= message
+            });
 
             await Clients.Group(roomID).ReceiveMessage(signallingUser.Username, message);
         }
@@ -22,7 +26,7 @@ namespace CSSHarris.Hubs
         public async Task Join(string username)
         {
             // Add the new user
-            User newUser = new()
+            ChatUser newUser = new()
             {
                 Username = username,
                 ConnectionId = Context.ConnectionId
@@ -53,7 +57,7 @@ namespace CSSHarris.Hubs
         public async Task DeleteRoom(string roomID)
         {
             var roomToDelete = Rooms.SingleOrDefault(u => u.ID == roomID);
-            User signallingUser = _Users.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
+            ChatUser signallingUser = _Users.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
 
             if (signallingUser != roomToDelete.Owner) return;
 
@@ -61,7 +65,7 @@ namespace CSSHarris.Hubs
             await Clients.Group(roomID).UpdateUserList(null);
             await Clients.Group(roomID).RoomDeleted();
 
-            foreach (User user in roomToDelete.UsersInRoom)
+            foreach (ChatUser user in roomToDelete.UsersInRoom)
             {
                 Groups.RemoveFromGroupAsync(user.ConnectionId, roomID);
             }
