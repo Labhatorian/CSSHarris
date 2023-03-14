@@ -8,12 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Chat\Friends.cshtml" />
     <Content Remove="wwwroot\images\Harris\classic-cars.jpg" />
     <Content Remove="wwwroot\images\Harris\person-pasfoto.png" />
     <Content Remove="wwwroot\js\slideshow.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Chat\Friends.cshtml" />
+    <None Include="Views\Chat\Global.cshtml" />
     <None Include="wwwroot\css\developer.css" />
     <None Include="wwwroot\images\classic-cars.jpg" />
     <None Include="wwwroot\images\Harris\classic-cars.jpg" />
@@ -28,8 +31,9 @@
   <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
     <PackageReference Include="Mailjet.Api" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3">
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-preview.1.23111.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0-preview.1.23111.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

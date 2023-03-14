@@ -1,0 +1,41 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="text-center">
+    <h1 class="display-4">Video with WebRTC</h1>
+
+    <div class="card card-body bg-light user-list">
+        <ul id="usersdata" class="list-group">
+            <li class="list-group-item">Online Users <small id="usersLength"></small></li>
+            <!-- ko foreach: Users -->
+            <li class="list-group-item user" data-cid="" data-username="">
+                <a href="#">
+                    <!-- only using an a here for bootstrap styling -->
+                    <div class="username"></div>
+                    <div class="helper" data-bind="css: $parent.getUserStatus($data)"></div>
+                </a>
+            </li>
+            <!-- /ko -->
+        </ul>
+    </div>
+
+    <!-- In Call Actions -->
+    <div class="card card-body bg-light actions">
+        <div id="callstatus" class="status">Idle</div>
+        <button class="btn btn-danger hangup">Hang Up</button>
+    </div>
+
+    <!--Video-->
+    <div class="container card card-body bg-light user-list">
+        <center>
+            <video style="max-width: 20%;" id="localVideo" autoplay playsinline/>
+            <video style="max-width: 20%;" id="remoteVideo" autoplay playsinline />
+        </center>
+    </div>
+
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script defer src="~/js/video.js"></script>
+
+</div>
