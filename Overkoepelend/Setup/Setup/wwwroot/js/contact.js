@@ -13,6 +13,7 @@ form.addEventListener("submit", async (event) => {
     ToggleInputs();
 
     let valide = ValidateInputs();
+
     if (valide) {
 
         let response = await fetch('/api/DevContact/Contact', {
