@@ -58,12 +58,6 @@ $(document).ready(function () {
     this.addEventListener("sendmessage", function (e) {
        if(currentRoomId != '' && currentRoomId != undefined) connection.invoke("SendMessage", currentRoomId, e.message);
     });
-
-    //Handler Add friend
-    //Handler send message
-    this.addEventListener("addfriend", function (e) {
-        connection.invoke("SendFriendRequest", e.userConnectId);
-    });
 });
 
 // Hub Callback: Update users

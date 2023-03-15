@@ -153,5 +153,44 @@ namespace CSSHarris.Hubs
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
+
+        #region Friendrequests
+        public async Task SendFriendRequest(string TargetConnectionId)
+        {
+            var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
+            var target = _Users.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
+            if (target == null || callingUser == null) return;
+
+            target.FriendRequests.Add(callingUser);
+        }
+
+        public async Task ConfirmFriendRequest(string TargetConnectionId)
+        {
+            var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
+            var target = _Users.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
+            if (target == null || callingUser == null) return;
+
+            target.Friends.Add(callingUser);
+            callingUser.Friends.Add(target);
+        }
+
+        public async Task DenyFriendRequest(string TargetConnectionId)
+        {
+            var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
+            var target = _Users.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
+            if (target == null || callingUser == null) return;
+
+            callingUser.FriendRequests.Remove(target);
+        }
+
+        public async Task RevokeFriendRequest(string TargetConnectionId)
+        {
+            var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
+            var target = _Users.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
+            if (target == null || callingUser == null) return;
+
+            target.FriendRequests.Remove(callingUser);
+        }
+        #endregion
     }
 }

@@ -9,7 +9,13 @@ namespace CSSHarris.Models
     public class ChatUser
     {
         public IdentityUser? User { get; set; }
+
         public string? Username { get; set; }
+
+        public List<ChatUser> Friends { get; set; }
+        public List<ChatUser> FriendRequests { get; set; }
+
         public string ConnectionId { get; set; }
+
     }
 }

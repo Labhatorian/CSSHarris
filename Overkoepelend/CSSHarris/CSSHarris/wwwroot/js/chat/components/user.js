@@ -36,6 +36,7 @@ class User extends HTMLElement {
         const clone = document.importNode(template.content, true);
         this.shadowRoot.appendChild(clone);
 
+        applyEventlisteners();
     }
 
     EditText() {
@@ -72,6 +73,22 @@ class User extends HTMLElement {
     // a list of attributes to observe for changes
     static get observedAttributes() {
         return ["data-username"];
+    }
+
+    applyEventlisteners() {
+        this.shadowRoot.querySelector("a").addEventListener('click', () => {
+            var addFriend = confirm("Do you want to add " + this.username() + " as a friend?");
+
+            if (addFriend) {
+                var event = new CustomEvent("addFriend", {
+                    composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
+                    bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+                });
+                event.userConnectId = this.getAttribute('data-id');
+
+                this.shadowRoot.dispatchEvent(event);
+            }
+        });
     }
 }
 
