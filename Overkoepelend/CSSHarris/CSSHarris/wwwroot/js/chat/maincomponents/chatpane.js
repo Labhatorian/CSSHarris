@@ -71,6 +71,9 @@ class ChatPane extends HTMLElement {
     NewMessage(user, message) {
         let msg = new ChatMessage(user, message);
         this.shadowRoot.querySelector('#messagesList').append(msg);
+
+        var pane = this.shadowRoot.querySelector('#chatpane')
+        pane.scrollTop = pane.scrollHeight - pane.clientHeight;
     }
 
     ShowMessages(Messages) {
@@ -78,6 +81,9 @@ class ChatPane extends HTMLElement {
         $.each(Messages, function (index) {
             self.NewMessage(Messages[index].chatUser.username, Messages[index].content)
         });
+
+        var pane = this.shadowRoot.querySelector('#chatpane')
+        pane.scrollTop = pane.scrollHeight - pane.clientHeight;
     }
 
     DeleteMessages() {

@@ -36,7 +36,7 @@ class User extends HTMLElement {
         const clone = document.importNode(template.content, true);
         this.shadowRoot.appendChild(clone);
 
-        applyEventlisteners();
+       this.applyEventlisteners();
     }
 
     EditText() {

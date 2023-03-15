@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using CSSHarris.Models.ChatModels;
 using ChatUser = CSSHarris.Models.ChatUser;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Principal;
 
 namespace CSSHarris.Hubs
 {
+    [AllowAnonymous]
     public class ChatHub : Hub<IConnectionHub>
     {
         private static readonly List<ChatUser> _Users = new();
@@ -25,10 +28,12 @@ namespace CSSHarris.Hubs
 
         public async Task Join(string username)
         {
-            // Add the new user
+            IIdentity currentUser = Context.User.Identity;
+
             ChatUser newUser = new()
             {
-                Username = username,
+                User = currentUser,
+                Username = currentUser.IsAuthenticated ? currentUser.Name : username,
                 ConnectionId = Context.ConnectionId
             };
 
@@ -41,11 +46,14 @@ namespace CSSHarris.Hubs
         public async Task CreateRoom(string title)
         {
             // Create room
+            if (Context.User.Identity is null) return;
+            if (Rooms.Where(room => room.Owner == Context.User.Identity.Name).ToList().Count >= 3) return;
+            Guid guid = Guid.NewGuid();
             Room room = new()
             {
-                Owner = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId),
+                Owner = Context.User.Identity.Name,
                 Title = title,
-                ID = Context.ConnectionId + 1
+                ID = guid.ToString()
             };
 
             Rooms.Add(room);
@@ -57,10 +65,8 @@ namespace CSSHarris.Hubs
         public async Task DeleteRoom(string roomID)
         {
             var roomToDelete = Rooms.SingleOrDefault(u => u.ID == roomID);
-            ChatUser signallingUser = _Users.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
 
-            if (signallingUser != roomToDelete.Owner) return;
-
+            if (Context.User.Identity.Name != roomToDelete.Owner) return;
 
             await Clients.Group(roomID).UpdateUserList(null);
             await Clients.Group(roomID).RoomDeleted();
@@ -115,7 +121,7 @@ namespace CSSHarris.Hubs
             var callingUser = _Users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
             var roomToJoin = Rooms.SingleOrDefault(u => u.ID == RoomID);
 
-            bool IsOwner = roomToJoin.Owner == callingUser ? true : false;
+            bool IsOwner = roomToJoin.Owner == Context.User.Identity.Name;
 
             //Join room
             roomToJoin.UsersInRoom.Add(callingUser);

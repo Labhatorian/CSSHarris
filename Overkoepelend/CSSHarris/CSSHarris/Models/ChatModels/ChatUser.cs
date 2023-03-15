@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Principal;
 
 namespace CSSHarris.Models
 {
     [NotMapped] //Will be generated when signalr connection established
     public class ChatUser
     {
-        public IdentityUser? User { get; set; }
+        public IIdentity? User { get; set; }
 
         public string? Username { get; set; }
 
