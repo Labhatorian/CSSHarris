@@ -23,7 +23,7 @@ namespace CSSHarris.Hubs
                 Content= message
             });
 
-            await Clients.Group(roomID).ReceiveMessage(signallingUser.Username, message);
+            await Clients.Group(roomID).ReceiveMessage(signallingUser.UserName, message);
         }
 
         public async Task Join(string username)
@@ -33,7 +33,7 @@ namespace CSSHarris.Hubs
             ChatUser newUser = new()
             {
                 User = currentUser,
-                Username = currentUser.IsAuthenticated ? currentUser.Name : username,
+                UserName = currentUser.IsAuthenticated ? currentUser.Name : username,
                 ConnectionId = Context.ConnectionId
             };
 
@@ -41,12 +41,13 @@ namespace CSSHarris.Hubs
 
             //Get rooms
             await Clients.Caller.UpdateRoomList(Rooms);
+            await Clients.Caller.Connected(newUser.UserName);
         }
 
         public async Task CreateRoom(string title)
         {
             // Create room
-            if (Context.User.Identity is null) return;
+            if (!Context.User.Identity.IsAuthenticated) return;
             if (Rooms.Where(room => room.Owner == Context.User.Identity.Name).ToList().Count >= 3) return;
             Guid guid = Guid.NewGuid();
             Room room = new()

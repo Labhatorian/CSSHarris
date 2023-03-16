@@ -1,5 +1,7 @@
-﻿using CSSHarris.Models.ChatModels;
+﻿using CSSHarris.Models;
+using CSSHarris.Models.ChatModels;
 using CSSHarris.Models.DeveloperModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,8 +20,7 @@ namespace CSSHarris.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // put your fluent API code here
-            base.OnModelCreating(modelBuilder); // call base method
+            base.OnModelCreating(modelBuilder); 
         }
     }
 }

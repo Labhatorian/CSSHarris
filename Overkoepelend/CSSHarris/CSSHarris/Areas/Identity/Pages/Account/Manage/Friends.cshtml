@@ -1,0 +1,21 @@
+﻿@page
+@model ChangeFriendsModel
+@{
+    ViewData["Title"] = "My Friends";
+    ViewData["ActivePage"] = ManageNavPages.Friends;
+}
+
+<h3>@ViewData["Title"]</h3>
+@*<partial name="_StatusMessage" for="StatusMessage" />*@
+<div class="row">
+    <div class="col-md-6">
+        <div id="friendrequests"></div>
+    </div>
+    <div class="col-md-7">
+        <div id="friends"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -77,7 +77,7 @@ class User extends HTMLElement {
 
     applyEventlisteners() {
         this.shadowRoot.querySelector("a").addEventListener('click', () => {
-            var addFriend = confirm("Do you want to add " + this.username() + " as a friend?");
+            var addFriend = confirm("Do you want to add " + this._username + " as a friend?");
 
             if (addFriend) {
                 var event = new CustomEvent("addFriend", {

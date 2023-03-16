@@ -139,10 +139,10 @@ class ChatList extends HTMLElement {
             userinfo.setAttribute("amount", userList.length-1);
 
             $.each(userList, function (index) {
-                if (userList[index].username != myUsername) {
+                if (userList[index].userName != myUsername) {
                     const userNode = document.createElement('chat-user');
                     userNode.setAttribute("data-id", userList[index].connectionId);
-                    userNode.setAttribute("data-username", userList[index].username);
+                    userNode.setAttribute("data-username", userList[index].userName);
                     self.shadowRoot.querySelector('#chatlistdata').append(userNode);
                 }
             });

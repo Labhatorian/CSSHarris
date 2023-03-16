@@ -17,5 +17,6 @@ namespace CSSHarris.Hubs
         Task UpdateRoomList(List<Room> rooms);
         Task RoomJoined(string roomtitle, bool isOwner, List<Message> messages);
         Task RoomDeleted();
+        Task Connected(string? userName);
     }
 }

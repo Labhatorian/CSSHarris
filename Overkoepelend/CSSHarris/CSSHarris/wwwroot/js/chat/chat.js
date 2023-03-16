@@ -10,18 +10,8 @@ var myUsername;
 var currentRoomId = "";
 
 const initializeSignalR = () => {
-    connection.start().then(() => { console.log("SignalR: Connected"); generateRandomUsername(); }).catch(err => console.log(err));
-};
-
-const setUsername = (username) => {
-    connection.invoke("Join", username)
-    myUsername = username;
-    document.querySelector("chat-list[type = 'user']").setUser(username);
-};
-
-const generateRandomUsername = () => {
     let username = 'User ' + Math.floor((Math.random() * 10000) + 1);
-    setUsername(username);
+    connection.start().then(() => { console.log("SignalR: Connected"); connection.invoke("Join", username); }).catch(err => console.log(err));
 };
 
 $(document).ready(function () {
@@ -61,9 +51,20 @@ $(document).ready(function () {
 
     //Handler Add friend
     //Handler send message
-    this.addEventListener("addfriend", function (e) {
+    this.addEventListener("addFriend", function (e) {
         connection.invoke("SendFriendRequest", e.userConnectId);
     });
+});
+
+// Hub Callback: Update users
+connection.on('Connected', (username) => {
+    myUsername = username;
+    document.querySelector("chat-list[type = 'user']").setUser(username);
+});
+
+// Hub Callback: Update users
+connection.on('updateUserList', (userList) => {
+    document.querySelector("chat-list[type = 'user']").updateUsers(userList, myUsername);
 });
 
 // Hub Callback: Update users
