@@ -77,6 +77,12 @@ connection.on('updateRoomList', (roomList) => {
     document.querySelector("chat-list[type = 'room']").updateRooms(roomList, currentRoomId);
 });
 
+// Hub Callback: Update Friends
+connection.on("updateFriends", function (friends, requests) {
+    document.querySelector("chat-list[type = 'friend'][myfriend = 1]").updateFriendLists(friends);
+    document.querySelector("chat-list[type = 'friend'][myfriend = 0]").updateFriendList(requests);
+});
+
 // Hub Callback: Room joined
 connection.on('roomJoined', (RoomTitle, IsOwner, Messages) => {
     console.log('Room joined');

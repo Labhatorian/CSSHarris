@@ -32,7 +32,7 @@ class ChatPane extends HTMLElement {
     init() {
         const linkElem = document.createElement("link");
         linkElem.setAttribute("rel", "stylesheet");
-        linkElem.setAttribute("href", "../js/chat/css/chatpane.css");
+        linkElem.setAttribute("href", "/css/components/chatpane.css");
         this.shadowRoot.appendChild(linkElem);
 
         const linkElemBootstrap = document.createElement("link");

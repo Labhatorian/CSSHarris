@@ -3,6 +3,8 @@ using CSSHarris.Models.ChatModels;
 using ChatUser = CSSHarris.Models.ChatUser;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Principal;
+using System.Security.Claims;
+using CSSHarris.Data;
 
 namespace CSSHarris.Hubs
 {
@@ -11,6 +13,12 @@ namespace CSSHarris.Hubs
     {
         private static readonly List<ChatUser> _Users = new();
         private static readonly List<Room> Rooms = new();
+        private readonly ApplicationDbContext db;
+
+        public ChatHub(ApplicationDbContext db)
+        {
+            this.db = db;
+        }
 
         public async Task SendMessage(string roomID, string message)
         {
@@ -30,18 +38,23 @@ namespace CSSHarris.Hubs
         {
             IIdentity currentUser = Context.User.Identity;
 
+            var identity = (ClaimsIdentity)Context.User.Identity;
+            var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = (userIdClaim is not null) ? userIdClaim.Value : null;
+            
             ChatUser newUser = new()
             {
-                User = currentUser,
+                UserID = userId,
                 UserName = currentUser.IsAuthenticated ? currentUser.Name : username,
                 ConnectionId = Context.ConnectionId
             };
 
             _Users.Add(newUser);
-
+            
             //Get rooms
             await Clients.Caller.UpdateRoomList(Rooms);
             await Clients.Caller.Connected(newUser.UserName);
+            //await Clients.Caller.UpdateFriends(newUser.UserName);
         }
 
         public async Task CreateRoom(string title)
@@ -58,6 +71,7 @@ namespace CSSHarris.Hubs
             };
 
             Rooms.Add(room);
+            db.Add(room);
 
             // Send down the new list to all clients
             await SendRoomListUpdate();
@@ -78,6 +92,7 @@ namespace CSSHarris.Hubs
             }
 
             Rooms.Remove(roomToDelete);
+            db.Remove(roomToDelete);
 
             // Send down the new list to all clients
             await SendRoomListUpdate();
@@ -197,6 +212,16 @@ namespace CSSHarris.Hubs
             if (target == null || callingUser == null) return;
 
             target.FriendRequests.Remove(callingUser);
+        }
+
+        public void GetFriends()
+        {
+
+        }
+
+        public void GetRequests()
+        {
+
         }
         #endregion
     }

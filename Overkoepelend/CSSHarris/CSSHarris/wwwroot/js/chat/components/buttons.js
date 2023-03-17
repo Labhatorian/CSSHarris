@@ -27,7 +27,7 @@ class RoomButtons extends HTMLElement {
 
         const linkElem = document.createElement("link");
         linkElem.setAttribute("rel", "stylesheet");
-        linkElem.setAttribute("href", "../js/chat/css/buttons.css");
+        linkElem.setAttribute("href", "/css/components/buttons.css");
         this.shadowRoot.appendChild(linkElem);
 
         const templateNode = document.createElement('template');

@@ -6,13 +6,15 @@
 }
 
 <h3>@ViewData["Title"]</h3>
-@*<partial name="_StatusMessage" for="StatusMessage" />*@
-<div class="row">
-    <div class="col-md-6">
-        <div id="friendrequests"></div>
+<script type="module" defer src="~/js/chat/friends.js"></script>
+<link rel="stylesheet" href="~/css/friend.css" asp-append-version="true" />
+
+<div class="row align-items-start friends">
+    <div class="col friends-div">
+        <chat-list type="friend" myfriends=0></chat-list>
     </div>
-    <div class="col-md-7">
-        <div id="friends"></div>
+    <div class="col friends-div">
+        <chat-list type="friend" myfriends=1></chat-list>
     </div>
 </div>
 
