@@ -25,8 +25,6 @@ builder.Services.AddSignalR(o =>
     o.EnableDetailedErrors = true;
 });
 
-builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

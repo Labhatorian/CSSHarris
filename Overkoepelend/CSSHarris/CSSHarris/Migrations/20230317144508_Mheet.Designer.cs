@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CSSHarris.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230314132222_CSSHarris")]
-    partial class CSSHarris
+    [Migration("20230317144508_Mheet")]
+    partial class Mheet
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -56,6 +56,10 @@ namespace CSSHarris.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.HasIndex("ChatlogID");
@@ -71,6 +75,10 @@ namespace CSSHarris.Migrations
                     b.Property<int>("ChatlogID")
                         .HasColumnType("int");
 
+                    b.Property<string>("Owner")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -80,6 +88,37 @@ namespace CSSHarris.Migrations
                     b.HasIndex("ChatlogID");
 
                     b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("CSSHarris.Models.ChatUser", b =>
+                {
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ChatlogID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConnectionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ChatlogID");
+
+                    b.HasIndex("RoomID");
+
+                    b.ToTable("ChatUsers");
                 });
 
             modelBuilder.Entity("CSSHarris.Models.DeveloperModels.Email", b =>
@@ -104,6 +143,21 @@ namespace CSSHarris.Migrations
                     b.HasKey("idEmail");
 
                     b.ToTable("Emails");
+                });
+
+            modelBuilder.Entity("ChatUserChatUser", b =>
+                {
+                    b.Property<string>("FriendRequestsID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FriendsID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FriendRequestsID", "FriendsID");
+
+                    b.HasIndex("FriendsID");
+
+                    b.ToTable("ChatUserChatUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -326,6 +380,32 @@ namespace CSSHarris.Migrations
                     b.Navigation("Chatlog");
                 });
 
+            modelBuilder.Entity("CSSHarris.Models.ChatUser", b =>
+                {
+                    b.HasOne("CSSHarris.Models.ChatModels.Chatlog", null)
+                        .WithMany("Users")
+                        .HasForeignKey("ChatlogID");
+
+                    b.HasOne("CSSHarris.Models.ChatModels.Room", null)
+                        .WithMany("UsersInRoom")
+                        .HasForeignKey("RoomID");
+                });
+
+            modelBuilder.Entity("ChatUserChatUser", b =>
+                {
+                    b.HasOne("CSSHarris.Models.ChatUser", null)
+                        .WithMany()
+                        .HasForeignKey("FriendRequestsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CSSHarris.Models.ChatUser", null)
+                        .WithMany()
+                        .HasForeignKey("FriendsID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -380,6 +460,13 @@ namespace CSSHarris.Migrations
             modelBuilder.Entity("CSSHarris.Models.ChatModels.Chatlog", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("CSSHarris.Models.ChatModels.Room", b =>
+                {
+                    b.Navigation("UsersInRoom");
                 });
 #pragma warning restore 612, 618
         }

@@ -79,7 +79,7 @@ class ChatPane extends HTMLElement {
     ShowMessages(Messages) {
         const self = this;
         $.each(Messages, function (index) {
-            self.NewMessage(Messages[index].chatUser.userName, Messages[index].content)
+            self.NewMessage(Messages[index].username, Messages[index].content)
         });
 
         var pane = this.shadowRoot.querySelector('#chatpane')

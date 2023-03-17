@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CSSHarris.Migrations
 {
     /// <inheritdoc />
-    public partial class CSSHarris : Migration
+    public partial class Mheet : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -189,6 +189,7 @@ namespace CSSHarris.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChatlogID = table.Column<int>(type: "int", nullable: true)
@@ -208,6 +209,7 @@ namespace CSSHarris.Migrations
                 columns: table => new
                 {
                     ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Owner = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChatlogID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -220,6 +222,55 @@ namespace CSSHarris.Migrations
                         principalTable: "Chatlogs",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatUsers",
+                columns: table => new
+                {
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ChatlogID = table.Column<int>(type: "int", nullable: true),
+                    RoomID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatUsers", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_ChatUsers_Chatlogs_ChatlogID",
+                        column: x => x.ChatlogID,
+                        principalTable: "Chatlogs",
+                        principalColumn: "ID");
+                    table.ForeignKey(
+                        name: "FK_ChatUsers_Rooms_RoomID",
+                        column: x => x.RoomID,
+                        principalTable: "Rooms",
+                        principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatUserChatUser",
+                columns: table => new
+                {
+                    FriendRequestsID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FriendsID = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatUserChatUser", x => new { x.FriendRequestsID, x.FriendsID });
+                    table.ForeignKey(
+                        name: "FK_ChatUserChatUser_ChatUsers_FriendRequestsID",
+                        column: x => x.FriendRequestsID,
+                        principalTable: "ChatUsers",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ChatUserChatUser_ChatUsers_FriendsID",
+                        column: x => x.FriendsID,
+                        principalTable: "ChatUsers",
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -262,6 +313,21 @@ namespace CSSHarris.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChatUserChatUser_FriendsID",
+                table: "ChatUserChatUser",
+                column: "FriendsID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatUsers_ChatlogID",
+                table: "ChatUsers",
+                column: "ChatlogID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatUsers_RoomID",
+                table: "ChatUsers",
+                column: "RoomID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Message_ChatlogID",
                 table: "Message",
                 column: "ChatlogID");
@@ -291,19 +357,25 @@ namespace CSSHarris.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ChatUserChatUser");
+
+            migrationBuilder.DropTable(
                 name: "Emails");
 
             migrationBuilder.DropTable(
                 name: "Message");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ChatUsers");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "Chatlogs");
