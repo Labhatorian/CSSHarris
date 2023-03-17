@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Security.Claims;
 using CSSHarris.Data;
 using CSSHarris.Models;
+using System.Collections.Concurrent;
 
 namespace CSSHarris.Hubs
 {
@@ -13,6 +14,7 @@ namespace CSSHarris.Hubs
     public class ChatHub : Hub<IConnectionHub>
     {
         private readonly ApplicationDbContext db;
+        private static ConcurrentDictionary<string, bool> CancelDict = new();
 
         public ChatHub(ApplicationDbContext db)
         {
@@ -47,22 +49,30 @@ namespace CSSHarris.Hubs
             var identity = (ClaimsIdentity)Context.User.Identity;
             var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
             var userId = (userIdClaim is not null) ? userIdClaim.Value : null;
-            Guid guid = Guid.NewGuid();
-            ChatUser newUser = new()
-            {
-                ID = guid.ToString(),
-                UserID = userId,
-                UserName = currentUser.IsAuthenticated ? currentUser.Name : username,
-                ConnectionId = Context.ConnectionId
-            };
 
-            db.ChatUsers.Add(newUser);
+            ChatUser user = db.ChatUsers.Where(user => user.UserID == userId).FirstOrDefault();
+            if (user is null)
+            {
+                Guid guid = Guid.NewGuid();
+                user = new()
+                {
+                    ID = guid.ToString(),
+                    UserID = userId,
+                    UserName = currentUser.IsAuthenticated ? currentUser.Name : username,
+                    ConnectionId = Context.ConnectionId
+                };
+
+                db.ChatUsers.Add(user);
+            } else
+            {
+                user.ConnectionId = Context.ConnectionId;
+                db.ChatUsers.Update(user);
+            }
             db.SaveChanges();
             
             //Get rooms
             await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
-            await Clients.Caller.Connected(newUser.UserName);
-            //await Clients.Caller.UpdateFriends(newUser.UserName);
+            await Clients.Caller.Connected(user.UserName);
         }
 
         public async Task CreateRoom(string title)
@@ -114,33 +124,28 @@ namespace CSSHarris.Hubs
         {
             var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
 
-            if (callingUser == null)
-            {
-                return;
-            }
+            if (callingUser == null) return;
 
-            // Remove the user
-            db.ChatUsers.Remove(callingUser);
-            db.SaveChanges();
-            
-            await base.OnDisconnectedAsync(exception);
-
-            //Leave room
             var roomToLeave = callingUser.CurrentRoom;
 
-            if (roomToLeave == null)
+            if (roomToLeave is not null)
             {
-                return;
+                await RemoveFromGroup(roomToLeave.ID);
+                await Clients.Group(roomToLeave.ID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToLeave).ToList());
             }
 
-            callingUser.CurrentRoom = null;
-            db.Update(callingUser);
-            db.SaveChanges();
+            if (callingUser.UserID is not null)
+            {
+                callingUser.CurrentRoom = null;
+                db.Update(callingUser);
+            }
+            else
+            {
+                db.ChatUsers.Remove(callingUser);
+            }
 
-            await RemoveFromGroup(roomToLeave.ID);
-            await Clients.Group(roomToLeave.ID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToLeave).ToList());
-            await Clients.Caller.UpdateUserList(null);
-            await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
+            db.SaveChanges();
+            await base.OnDisconnectedAsync(exception);
         }
 
         private async Task SendRoomListUpdate()
@@ -198,53 +203,15 @@ namespace CSSHarris.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
 
-        #region Friendrequests
         public async Task SendFriendRequest(string TargetConnectionId)
         {
             var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
             var target = db.ChatUsers.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
-            if (target == null || callingUser == null) return;
+            if (target == null || callingUser == null || target.FriendRequests.Contains(callingUser) || callingUser.Friends.Contains(target)) return;
 
-            //target.FriendRequests.Add(callingUser);
+            target.FriendRequests.Add(callingUser);
+            db.Update(target);
+            db.SaveChanges();
         }
-
-        public async Task ConfirmFriendRequest(string TargetConnectionId)
-        {
-            var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
-            var target = db.ChatUsers.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
-            if (target == null || callingUser == null) return;
-
-            //target.Friends.Add(callingUser);
-            //callingUser.Friends.Add(target);
-        }
-
-        public async Task DenyFriendRequest(string TargetConnectionId)
-        {
-            var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
-            var target = db.ChatUsers.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
-            if (target == null || callingUser == null) return;
-
-            //callingUser.FriendRequests.Remove(target);
-        }
-
-        public async Task RevokeFriendRequest(string TargetConnectionId)
-        {
-            var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
-            var target = db.ChatUsers.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
-            if (target == null || callingUser == null) return;
-
-            //target.FriendRequests.Remove(callingUser);
-        }
-
-        public void GetFriends()
-        {
-
-        }
-
-        public void GetRequests()
-        {
-
-        }
-        #endregion
     }
 }
