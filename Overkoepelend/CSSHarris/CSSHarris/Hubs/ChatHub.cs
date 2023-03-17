@@ -94,9 +94,12 @@ namespace CSSHarris.Hubs
             await Clients.Group(roomID).UpdateUserList(null);
             await Clients.Group(roomID).RoomDeleted();
 
-            foreach (ChatUser user in roomToDelete.UsersInRoom)
+            List<ChatUser> users = db.ChatUsers.Where(user => user.CurrentRoom == roomToDelete).ToList();
+
+            foreach (ChatUser user in users)
             {
-                roomToDelete.UsersInRoom.Remove(user);
+                user.CurrentRoom = null;
+                db.Update(user);
                 Groups.RemoveFromGroupAsync(user.ConnectionId, roomID);
             }
 
@@ -123,18 +126,19 @@ namespace CSSHarris.Hubs
             await base.OnDisconnectedAsync(exception);
 
             //Leave room
-            var roomToLeave = db.Rooms.Where(u => u.UsersInRoom.Contains(callingUser)).FirstOrDefault(); ;
+            var roomToLeave = callingUser.CurrentRoom;
 
             if (roomToLeave == null)
             {
                 return;
             }
-            roomToLeave.UsersInRoom.Remove(callingUser);
-            db.Update(roomToLeave);
+
+            callingUser.CurrentRoom = null;
+            db.Update(callingUser);
             db.SaveChanges();
 
             await RemoveFromGroup(roomToLeave.ID);
-            await Clients.Group(roomToLeave.ID).UpdateUserList(roomToLeave.UsersInRoom);
+            await Clients.Group(roomToLeave.ID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToLeave).ToList());
             await Clients.Caller.UpdateUserList(null);
             await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
         }
@@ -152,12 +156,12 @@ namespace CSSHarris.Hubs
             bool IsOwner = roomToJoin.Owner == Context.User.Identity.Name;
 
             //Join room
-            roomToJoin.UsersInRoom.Add(callingUser);
-            db.Update(roomToJoin);
+            callingUser.CurrentRoom = roomToJoin;
+            db.Update(callingUser);
             db.SaveChanges();
 
             await AddToGroup(RoomID);
-            await Clients.Group(RoomID).UpdateUserList(roomToJoin.UsersInRoom);
+            await Clients.Group(RoomID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToJoin).ToList());
 
             //TODO do not send full user data
             await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner, roomToJoin.Chatlog.Messages);
@@ -171,16 +175,15 @@ namespace CSSHarris.Hubs
             if (callingUser == null) return;
 
             //Join room
-            var roomTest = db.Rooms.Where(u => u.Title.Equals("Test")).FirstOrDefault();
-            var roomToLeave = db.Rooms.Where(u => u.UsersInRoom.Contains(callingUser)).FirstOrDefault();
+            var roomToLeave = callingUser.CurrentRoom;
+            await RemoveFromGroup(roomToLeave.ID);
 
-            roomToLeave.UsersInRoom.Remove(callingUser);
+            callingUser.CurrentRoom = null;
 
-            db.Update(roomToLeave);
+            db.Update(callingUser);
             db.SaveChanges();
 
-            await RemoveFromGroup(roomToLeave.ID);
-            await Clients.Group(roomToLeave.ID).UpdateUserList(roomToLeave.UsersInRoom);
+            await Clients.Group(roomToLeave.ID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToLeave).ToList());
             await Clients.Caller.UpdateUserList(null);
             await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
         }

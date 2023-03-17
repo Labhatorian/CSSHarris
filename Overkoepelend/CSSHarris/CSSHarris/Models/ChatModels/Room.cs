@@ -12,8 +12,6 @@ namespace CSSHarris.Models.ChatModels
 
         public string Owner { get; set; }
         public string Title { get; set; }
-
-        public List<ChatUser> UsersInRoom { get; set; } = new();
         public Chatlog Chatlog { get; set; } = new();
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CSSHarris.Migrations
 {
     /// <inheritdoc />
-    public partial class Mheet : Migration
+    public partial class MHeet : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -230,10 +230,10 @@ namespace CSSHarris.Migrations
                 {
                     ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ChatlogID = table.Column<int>(type: "int", nullable: true),
-                    RoomID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    RoomId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ChatlogID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -244,8 +244,8 @@ namespace CSSHarris.Migrations
                         principalTable: "Chatlogs",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_ChatUsers_Rooms_RoomID",
-                        column: x => x.RoomID,
+                        name: "FK_ChatUsers_Rooms_RoomId",
+                        column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "ID");
                 });
@@ -323,9 +323,9 @@ namespace CSSHarris.Migrations
                 column: "ChatlogID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatUsers_RoomID",
+                name: "IX_ChatUsers_RoomId",
                 table: "ChatUsers",
-                column: "RoomID");
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Message_ChatlogID",

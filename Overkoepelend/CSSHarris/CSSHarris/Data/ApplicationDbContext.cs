@@ -25,6 +25,7 @@ namespace CSSHarris.Data
         {
             modelBuilder.Entity<Room>().Navigation(r => r.Chatlog).AutoInclude();
             modelBuilder.Entity<Chatlog>().Navigation(r => r.Messages).AutoInclude();
+            modelBuilder.Entity<ChatUser>().Navigation(r => r.CurrentRoom).AutoInclude();
 
             modelBuilder.Entity<Chatlog>()
                 .Property(e => e.ID)

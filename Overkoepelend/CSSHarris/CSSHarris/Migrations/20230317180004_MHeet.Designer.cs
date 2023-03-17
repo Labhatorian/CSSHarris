@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CSSHarris.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230317144508_Mheet")]
-    partial class Mheet
+    [Migration("20230317180004_MHeet")]
+    partial class MHeet
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,10 +99,9 @@ namespace CSSHarris.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ConnectionId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoomID")
+                    b.Property<string>("RoomId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserID")
@@ -116,7 +115,7 @@ namespace CSSHarris.Migrations
 
                     b.HasIndex("ChatlogID");
 
-                    b.HasIndex("RoomID");
+                    b.HasIndex("RoomId");
 
                     b.ToTable("ChatUsers");
                 });
@@ -386,9 +385,11 @@ namespace CSSHarris.Migrations
                         .WithMany("Users")
                         .HasForeignKey("ChatlogID");
 
-                    b.HasOne("CSSHarris.Models.ChatModels.Room", null)
-                        .WithMany("UsersInRoom")
-                        .HasForeignKey("RoomID");
+                    b.HasOne("CSSHarris.Models.ChatModels.Room", "CurrentRoom")
+                        .WithMany()
+                        .HasForeignKey("RoomId");
+
+                    b.Navigation("CurrentRoom");
                 });
 
             modelBuilder.Entity("ChatUserChatUser", b =>
@@ -462,11 +463,6 @@ namespace CSSHarris.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("CSSHarris.Models.ChatModels.Room", b =>
-                {
-                    b.Navigation("UsersInRoom");
                 });
 #pragma warning restore 612, 618
         }
