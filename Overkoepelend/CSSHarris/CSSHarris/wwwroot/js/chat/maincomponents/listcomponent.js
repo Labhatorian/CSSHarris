@@ -106,7 +106,6 @@ class ChatList extends HTMLElement {
     }
 
     updateButtons(RoomTitle, IsOwner, currentRoomId) {
-        //Enable buttons
         if (currentRoomId != "" && currentRoomId != undefined) {
             this.shadowRoot.querySelector('#component2').querySelector("room-buttons").JoinRoom(currentRoomId, IsOwner, RoomTitle);
         }
@@ -138,7 +137,6 @@ class ChatList extends HTMLElement {
         }
     }
 
-    //todo secure connection ids
     updateUsers(userList, myUsername) {
         var type = this.getAttribute("type");
         if (type === "user") {
@@ -161,14 +159,24 @@ class ChatList extends HTMLElement {
         }
     }
 
-    updateFriendList(userList) {
+    updateFriendList(userList, type) {
         var type = this.getAttribute("type");
         const self = this;
         if (type === "friend") {
             $.each(userList, function (index) {
                     const userNode = document.createElement('chat-user');
-                   // userNode.setAttribute("data-id", userList[index].connectionId);
-                    userNode.setAttribute("data-username", userList[index].userName);
+                    userNode.setAttribute("data-id", userList[index].chatUserID);
+                userNode.setAttribute("data-username", userList[index].userName);
+
+                var usertype;
+                var myfriends = self.getAttribute("myfriends");
+                if (myfriends === '0'){
+                    usertype = "request";
+                } else {
+                    usertype = "friend";
+                }
+
+                userNode.setAttribute("type", usertype);
                     self.shadowRoot.querySelector('#chatlistdata').append(userNode);
             });
         }

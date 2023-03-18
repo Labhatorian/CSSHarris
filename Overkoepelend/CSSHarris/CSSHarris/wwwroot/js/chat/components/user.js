@@ -76,20 +76,53 @@ class User extends HTMLElement {
     }
 
     applyEventlisteners() {
-        this.shadowRoot.querySelector("a").addEventListener('click', () => {
-            var addFriend = confirm("Do you want to add " + this._username + " as a friend?");
+            this.shadowRoot.querySelector("a").addEventListener('click', () => {
+                var type = this.getAttribute("type");
+                if (type === "friend") {
 
-            if (addFriend) {
-                var event = new CustomEvent("addFriend", {
-                    composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
-                    bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
-                });
-                event.userConnectId = this.getAttribute('data-id');
+                        var addFriend = confirm("Do you want to delete " + this._username + " as a friend?");
 
-                this.shadowRoot.dispatchEvent(event);
-            }
-        });
+                        if (addFriend) {
+                            var event = new CustomEvent("deleteFriend", {
+                                composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
+                                bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+                            });
+                            event.userID = this.getAttribute('data-id');
+
+                            this.shadowRoot.dispatchEvent(event);
+
+                        }
+                }
+                else if (type === "request") {
+
+                        var addFriend = confirm("Do you want to add " + this._username + " as a friend?");
+
+                        var event = new CustomEvent("decideFriend", {
+                            composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
+                            bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+                        });
+                        event.confirm = addFriend;
+                        event.userID = this.getAttribute('data-id');
+
+                        this.shadowRoot.dispatchEvent(event);
+
+
+                } else {
+                    var addFriend = confirm("Do you want to add " + this._username + " as a friend?");
+
+                    if (addFriend) {
+                        var event = new CustomEvent("addFriend", {
+                            composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
+                            bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+                        });
+                        event.userConnectId = this.getAttribute('data-id');
+
+                        this.shadowRoot.dispatchEvent(event);
+                    }
+                }
+            });
+        }
     }
-}
+
 
 export { User };

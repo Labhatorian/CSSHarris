@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using CSSHarris.Models;
 using CSSHarris.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 
 //SignalR
@@ -24,7 +27,6 @@ builder.Services.AddSignalR(o =>
 {
     o.EnableDetailedErrors = true;
 });
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
