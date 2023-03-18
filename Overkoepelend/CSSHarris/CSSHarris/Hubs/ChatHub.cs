@@ -7,6 +7,9 @@ using System.Security.Claims;
 using CSSHarris.Data;
 using CSSHarris.Models;
 using System.Collections.Concurrent;
+using Mailjet.Client.Resources;
+using Microsoft.EntityFrameworkCore;
+using Message = CSSHarris.Models.ChatModels.Message;
 
 namespace CSSHarris.Hubs
 {
@@ -14,7 +17,6 @@ namespace CSSHarris.Hubs
     public class ChatHub : Hub<IConnectionHub>
     {
         private readonly ApplicationDbContext db;
-        private static ConcurrentDictionary<string, bool> CancelDict = new();
 
         public ChatHub(ApplicationDbContext db)
         {
@@ -56,7 +58,7 @@ namespace CSSHarris.Hubs
                 Guid guid = Guid.NewGuid();
                 user = new()
                 {
-                    ID = guid.ToString(),
+                    ChatUserID = guid.ToString(),
                     UserID = userId,
                     UserName = currentUser.IsAuthenticated ? currentUser.Name : username,
                     ConnectionId = Context.ConnectionId
@@ -130,19 +132,13 @@ namespace CSSHarris.Hubs
 
             if (roomToLeave is not null)
             {
+                callingUser.CurrentRoom = null;
+                db.Update(callingUser);
                 await RemoveFromGroup(roomToLeave.ID);
                 await Clients.Group(roomToLeave.ID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToLeave).ToList());
             }
 
-            if (callingUser.UserID is not null)
-            {
-                callingUser.CurrentRoom = null;
-                db.Update(callingUser);
-            }
-            else
-            {
-                db.ChatUsers.Remove(callingUser);
-            }
+            if (callingUser.UserID is null) db.ChatUsers.Remove(callingUser);
 
             db.SaveChanges();
             await base.OnDisconnectedAsync(exception);
@@ -207,9 +203,14 @@ namespace CSSHarris.Hubs
         {
             var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
             var target = db.ChatUsers.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
-            if (target == null || callingUser == null || target.FriendRequests.Contains(callingUser) || callingUser.Friends.Contains(target)) return;
 
-            target.FriendRequests.Add(callingUser);
+            var requests = db.ChatUsers.Include(i => i.IncomingRequests).Where(user => user.UserID == target.UserID).AsNoTracking().FirstOrDefault().IncomingRequests;
+            var friends = db.ChatUsers.Include(i => i.Friends).Where(user => user.UserID == callingUser.UserID).AsNoTracking().FirstOrDefault().Friends;
+
+            if (target == null || callingUser == null || requests.Contains(callingUser) || friends.Contains(target)) return;
+
+            target = db.ChatUsers.Include(c => c.IncomingRequests).Where(user => user.UserID == target.UserID).FirstOrDefault();
+            target.IncomingRequests.Add(callingUser);
             db.Update(target);
             db.SaveChanges();
         }

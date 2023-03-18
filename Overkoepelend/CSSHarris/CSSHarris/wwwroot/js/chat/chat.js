@@ -56,7 +56,7 @@ $(document).ready(function () {
     });
 });
 
-// Hub Callback: Update users
+// Hub Callback: Update user
 connection.on('Connected', (username) => {
     myUsername = username;
     document.querySelector("chat-list[type = 'user']").setUser(username);
@@ -75,12 +75,6 @@ connection.on('updateUserList', (userList) => {
 // Hub Callback: Update rooms
 connection.on('updateRoomList', (roomList) => {
     document.querySelector("chat-list[type = 'room']").updateRooms(roomList, currentRoomId);
-});
-
-// Hub Callback: Update Friends
-connection.on("updateFriends", function (friends, requests) {
-    document.querySelector("chat-list[type = 'friend'][myfriend = 1]").updateFriendLists(friends);
-    document.querySelector("chat-list[type = 'friend'][myfriend = 0]").updateFriendList(requests);
 });
 
 // Hub Callback: Room joined

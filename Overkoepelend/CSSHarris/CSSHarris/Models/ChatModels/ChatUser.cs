@@ -7,14 +7,15 @@ namespace CSSHarris.Models
     public class ChatUser
     {
         [Key]
-        public string ID { get; set; }
+        public string ChatUserID { get; set; }
         public string? UserID { get; set; }
 
         public string? ConnectionId { get; set; }
         public string UserName { get; set; }
 
-        public List<ChatUser> Friends { get; set; } = new();
-        public List<ChatUser> FriendRequests { get; set; } = new();
+        public List<ChatUser> Friends { get; set; }
+        public List<ChatUser> IncomingRequests { get; set; }
+
 
         [ForeignKey("RoomId")]
         public Room? CurrentRoom { get; set; }

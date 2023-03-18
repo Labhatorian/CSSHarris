@@ -163,14 +163,13 @@ class ChatList extends HTMLElement {
 
     updateFriendList(userList) {
         var type = this.getAttribute("type");
+        const self = this;
         if (type === "friend") {
             $.each(userList, function (index) {
-                if (userList[index].userName != myUsername) {
                     const userNode = document.createElement('chat-user');
-                    userNode.setAttribute("data-id", userList[index].connectionId);
+                   // userNode.setAttribute("data-id", userList[index].connectionId);
                     userNode.setAttribute("data-username", userList[index].userName);
                     self.shadowRoot.querySelector('#chatlistdata').append(userNode);
-                }
             });
         }
     }

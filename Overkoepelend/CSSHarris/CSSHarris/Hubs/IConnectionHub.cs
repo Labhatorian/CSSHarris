@@ -18,5 +18,6 @@ namespace CSSHarris.Hubs
         Task RoomJoined(string roomtitle, bool isOwner, List<Message> messages);
         Task RoomDeleted();
         Task Connected(string? userName);
+        Task GetAllFriends(List<ChatUserVM> friendRequests, List<ChatUserVM> friends);
     }
 }

@@ -40,6 +40,7 @@ else
 }
 
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<FriendHub>("/friendHub");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System.Net;
+using System;
+using System.Reflection.Metadata;
 
 namespace CSSHarris.Data
 {
@@ -25,6 +28,7 @@ namespace CSSHarris.Data
         {
             modelBuilder.Entity<Room>().Navigation(r => r.Chatlog).AutoInclude();
             modelBuilder.Entity<Chatlog>().Navigation(r => r.Messages).AutoInclude();
+
             modelBuilder.Entity<ChatUser>().Navigation(r => r.CurrentRoom).AutoInclude();
 
             modelBuilder.Entity<Chatlog>()

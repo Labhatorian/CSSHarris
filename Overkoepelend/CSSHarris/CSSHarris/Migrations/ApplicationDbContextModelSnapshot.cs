@@ -89,7 +89,7 @@ namespace CSSHarris.Migrations
 
             modelBuilder.Entity("CSSHarris.Models.ChatUser", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<string>("ChatUserID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("ChatlogID")
@@ -108,7 +108,7 @@ namespace CSSHarris.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("ChatUserID");
 
                     b.HasIndex("ChatlogID");
 
@@ -143,15 +143,15 @@ namespace CSSHarris.Migrations
 
             modelBuilder.Entity("ChatUserChatUser", b =>
                 {
-                    b.Property<string>("FriendRequestsID")
+                    b.Property<string>("FriendsChatUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("FriendsID")
+                    b.Property<string>("IncomingRequestsChatUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("FriendRequestsID", "FriendsID");
+                    b.HasKey("FriendsChatUserID", "IncomingRequestsChatUserID");
 
-                    b.HasIndex("FriendsID");
+                    b.HasIndex("IncomingRequestsChatUserID");
 
                     b.ToTable("ChatUserChatUser");
                 });
@@ -393,13 +393,13 @@ namespace CSSHarris.Migrations
                 {
                     b.HasOne("CSSHarris.Models.ChatUser", null)
                         .WithMany()
-                        .HasForeignKey("FriendRequestsID")
+                        .HasForeignKey("FriendsChatUserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CSSHarris.Models.ChatUser", null)
                         .WithMany()
-                        .HasForeignKey("FriendsID")
+                        .HasForeignKey("IncomingRequestsChatUserID")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });

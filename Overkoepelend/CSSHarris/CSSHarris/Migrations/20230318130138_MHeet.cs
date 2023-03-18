@@ -228,7 +228,7 @@ namespace CSSHarris.Migrations
                 name: "ChatUsers",
                 columns: table => new
                 {
-                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChatUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -237,7 +237,7 @@ namespace CSSHarris.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatUsers", x => x.ID);
+                    table.PrimaryKey("PK_ChatUsers", x => x.ChatUserID);
                     table.ForeignKey(
                         name: "FK_ChatUsers_Chatlogs_ChatlogID",
                         column: x => x.ChatlogID,
@@ -254,23 +254,23 @@ namespace CSSHarris.Migrations
                 name: "ChatUserChatUser",
                 columns: table => new
                 {
-                    FriendRequestsID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FriendsID = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    FriendsChatUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IncomingRequestsChatUserID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatUserChatUser", x => new { x.FriendRequestsID, x.FriendsID });
+                    table.PrimaryKey("PK_ChatUserChatUser", x => new { x.FriendsChatUserID, x.IncomingRequestsChatUserID });
                     table.ForeignKey(
-                        name: "FK_ChatUserChatUser_ChatUsers_FriendRequestsID",
-                        column: x => x.FriendRequestsID,
+                        name: "FK_ChatUserChatUser_ChatUsers_FriendsChatUserID",
+                        column: x => x.FriendsChatUserID,
                         principalTable: "ChatUsers",
-                        principalColumn: "ID",
+                        principalColumn: "ChatUserID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ChatUserChatUser_ChatUsers_FriendsID",
-                        column: x => x.FriendsID,
+                        name: "FK_ChatUserChatUser_ChatUsers_IncomingRequestsChatUserID",
+                        column: x => x.IncomingRequestsChatUserID,
                         principalTable: "ChatUsers",
-                        principalColumn: "ID");
+                        principalColumn: "ChatUserID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -313,9 +313,9 @@ namespace CSSHarris.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatUserChatUser_FriendsID",
+                name: "IX_ChatUserChatUser_IncomingRequestsChatUserID",
                 table: "ChatUserChatUser",
-                column: "FriendsID");
+                column: "IncomingRequestsChatUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatUsers_ChatlogID",
