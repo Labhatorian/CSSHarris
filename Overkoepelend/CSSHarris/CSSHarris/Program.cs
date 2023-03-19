@@ -6,6 +6,8 @@ using CSSHarris.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using CSSHarris.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,10 @@ builder.Services.AddSignalR(o =>
 {
     o.EnableDetailedErrors = true;
 });
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
