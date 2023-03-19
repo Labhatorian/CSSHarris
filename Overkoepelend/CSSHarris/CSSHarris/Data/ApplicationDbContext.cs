@@ -11,7 +11,7 @@ using System.Reflection.Metadata;
 
 namespace CSSHarris.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Email> Emails { get; set; }
 
@@ -72,6 +72,8 @@ namespace CSSHarris.Data
             {
                 entity.ToTable("UserTokens");
             });
+
+            //todo add admin and mod role and admin account and seed data
         }
     }
 }

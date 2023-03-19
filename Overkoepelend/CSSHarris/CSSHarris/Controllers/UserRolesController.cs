@@ -1,16 +1,20 @@
 ﻿using CSSHarris.Areas.Identity.Pages.Account.Manage;
+using CSSHarris.Models;
 using CSSHarris.Models.Management;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CSSHarris.Controllers
 {
+    [Authorize(Policy = "RequireAdminRole")]
     public class UserRolesController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public UserRolesController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserRolesController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -19,7 +23,7 @@ namespace CSSHarris.Controllers
         {
             var users = await _userManager.Users.ToListAsync();
             var userRolesViewModel = new List<UserRolesViewModel>();
-            foreach (IdentityUser user in users)
+            foreach (ApplicationUser user in users)
             {
                 var thisViewModel = new UserRolesViewModel();
                 thisViewModel.UserId = user.Id;
@@ -30,7 +34,7 @@ namespace CSSHarris.Controllers
             }
             return View(userRolesViewModel);
         }
-        private async Task<List<string>> GetUserRoles(IdentityUser user)
+        private async Task<List<string>> GetUserRoles(ApplicationUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }

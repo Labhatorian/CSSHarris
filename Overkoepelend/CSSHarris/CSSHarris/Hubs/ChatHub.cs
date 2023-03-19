@@ -23,6 +23,7 @@ namespace CSSHarris.Hubs
             this.db = db;
         }
 
+        //TOdo check for banned
         public async Task SendMessage(string roomID, string message)
         {
             ChatUser signallingUser = db.ChatUsers.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();

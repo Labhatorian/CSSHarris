@@ -1,4 +1,4 @@
-﻿namespace CSSHarris.Areas.Identity.Pages.Account.Manage
+﻿namespace CSSHarris.Models.Management
 {
     public class ManageUserRolesViewModel
     {

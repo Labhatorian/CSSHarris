@@ -5,6 +5,7 @@ using CSSHarris.Models;
 using CSSHarris.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +17,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthorization(o =>
+{
+    // Only admin can access.
+    o.AddPolicy("RequireAdminRole", p => p.RequireRole("Admin"));
+
+    // Only Mod can access.
+    o.AddPolicy("RequireModRole", p => p.RequireRole("Moderator", "Admin"));
+});
+
+builder.Services.AddSingleton<IAuthorizationService, DefaultAuthorizationService>();
 
 //SignalR
 builder.Services.AddSignalR(o =>

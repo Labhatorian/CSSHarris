@@ -1,11 +1,14 @@
 ﻿using CSSHarris.Models.Management;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CSSHarris.Controllers
 {
+    [Authorize(Policy = "RequireAdminRole")]
     public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -27,4 +30,5 @@ namespace CSSHarris.Controllers
             }
             return RedirectToAction("Index");
         }
+    }
 }
