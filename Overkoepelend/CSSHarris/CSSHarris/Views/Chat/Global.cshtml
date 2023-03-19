@@ -2,12 +2,19 @@
     ViewData["Title"] = "Global Chat";
 }
 
+
 <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
 <script type="module" defer src="~/js/chat/chat.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 
 <div class="text-center">
     <h1 class="display-4">Global Chat</h1>
+    @if (@TempData["Banned"] is not null && (bool)@TempData["Banned"])
+    {
+        <div class="alert alert-danger" role="alert">
+            You have been banned and may no longer partake in chatting or create new rooms
+        </div>
+    }
     <div class="chat">
         <chat-list type="room"></chat-list>
         <chat-pane></chat-pane>

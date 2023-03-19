@@ -26,8 +26,6 @@ namespace CSSHarris.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
             modelBuilder.Entity<Room>().Navigation(r => r.Chatlog).AutoInclude();
             modelBuilder.Entity<Chatlog>().Navigation(r => r.Messages).AutoInclude();
 
@@ -73,7 +71,29 @@ namespace CSSHarris.Data
                 entity.ToTable("UserTokens");
             });
 
-            //todo add admin and mod role and admin account and seed data
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole {Id = "a18be9c0-aa65-4af8-bd17-00bd9320e575", Name = "Admin", NormalizedName = "Admin".ToUpper() });
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole {Id = "a18be9c0-aa65-4af8-bd17-00ca3234e243", Name = "Moderator", NormalizedName = "Moderator".ToUpper() });
+
+            const string ADMIN_ID = "a18be9c0-aa65-4af8-bd17-00bd9344e575";
+
+            var hasher = new PasswordHasher<ApplicationUser>();
+            modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser
+            {
+                Id = ADMIN_ID,
+                UserName = "admin",
+                NormalizedUserName = "admin",
+                Email = "admin@admin.nl",
+                NormalizedEmail = "admin@admin.nl,",
+                EmailConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "Admin123!"),
+                SecurityStamp = string.Empty
+            });
+
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = "a18be9c0-aa65-4af8-bd17-00bd9320e575",
+                UserId = ADMIN_ID
+            });
         }
     }
 }

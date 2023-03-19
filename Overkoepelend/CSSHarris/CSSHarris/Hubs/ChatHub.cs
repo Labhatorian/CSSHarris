@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using Mailjet.Client.Resources;
 using Microsoft.EntityFrameworkCore;
 using Message = CSSHarris.Models.ChatModels.Message;
+using Microsoft.AspNetCore.Identity;
 
 namespace CSSHarris.Hubs
 {
@@ -17,15 +18,19 @@ namespace CSSHarris.Hubs
     public class ChatHub : Hub<IConnectionHub>
     {
         private readonly ApplicationDbContext db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ChatHub(ApplicationDbContext db)
+        public ChatHub(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             this.db = db;
+            this._userManager = userManager;
         }
 
-        //TOdo check for banned
         public async Task SendMessage(string roomID, string message)
         {
+            var user = await _userManager.GetUserAsync(Context.User);
+            if (user is not null && user.Banned) return;
+
             ChatUser signallingUser = db.ChatUsers.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
             Room room = db.Rooms.Where(r => r.ID == roomID).FirstOrDefault();
 
@@ -80,6 +85,9 @@ namespace CSSHarris.Hubs
 
         public async Task CreateRoom(string title)
         {
+            var user = await _userManager.GetUserAsync(Context.User);
+            if (user is not null && user.Banned) return;
+
             // Create room
             if (!Context.User.Identity.IsAuthenticated) return;
             if (db.Rooms.Where(room => room.Owner == Context.User.Identity.Name).ToList().Count >= 3) return;

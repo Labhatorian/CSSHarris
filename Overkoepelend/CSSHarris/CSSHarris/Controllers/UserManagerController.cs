@@ -56,8 +56,9 @@ namespace CSSHarris.Controllers
             }
 
             user.Banned = !user.Banned;
+            await _userManager.UpdateAsync(user);
 
-            if(user.Banned) { TempData["message"] = user.UserName + " has been banned"; }
+            if (user.Banned) { TempData["message"] = user.UserName + " has been banned"; }
             else { TempData["message"] = user.UserName + " has been unbanned"; }
             
             return RedirectToAction("Index");
@@ -100,6 +101,7 @@ namespace CSSHarris.Controllers
             {
                 TempData["message"] = user.UserName + " has been email verified";
                 user.EmailConfirmed = true;
+                await _userManager.UpdateAsync(user);
             } else
             {
                 TempData["message"] = user.UserName + " has already been email verified";
