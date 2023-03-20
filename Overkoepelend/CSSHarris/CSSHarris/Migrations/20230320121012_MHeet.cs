@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace CSSHarris.Migrations
 {
     /// <inheritdoc />
-    public partial class Mheet : Migration
+    public partial class MHeet : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -327,6 +329,28 @@ namespace CSSHarris.Migrations
                         principalTable: "ChatUsers",
                         principalColumn: "ChatUserID");
                 });
+
+            migrationBuilder.InsertData(
+                schema: "Identity",
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Banned", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, false, "675ac263-18ea-43c5-87bc-a6248a3e382a", "admin@admin.nl", true, false, null, "admin@admin.nl,", "admin", "AQAAAAIAAYagAAAAENlS6mASdhcLBDoTb2u8XN0x/BWYuoR//o+zFM2tFaI8nYBLU+r4pl1bV2rtghXb5w==", null, false, "", false, "admin" });
+
+            migrationBuilder.InsertData(
+                schema: "Identity",
+                table: "Role",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "a18be9c0-aa65-4af8-bd17-00bd9320e575", null, "Admin", "ADMIN" },
+                    { "a18be9c0-aa65-4af8-bd17-00ca3234e243", null, "Moderator", "MODERATOR" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "Identity",
+                table: "UserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9320e575", "a18be9c0-aa65-4af8-bd17-00bd9344e575" });
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",

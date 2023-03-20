@@ -34,45 +34,6 @@ builder.Services.AddAuthorization(o =>
     o.AddPolicy("RequireModRole", p => p.RequireRole("Moderator", "Admin"));
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-        options => builder.Configuration.Bind("CookieSettings", options))
-    .AddJwtBearer(o =>
-        {
-            using var loggerFactory = LoggerFactory.Create(loggingBuilder =>
-    loggingBuilder
-        .SetMinimumLevel(LogLevel.Trace)
-        .AddConsole());
-            ILogger logger = loggerFactory.CreateLogger<Program>();
-
-            o.Events = new JwtBearerEvents()
-            {
-                OnAuthenticationFailed = c =>
-                {
-                    logger.LogInformation(c.HttpContext.User.Identity.Name +  " has failed authentication");
-                    return Task.CompletedTask;
-                },
-
-                OnChallenge = c =>
-                {
-                    logger.LogInformation(c.HttpContext.User.Identity.Name + " is OnChallenge");
-                    return Task.CompletedTask;
-                },
-
-                OnMessageReceived = c =>
-                {
-                    logger.LogInformation(c.HttpContext.User.Identity.Name + " received a message");
-                    return Task.CompletedTask;
-                },
-
-                OnTokenValidated = c =>
-                {
-                    logger.LogInformation(c.HttpContext.User.Identity.Name + " has validated token");
-                    return Task.CompletedTask;
-                }
-            };
-        });
-
 builder.Services.AddSingleton<IAuthorizationService, DefaultAuthorizationService>();
 
 //SignalR
