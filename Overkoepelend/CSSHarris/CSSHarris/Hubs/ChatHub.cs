@@ -47,7 +47,7 @@ namespace CSSHarris.Hubs
             db.Update(room);
             db.SaveChanges();
 
-            await Clients.Group(roomID).ReceiveMessage(signallingUser.UserName, message);
+            await Clients.Group(roomID).ReceiveMessage(newmessage.ID, signallingUser.UserName, message);
         }
 
         public async Task Join(string username)
@@ -131,6 +131,20 @@ namespace CSSHarris.Hubs
             await SendRoomListUpdate();
         }
 
+        [Authorize(Policy = "RequireModRole")]
+        public async Task DeleteMessage(string roomID, string messageID)
+        {
+            Chatlog chatlog = db.Rooms.SingleOrDefault(u =>  u.ID == roomID).Chatlog;
+            Message messageToDelete = chatlog.Messages.SingleOrDefault(u => u.ID == int.Parse(messageID));
+
+            chatlog.Messages.Remove(messageToDelete);
+            db.Update(chatlog);
+            db.Remove(messageToDelete);
+            db.SaveChanges(true);
+
+            await Clients.Group(roomID).ShowMessages(chatlog.Messages);
+        }
+
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
@@ -174,7 +188,8 @@ namespace CSSHarris.Hubs
             await Clients.Group(RoomID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToJoin).ToList());
 
             //TODO do not send full user data
-            await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner, roomToJoin.Chatlog.Messages);
+            await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner); 
+            await Clients.Caller.ShowMessages(roomToJoin.Chatlog.Messages);
             await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
         }
 
@@ -206,22 +221,6 @@ namespace CSSHarris.Hubs
         public async Task RemoveFromGroup(string groupName)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-        }
-
-        public async Task SendFriendRequest(string TargetConnectionId)
-        {
-            var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
-            var target = db.ChatUsers.Where(item => item.ConnectionId == TargetConnectionId).FirstOrDefault();
-
-            var requests = db.ChatUsers.Include(i => i.IncomingRequests).Where(user => user.UserID == target.UserID).AsNoTracking().FirstOrDefault().IncomingRequests;
-            var friends = db.ChatUsers.Include(i => i.Friends).Where(user => user.UserID == callingUser.UserID).AsNoTracking().FirstOrDefault().Friends;
-
-            if (target == null || callingUser == null || requests.Contains(callingUser) || friends.Contains(target)) return;
-
-            target = db.ChatUsers.Include(c => c.IncomingRequests).Where(user => user.UserID == target.UserID).FirstOrDefault();
-            target.IncomingRequests.Add(callingUser);
-            db.Update(target);
-            db.SaveChanges();
         }
     }
 }

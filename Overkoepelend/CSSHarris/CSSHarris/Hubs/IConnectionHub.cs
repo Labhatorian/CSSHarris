@@ -13,11 +13,12 @@ namespace CSSHarris.Hubs
         Task CallEnded(ChatUser signalingUser, string signal);
         Task SendMessage(string roomid, string message);
         Task SendAsync(ChatUser signalingUser, string signal);
-        Task ReceiveMessage(string user, string message);
+        Task ReceiveMessage(int iD, string user, string message);
         Task UpdateRoomList(List<Room> rooms);
-        Task RoomJoined(string roomtitle, bool isOwner, List<Message> messages);
+        Task RoomJoined(string roomtitle, bool isOwner);
         Task RoomDeleted();
         Task Connected(string? userName);
         Task GetAllFriends(List<ChatUserVM> friendRequests, List<ChatUserVM> friends);
+        Task ShowMessages(List<Message> messages);
     }
 }

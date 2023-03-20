@@ -9,3 +9,9 @@
     flex: 1;
     overflow-y: auto;
 }
+
+#context-menu {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+}

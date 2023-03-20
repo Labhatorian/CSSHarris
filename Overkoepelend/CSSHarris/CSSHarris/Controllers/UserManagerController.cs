@@ -18,11 +18,13 @@ namespace CSSHarris.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly ILogger<HomeController> _logger;
 
-        public UserManagerController(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public UserManagerController(UserManager<ApplicationUser> userManager, IEmailSender emailSender, ILogger<HomeController> logger)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -40,6 +42,10 @@ namespace CSSHarris.Controllers
                 thisViewModel.Roles = await GetUserRoles(user);
                 userRolesViewModel.Add(thisViewModel);
             }
+
+            _logger.LogInformation(HttpContext.User.Identity.Name + " entered the usermanage page at " +
+           DateTime.UtcNow.ToLongTimeString());
+
             return View(userRolesViewModel);
         }
         private async Task<List<string>> GetUserRoles(ApplicationUser user)
@@ -60,7 +66,10 @@ namespace CSSHarris.Controllers
 
             if (user.Banned) { TempData["message"] = user.UserName + " has been banned"; }
             else { TempData["message"] = user.UserName + " has been unbanned"; }
-            
+
+            _logger.LogInformation(HttpContext.User.Identity.Name + " performed ban/unban on " + user.UserName + " at " + 
+           DateTime.UtcNow.ToLongTimeString());
+
             return RedirectToAction("Index");
         }
 
@@ -87,6 +96,10 @@ namespace CSSHarris.Controllers
                 $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
             TempData["message"] = "Password for " + user.UserName + " has been reset";
+
+            _logger.LogInformation(HttpContext.User.Identity.Name + " performed password reset on " + user.UserName + " at " +
+           DateTime.UtcNow.ToLongTimeString());
+
             return RedirectToAction("Index");
         }
 
@@ -106,7 +119,9 @@ namespace CSSHarris.Controllers
             {
                 TempData["message"] = user.UserName + " has already been email verified";
             }
-            
+
+            _logger.LogInformation(HttpContext.User.Identity.Name + " performed verify on " + user.UserName + " at " +
+           DateTime.UtcNow.ToLongTimeString());
 
             return RedirectToAction("Index");
         }

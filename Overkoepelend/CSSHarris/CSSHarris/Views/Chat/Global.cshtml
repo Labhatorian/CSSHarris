@@ -1,7 +1,12 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IAuthorizationService AuthorizationService
+
+@{
     ViewData["Title"] = "Global Chat";
 }
-
 
 <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
 <script type="module" defer src="~/js/chat/chat.js"></script>
@@ -17,7 +22,14 @@
     }
     <div class="chat">
         <chat-list type="room"></chat-list>
-        <chat-pane></chat-pane>
+        @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Moderator") || User.IsInRole("Admin")))
+        {
+            <chat-pane moderator=true></chat-pane>
+        } else
+        {
+            <chat-pane></chat-pane>
+        }
+
         <chat-list type="user"></chat-list>
     </div>
 </div>

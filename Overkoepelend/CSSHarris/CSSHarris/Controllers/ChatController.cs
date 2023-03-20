@@ -22,10 +22,5 @@ namespace CSSHarris.Controllers
             if(user is not null) TempData["Banned"] = user.Banned;
             return View();
         }
-        
-        public IActionResult Friends()
-        {
-            return View();
-        }
     }
 }

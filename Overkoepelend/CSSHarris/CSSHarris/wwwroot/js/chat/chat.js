@@ -1,5 +1,4 @@
-﻿//TODO convert o module
-import { ChatPane } from "./maincomponents/chatpane.js";
+﻿import { ChatPane } from "./maincomponents/chatpane.js";
 import { ChatList } from "./maincomponents/listcomponent.js";
 
 customElements.define('chat-pane', ChatPane);
@@ -49,10 +48,9 @@ $(document).ready(function () {
        if(currentRoomId != '' && currentRoomId != undefined) connection.invoke("SendMessage", currentRoomId, e.message);
     });
 
-    //Handler Add friend
     //Handler send message
-    this.addEventListener("addFriend", function (e) {
-        connection.invoke("SendFriendRequest", e.userConnectId);
+    this.addEventListener("deleteMessage", function (e) {
+        connection.invoke("DeleteMessage", currentRoomId, e.messageid);
     });
 });
 
@@ -78,9 +76,14 @@ connection.on('updateRoomList', (roomList) => {
 });
 
 // Hub Callback: Room joined
-connection.on('roomJoined', (RoomTitle, IsOwner, Messages) => {
+connection.on('roomJoined', (RoomTitle, IsOwner) => {
     console.log('Room joined');
     document.querySelector("chat-list[type = 'room']").updateButtons(currentRoomId, IsOwner, RoomTitle);
+});
+
+// Hub Callback: ShowMessages
+connection.on('showMessages', (Messages) => {
+    console.log('Messages updated');
     document.querySelector("chat-pane").ShowMessages(Messages);
 });
 
@@ -94,6 +97,6 @@ connection.on('roomDeleted', () => {
 });
 
 // Hub Callback: Receive message
-connection.on("ReceiveMessage", function (user, message) {
-    document.querySelector("chat-pane").NewMessage(user, message);
+connection.on("ReceiveMessage", function (id, user, message) {
+    document.querySelector("chat-pane").NewMessage(id, user, message);
 });

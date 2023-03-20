@@ -1,7 +1,7 @@
 
 
 //student uitwerking
-//class Log {
+class Log {
 
     info(message) {
         console.info(message);
@@ -17,3 +17,4 @@
 
 }
 
+export {Log};

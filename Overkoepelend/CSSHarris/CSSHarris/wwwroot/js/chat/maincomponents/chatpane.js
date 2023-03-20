@@ -16,6 +16,11 @@ const chatpaneTemplate = {
                 <br />
                 <input type="button" id="sendButton" value="Send Message" />
             </div>
+
+<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
+    <li><a tabindex="-1" href="#">Delete Message</a></li>
+</ul>
+
     </section> 
     `
 }
@@ -54,6 +59,8 @@ class ChatPane extends HTMLElement {
     }
 
     applyEventlisteners() {
+        const self = this;
+
         this.shadowRoot.querySelector("#sendButton").addEventListener('click', (event) => {
             event.preventDefault();
             var message = this.shadowRoot.getElementById("messageInput").value;
@@ -66,20 +73,56 @@ class ChatPane extends HTMLElement {
 
             this.shadowRoot.dispatchEvent(messageevent);
         });
+
+        if (this.getAttribute("moderator")) {
+            var element;
+            this.shadowRoot.addEventListener("contextmenu", function (event) {
+                if (event.target.tagName === "CHAT-MESSAGE") {
+                    element = event.target;
+
+                    event.preventDefault();
+                    var contextMenu = self.shadowRoot.getElementById("contextMenu");
+                    contextMenu.style.display = "block";
+                    contextMenu.style.left = event.pageX + "px";
+                    contextMenu.style.top = event.pageY + "px";
+                }
+            });
+
+            this.shadowRoot.querySelector("#contextMenu li a").addEventListener("click", function (event) {
+                var messageid = element.getAttribute("data-id");
+
+                var deleteEvent = new CustomEvent("deleteMessage", {
+                    composed: true,
+                    bubbles: true,
+                });
+                deleteEvent.messageid = messageid;
+
+                self.shadowRoot.dispatchEvent(deleteEvent);
+
+                element = null;
+            });
+
+            this.shadowRoot.addEventListener("click", function (event) {
+                var contextMenu = self.shadowRoot.getElementById("contextMenu");
+                contextMenu.style.display = "none";
+                element = null;
+            });
+        }
     }
 
-    NewMessage(user, message) {
+    NewMessage(id, user, message) {
         let msg = new ChatMessage(user, message);
         this.shadowRoot.querySelector('#messagesList').append(msg);
-
+        msg.setAttribute("data-id", id)
         var pane = this.shadowRoot.querySelector('#chatpane')
         pane.scrollTop = pane.scrollHeight - pane.clientHeight;
     }
 
     ShowMessages(Messages) {
+        this.DeleteMessages();
         const self = this;
         $.each(Messages, function (index) {
-            self.NewMessage(Messages[index].username, Messages[index].content)
+            self.NewMessage(Messages[index].id, Messages[index].username, Messages[index].content)
         });
 
         var pane = this.shadowRoot.querySelector('#chatpane')
