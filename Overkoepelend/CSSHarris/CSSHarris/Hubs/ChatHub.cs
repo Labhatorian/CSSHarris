@@ -1,6 +1,8 @@
 ﻿using CSSHarris.Data;
 using CSSHarris.Models;
 using CSSHarris.Models.ChatModels;
+using CSSHarris.Models.DeveloperModels;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
@@ -17,7 +19,7 @@ namespace CSSHarris.Hubs
     {
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
-
+        private HtmlSanitizer sanitizer = new HtmlSanitizer();
         public ChatHub(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             this.db = db;
@@ -37,6 +39,8 @@ namespace CSSHarris.Hubs
 
             ChatUser signallingUser = db?.ChatUsers?.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
             Room room = db?.Rooms?.Where(r => r.ID == roomID).FirstOrDefault();
+
+            message = sanitizer.Sanitize(message);
 
             Message newmessage = new()
             {
@@ -70,6 +74,7 @@ namespace CSSHarris.Hubs
                 var identity = (ClaimsIdentity)Context.User.Identity;
                 var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
                 var userId = userIdClaim?.Value;
+                username = sanitizer.Sanitize(username);
 
                 ChatUser user = db.ChatUsers.Where(user => user.UserID == userId).FirstOrDefault();
                 if (user is null)
@@ -107,6 +112,7 @@ namespace CSSHarris.Hubs
         {
             var user = await _userManager.GetUserAsync(Context.User);
             if (user is not null && user.Banned) return;
+            title = sanitizer.Sanitize(title);
 
             // Create room
             if (!Context.User.Identity.IsAuthenticated) return;
