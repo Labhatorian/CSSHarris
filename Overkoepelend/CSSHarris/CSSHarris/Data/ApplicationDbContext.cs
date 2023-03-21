@@ -4,10 +4,6 @@ using CSSHarris.Models.DeveloperModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
-using System.Net;
-using System;
-using System.Reflection.Metadata;
 
 namespace CSSHarris.Data
 {
@@ -41,6 +37,7 @@ namespace CSSHarris.Data
 
             base.OnModelCreating(modelBuilder);
 
+            //Change tablenames to something better
             modelBuilder.HasDefaultSchema("Identity");
             modelBuilder.Entity<IdentityUser>(entity =>
             {
@@ -71,9 +68,11 @@ namespace CSSHarris.Data
                 entity.ToTable("UserTokens");
             });
 
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole {Id = "a18be9c0-aa65-4af8-bd17-00bd9320e575", Name = "Admin", NormalizedName = "Admin".ToUpper() });
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole {Id = "a18be9c0-aa65-4af8-bd17-00ca3234e243", Name = "Moderator", NormalizedName = "Moderator".ToUpper() });
+            //Roles
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Id = "a18be9c0-aa65-4af8-bd17-00bd9320e575", Name = "Admin", NormalizedName = "Admin".ToUpper() });
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Id = "a18be9c0-aa65-4af8-bd17-00ca3234e243", Name = "Moderator", NormalizedName = "Moderator".ToUpper() });
 
+            //Dataseed for testing
             const string ADMIN_ID = "a18be9c0-aa65-4af8-bd17-00bd9344e575";
 
             var hasher = new PasswordHasher<ApplicationUser>();

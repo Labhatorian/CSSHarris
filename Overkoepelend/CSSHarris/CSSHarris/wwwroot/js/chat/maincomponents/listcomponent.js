@@ -33,8 +33,8 @@ const listTemplate = {
 class ChatList extends HTMLElement {
     shadowRoot;
 
-    constructor(Username) {
-        super(); // always call super() first in the ctor.
+    constructor() {
+        super();
         this.shadowRoot = this.attachShadow({ mode: 'open' })
         this.init();
 

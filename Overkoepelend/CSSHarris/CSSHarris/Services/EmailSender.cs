@@ -1,39 +1,45 @@
-﻿using CSSHarris.Models.DeveloperModels;
+﻿using Mailjet.Client;
 using Mailjet.Client.TransactionalEmails;
-using Mailjet.Client;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
-using System.Net.Mail;
 
 namespace CSSHarris.Services;
 
 public class EmailSender : IEmailSender
 {
-    private readonly ILogger _logger;
     private readonly IConfiguration Configuration;
 
     public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor,
-                       ILogger<EmailSender> logger,
                        IConfiguration configuration)
     {
         Options = optionsAccessor.Value;
-        _logger = logger;
         Configuration = configuration;
     }
 
-    public AuthMessageSenderOptions Options { get; } //Set with Secret Manager.
+    public AuthMessageSenderOptions Options { get; } //Set with Secret Manager but unused
 
+    /// <summary>
+    /// Former code unused and removed, go straight to execute
+    /// </summary>
+    /// <param name="toEmail"></param>
+    /// <param name="subject"></param>
+    /// <param name="message"></param>
+    /// <returns></returns>
     public async Task SendEmailAsync(string toEmail, string subject, string message)
     {
-        //We dont use this
-        //if (string.IsNullOrEmpty(Options.MailJetSecret) || string.IsNullOrEmpty(Options.MailJetPublicKey))
-        //{
-        //    throw new Exception("Null Key");
-        //}
-        await Execute(Options.MailJetSecret, Options.MailJetPublicKey, subject, message, toEmail);
+        await Execute(subject, message, toEmail);
     }
 
-    public async Task Execute(string apiKey, string publickey, string subject, string message, string toEmail)
+    /// <summary>
+    /// Send email
+    /// </summary>
+    /// <param name="apiKey"></param>
+    /// <param name="publickey"></param>
+    /// <param name="subject"></param>
+    /// <param name="message"></param>
+    /// <param name="toEmail"></param>
+    /// <returns></returns>
+    public async Task Execute(string subject, string message, string toEmail)
     {
         MailjetClient client = new(Configuration["PublicKeys:MailJetPublicKey"], Configuration["SecretKeys:MailJetSecret"]);
 
@@ -47,6 +53,6 @@ public class EmailSender : IEmailSender
                .Build();
 
         // invoke API to send email
-        var response = await client.SendTransactionalEmailAsync(emailtosend);
+        await client.SendTransactionalEmailAsync(emailtosend);
     }
 }

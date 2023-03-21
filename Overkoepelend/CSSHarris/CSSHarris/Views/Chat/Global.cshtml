@@ -14,11 +14,14 @@
 
 <div class="text-center">
     <h1 class="display-4">Global Chat</h1>
-    @if (@TempData["Banned"] is not null && (bool)@TempData["Banned"])
+    @if (@TempData["Banned"] is not null)
     {
-        <div class="alert alert-danger" role="alert">
-            You have been banned and may no longer partake in chatting or create new rooms
-        </div>
+        if ((bool)@TempData["Banned"])
+        {
+            <div class="alert alert-danger" role="alert">
+                You have been banned and may no longer partake in chatting or create new rooms
+            </div>
+        }
     }
     <div class="chat">
         <chat-list type="room"></chat-list>

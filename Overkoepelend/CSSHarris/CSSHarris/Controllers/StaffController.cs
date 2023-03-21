@@ -1,7 +1,5 @@
-﻿using AngleSharp.Css;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace CSSHarris.Controllers
 {
@@ -17,7 +15,7 @@ namespace CSSHarris.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogInformation(HttpContext.User.Identity.Name + " entered the staff page at " +
+            _logger.LogInformation(HttpContext?.User?.Identity?.Name + " entered the staff page at " +
            DateTime.UtcNow.ToLongTimeString());
 
             return View();

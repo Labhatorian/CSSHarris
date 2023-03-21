@@ -17,7 +17,7 @@ class RoomButtons extends HTMLElement {
     elementId = 'buttons';
 
     constructor() {
-        super(); // always call super() first in the ctor.
+        super();
         this.shadowRoot = this.attachShadow({ mode: 'open' });
 
         const linkElemBootstrap = document.createElement("link");
@@ -43,6 +43,7 @@ class RoomButtons extends HTMLElement {
         this.applyEventlisteners();
     }
 
+    //Change button states
     JoinRoom(RoomTitle, IsOwner) {
         if ($(this.shadowRoot).find('body').attr("data-mode") !== "idle") {
             $(this.shadowRoot).find('body').attr('data-mode', 'inroom');
@@ -69,8 +70,8 @@ class RoomButtons extends HTMLElement {
             console.log('Creating room...');
 
             var event = new CustomEvent("createroom", {
-                composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
-                bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+                composed: true,
+                bubbles: true,
             });
             event.newroom = title;
 

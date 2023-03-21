@@ -2,13 +2,10 @@ using CSSHarris.Data;
 using CSSHarris.Hubs;
 using CSSHarris.Models;
 using CSSHarris.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,7 +58,6 @@ else
 }
 
 app.MapHub<ChatHub>("/chatHub");
-app.MapHub<FriendHub>("/friendHub");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

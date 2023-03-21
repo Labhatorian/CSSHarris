@@ -1,5 +1,4 @@
-﻿using CSSHarris.Areas.Identity.Pages.Account.Manage;
-using CSSHarris.Models;
+﻿using CSSHarris.Models;
 using CSSHarris.Models.Management;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,9 +6,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Text.Encodings.Web;
 using System.Text;
+using System.Text.Encodings.Web;
 
 namespace CSSHarris.Controllers
 {
@@ -27,6 +25,10 @@ namespace CSSHarris.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Index page that gets all users and shows them in a list
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -43,20 +45,31 @@ namespace CSSHarris.Controllers
                 userRolesViewModel.Add(thisViewModel);
             }
 
-            _logger.LogInformation(HttpContext.User.Identity.Name + " entered the usermanage page at " +
+            _logger.LogInformation(HttpContext?.User?.Identity?.Name + " entered the usermanage page at " +
            DateTime.UtcNow.ToLongTimeString());
 
             return View(userRolesViewModel);
         }
+
+        /// <summary>
+        /// Get the roles of the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>List<string></returns>
         private async Task<List<string>> GetUserRoles(ApplicationUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
 
+        /// <summary>
+        /// Bans or Unbans the user depending on their status
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<IActionResult> BanUnban(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            if (user is null)
             {
                 RedirectToAction("Index");
             }
@@ -67,16 +80,21 @@ namespace CSSHarris.Controllers
             if (user.Banned) { TempData["message"] = user.UserName + " has been banned"; }
             else { TempData["message"] = user.UserName + " has been unbanned"; }
 
-            _logger.LogInformation(HttpContext.User.Identity.Name + " performed ban/unban on " + user.UserName + " at " + 
+            _logger.LogInformation(HttpContext?.User?.Identity?.Name + " performed ban/unban on " + user.UserName + " at " +
            DateTime.UtcNow.ToLongTimeString());
 
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Resets the user's password and sends them an email
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<IActionResult> ResetPassword(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            if (user is null || user.Email is null)
             {
                 RedirectToAction("Index");
             }
@@ -97,16 +115,21 @@ namespace CSSHarris.Controllers
 
             TempData["message"] = "Password for " + user.UserName + " has been reset";
 
-            _logger.LogInformation(HttpContext.User.Identity.Name + " performed password reset on " + user.UserName + " at " +
+            _logger.LogInformation(HttpContext?.User?.Identity?.Name + " performed password reset on " + user.UserName + " at " +
            DateTime.UtcNow.ToLongTimeString());
 
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Verifies the users email
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<IActionResult> VerifyUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null )
+            if (user == null)
             {
                 RedirectToAction("Index");
             }
@@ -115,12 +138,13 @@ namespace CSSHarris.Controllers
                 TempData["message"] = user.UserName + " has been email verified";
                 user.EmailConfirmed = true;
                 await _userManager.UpdateAsync(user);
-            } else
+            }
+            else
             {
                 TempData["message"] = user.UserName + " has already been email verified";
             }
 
-            _logger.LogInformation(HttpContext.User.Identity.Name + " performed verify on " + user.UserName + " at " +
+            _logger.LogInformation(HttpContext?.User?.Identity?.Name + " performed verify on " + user.UserName + " at " +
            DateTime.UtcNow.ToLongTimeString());
 
             return RedirectToAction("Index");

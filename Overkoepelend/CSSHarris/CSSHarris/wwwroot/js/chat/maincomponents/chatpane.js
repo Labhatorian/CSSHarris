@@ -7,7 +7,7 @@ const chatpaneTemplate = {
     template: `
     <section id="chat">
             <div class="bg-light user-list" id="chatpane">
-                    <ul id="messagesList">  
+                    <ul id="messagesList" class="no-gutter">  
                     </ul>
                 </div>
             <br />
@@ -29,7 +29,7 @@ class ChatPane extends HTMLElement {
     shadowRoot;
 
     constructor() {
-        super(); // always call super() first in the ctor.
+        super();
         this.shadowRoot = this.attachShadow({ mode: 'open' })
         this.init();
     }
@@ -66,8 +66,8 @@ class ChatPane extends HTMLElement {
             var message = this.shadowRoot.getElementById("messageInput").value;
 
             var messageevent = new CustomEvent("sendmessage", {
-                composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
-                bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+                composed: true,
+                bubbles: true,
             });
             messageevent.message = message;
 

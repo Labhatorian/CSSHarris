@@ -7,6 +7,6 @@
         public string? Email { get; internal set; }
         public bool? Banned { get; internal set; }
         public bool? Verified { get; internal set; }
-        public List<string> Roles { get; internal set; }
+        public List<string>? Roles { get; internal set; }
     }
 }

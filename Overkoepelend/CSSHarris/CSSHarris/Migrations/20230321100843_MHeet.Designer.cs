@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CSSHarris.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230320121012_MHeet")]
+    [Migration("20230321100843_MHeet")]
     partial class MHeet
     {
         /// <inheritdoc />
@@ -99,13 +99,13 @@ namespace CSSHarris.Migrations
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
                             Banned = false,
-                            ConcurrencyStamp = "675ac263-18ea-43c5-87bc-a6248a3e382a",
+                            ConcurrencyStamp = "76103b16-9f71-4fe0-845b-b6bccbda92e1",
                             Email = "admin@admin.nl",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@admin.nl,",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAIAAYagAAAAENlS6mASdhcLBDoTb2u8XN0x/BWYuoR//o+zFM2tFaI8nYBLU+r4pl1bV2rtghXb5w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED6rZ7dN2vy3GkUdjushHQ7ZPARbL8Dx/hmS/7X2aicQazZt9ypZ2KTGzZWYFsMXjw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -140,9 +140,6 @@ namespace CSSHarris.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -183,9 +180,6 @@ namespace CSSHarris.Migrations
                     b.Property<string>("ChatUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ChatlogID")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConnectionId")
                         .HasColumnType("nvarchar(max)");
 
@@ -200,8 +194,6 @@ namespace CSSHarris.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ChatUserID");
-
-                    b.HasIndex("ChatlogID");
 
                     b.HasIndex("RoomId");
 
@@ -230,21 +222,6 @@ namespace CSSHarris.Migrations
                     b.HasKey("idEmail");
 
                     b.ToTable("Emails", "Identity");
-                });
-
-            modelBuilder.Entity("ChatUserChatUser", b =>
-                {
-                    b.Property<string>("FriendsChatUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("IncomingRequestsChatUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("FriendsChatUserID", "IncomingRequestsChatUserID");
-
-                    b.HasIndex("IncomingRequestsChatUserID");
-
-                    b.ToTable("ChatUserChatUser", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -477,30 +454,11 @@ namespace CSSHarris.Migrations
 
             modelBuilder.Entity("CSSHarris.Models.ChatUser", b =>
                 {
-                    b.HasOne("CSSHarris.Models.ChatModels.Chatlog", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ChatlogID");
-
                     b.HasOne("CSSHarris.Models.ChatModels.Room", "CurrentRoom")
                         .WithMany()
                         .HasForeignKey("RoomId");
 
                     b.Navigation("CurrentRoom");
-                });
-
-            modelBuilder.Entity("ChatUserChatUser", b =>
-                {
-                    b.HasOne("CSSHarris.Models.ChatUser", null)
-                        .WithMany()
-                        .HasForeignKey("FriendsChatUserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CSSHarris.Models.ChatUser", null)
-                        .WithMany()
-                        .HasForeignKey("IncomingRequestsChatUserID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -557,8 +515,6 @@ namespace CSSHarris.Migrations
             modelBuilder.Entity("CSSHarris.Models.ChatModels.Chatlog", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

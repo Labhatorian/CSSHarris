@@ -1,13 +1,10 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Principal;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CSSHarris.Models.ChatModels
 {
     public class Room
     {
-        [Key] 
+        [Key]
         public string ID { get; set; }
 
         public string Owner { get; set; }

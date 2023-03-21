@@ -1,10 +1,7 @@
-﻿using CSSHarris.Models.Management;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace CSSHarris.Controllers
 {
@@ -25,6 +22,11 @@ namespace CSSHarris.Controllers
             return View(roles);
         }
 
+        /// <summary>
+        /// Adds role to the use and logs it
+        /// </summary>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> AddRole(string roleName)
         {
@@ -33,7 +35,7 @@ namespace CSSHarris.Controllers
                 await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
             }
 
-            _logger.LogInformation("Role " + roleName + " added by " + HttpContext.User.Identity.Name + "at" +
+            _logger.LogInformation("Role " + roleName + " added by " + HttpContext?.User?.Identity?.Name + "at" +
             DateTime.UtcNow.ToLongTimeString());
 
             return RedirectToAction("Index");

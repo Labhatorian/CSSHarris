@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CSSHarris.Controllers
 {
+    /// <summary>
+    /// Brings useers to the chat page
+    /// </summary>
     [Authorize]
     public class ChatController : Controller
     {
@@ -19,7 +22,7 @@ namespace CSSHarris.Controllers
         public async Task<IActionResult> Global()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if(user is not null) TempData["Banned"] = user.Banned;
+            if (user is not null) TempData["Banned"] = user.Banned;
             return View();
         }
     }

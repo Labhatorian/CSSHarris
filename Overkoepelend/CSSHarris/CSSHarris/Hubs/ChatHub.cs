@@ -1,19 +1,17 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using CSSHarris.Models.ChatModels;
-using ChatUser = CSSHarris.Models.ChatUser;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Principal;
-using System.Security.Claims;
-using CSSHarris.Data;
+﻿using CSSHarris.Data;
 using CSSHarris.Models;
-using System.Collections.Concurrent;
-using Mailjet.Client.Resources;
-using Microsoft.EntityFrameworkCore;
-using Message = CSSHarris.Models.ChatModels.Message;
+using CSSHarris.Models.ChatModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
+using System.Security.Principal;
+using ChatUser = CSSHarris.Models.ChatUser;
+using Message = CSSHarris.Models.ChatModels.Message;
 
 namespace CSSHarris.Hubs
 {
+    //TODO TESTING
     [AllowAnonymous]
     public class ChatHub : Hub<IConnectionHub>
     {
@@ -26,63 +24,85 @@ namespace CSSHarris.Hubs
             this._userManager = userManager;
         }
 
+        /// <summary>
+        /// Send message to everyone in the room
+        /// </summary>
+        /// <param name="roomID"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task SendMessage(string roomID, string message)
         {
             var user = await _userManager.GetUserAsync(Context.User);
             if (user is not null && user.Banned) return;
 
-            ChatUser signallingUser = db.ChatUsers.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
-            Room room = db.Rooms.Where(r => r.ID == roomID).FirstOrDefault();
+            ChatUser signallingUser = db?.ChatUsers?.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
+            Room room = db?.Rooms?.Where(r => r.ID == roomID).FirstOrDefault();
 
-            Message newmessage = new Message()
+            Message newmessage = new()
             {
                 Username = signallingUser.UserName,
-                DateTime = DateTime.Now,
                 Content = message
             };
-            room.Chatlog.Messages.Add(newmessage);
+            room?.Chatlog.Messages.Add(newmessage);
 
-            db.Add(newmessage);
-            db.Update(room.Chatlog);
-            db.Update(room);
-            db.SaveChanges();
+            if (db is not null || room is not null)
+            {
+                db.Add(newmessage);
+                db.Update(room.Chatlog);
+                db.Update(room);
+                db.SaveChanges();
+            }
 
             await Clients.Group(roomID).ReceiveMessage(newmessage.ID, signallingUser.UserName, message);
         }
 
+        /// <summary>
+        /// SignalR join function, creates a new <see cref="ChatUser"/>
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public async Task Join(string username)
         {
-            IIdentity currentUser = Context.User.Identity;
-
-            var identity = (ClaimsIdentity)Context.User.Identity;
-            var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
-            var userId = (userIdClaim is not null) ? userIdClaim.Value : null;
-
-            ChatUser user = db.ChatUsers.Where(user => user.UserID == userId).FirstOrDefault();
-            if (user is null)
+            if (Context.User is not null)
             {
-                Guid guid = Guid.NewGuid();
-                user = new()
+                IIdentity currentUser = Context.User.Identity;
+
+                var identity = (ClaimsIdentity)Context.User.Identity;
+                var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = userIdClaim?.Value;
+
+                ChatUser user = db.ChatUsers.Where(user => user.UserID == userId).FirstOrDefault();
+                if (user is null)
                 {
-                    ChatUserID = guid.ToString(),
-                    UserID = userId,
-                    UserName = currentUser.IsAuthenticated ? currentUser.Name : username,
-                    ConnectionId = Context.ConnectionId
-                };
+                    Guid guid = Guid.NewGuid();
+                    user = new()
+                    {
+                        ChatUserID = guid.ToString(),
+                        UserID = userId,
+                        UserName = currentUser.IsAuthenticated ? currentUser.Name : username,
+                        ConnectionId = Context.ConnectionId
+                    };
 
-                db.ChatUsers.Add(user);
-            } else
-            {
-                user.ConnectionId = Context.ConnectionId;
-                db.ChatUsers.Update(user);
+                    db.ChatUsers.Add(user);
+                }
+                else
+                {
+                    user.ConnectionId = Context.ConnectionId;
+                    db.ChatUsers.Update(user);
+                }
+                db.SaveChanges();
+
+                //Get rooms
+                await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
+                await Clients.Caller.Connected(user.UserName);
             }
-            db.SaveChanges();
-            
-            //Get rooms
-            await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
-            await Clients.Caller.Connected(user.UserName);
         }
 
+        /// <summary>
+        /// Creates a room if a user is logged in, max 3
+        /// </summary>
+        /// <param name="title"></param>
+        /// <returns></returns>
         public async Task CreateRoom(string title)
         {
             var user = await _userManager.GetUserAsync(Context.User);
@@ -106,6 +126,11 @@ namespace CSSHarris.Hubs
             await SendRoomListUpdate();
         }
 
+        /// <summary>
+        /// Deletes a room
+        /// </summary>
+        /// <param name="roomID"></param>
+        /// <returns></returns>
         public async Task DeleteRoom(string roomID)
         {
             var roomToDelete = db.Rooms.SingleOrDefault(u => u.ID == roomID);
@@ -131,10 +156,16 @@ namespace CSSHarris.Hubs
             await SendRoomListUpdate();
         }
 
+        /// <summary>
+        /// Deletes a message if the user is a moderator
+        /// </summary>
+        /// <param name="roomID"></param>
+        /// <param name="messageID"></param>
+        /// <returns></returns>
         [Authorize(Policy = "RequireModRole")]
         public async Task DeleteMessage(string roomID, string messageID)
         {
-            Chatlog chatlog = db.Rooms.SingleOrDefault(u =>  u.ID == roomID).Chatlog;
+            Chatlog chatlog = db.Rooms.SingleOrDefault(u => u.ID == roomID).Chatlog;
             Message messageToDelete = chatlog.Messages.SingleOrDefault(u => u.ID == int.Parse(messageID));
 
             chatlog.Messages.Remove(messageToDelete);
@@ -145,7 +176,12 @@ namespace CSSHarris.Hubs
             await Clients.Group(roomID).ShowMessages(chatlog.Messages);
         }
 
-        public override async Task OnDisconnectedAsync(Exception exception)
+        /// <summary>
+        /// When user disconnects, check if guest and then delete them from the db
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
 
@@ -167,11 +203,20 @@ namespace CSSHarris.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
+        /// <summary>
+        /// Update roomlist for everyone
+        /// </summary>
+        /// <returns></returns>
         private async Task SendRoomListUpdate()
         {
             await Clients.All.UpdateRoomList(db.Rooms.ToList());
         }
 
+        /// <summary>
+        /// Join a room
+        /// </summary>
+        /// <param name="RoomID"></param>
+        /// <returns></returns>
         public async Task JoinRoom(string RoomID)
         {
             var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
@@ -187,12 +232,15 @@ namespace CSSHarris.Hubs
             await AddToGroup(RoomID);
             await Clients.Group(RoomID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToJoin).ToList());
 
-            //TODO do not send full user data
-            await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner); 
+            await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner);
             await Clients.Caller.ShowMessages(roomToJoin.Chatlog.Messages);
             await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
         }
 
+        /// <summary>
+        /// Leave a room
+        /// </summary>
+        /// <returns></returns>
         public async Task LeaveRoom()
         {
             var callingUser = db.ChatUsers.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
@@ -213,11 +261,21 @@ namespace CSSHarris.Hubs
             await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
         }
 
+        /// <summary>
+        /// Add connectionid to group
+        /// </summary>
+        /// <param name="groupName"></param>
+        /// <returns></returns>
         public async Task AddToGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
 
+        /// <summary>
+        /// Remove connectionid from group
+        /// </summary>
+        /// <param name="groupName"></param>
+        /// <returns></returns>
         public async Task RemoveFromGroup(string groupName)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);

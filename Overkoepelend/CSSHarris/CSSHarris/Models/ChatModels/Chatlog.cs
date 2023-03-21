@@ -6,8 +6,6 @@ namespace CSSHarris.Models.ChatModels
     {
         [Key] public int ID { get; set; }
 
-        //todo check users max 2
-        public List<ChatUser> Users { get; set; }
         public List<Message> Messages { get; set; } = new();
     }
 }
