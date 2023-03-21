@@ -34,7 +34,8 @@
             </div>
 
             <div class="form-floating mb-3">
-                <div class="g-recaptcha" data-sitekey="6LdiaZIkAAAAACtxhDrL-lNmcpWpjcwvWEttM15R" data-callback="GetResponseKey" data-expired-callback="ClearResponseKey" data-error-callback="ClearResponseKey"></div>
+                <div id="captcha"></div>
+                <input asp-for="Input.Captcha" type="hidden" id="captchatoken"/>
             </div>
             
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
@@ -74,4 +75,20 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+        <script>
+        var onloadCallback = (function () {
+            grecaptcha.render('captcha', {
+                'sitekey': '6LdiaZIkAAAAACtxhDrL-lNmcpWpjcwvWEttM15R',
+                'callback': function (token) {
+                    document.getElementById("captchatoken").value = token;
+                }
+            });
+        });
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
+
 }
