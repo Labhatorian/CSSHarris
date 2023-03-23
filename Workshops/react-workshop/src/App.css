@@ -1,0 +1,73 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  font-size: 16px;
+  color: white;
+}
+
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+      max-width: 750px;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .container {
+      max-width: 970px;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .container {
+      max-width: 1170px;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+  }
+}
+
+.container--centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/*------------------------------*\
+    # TEXT
+\*------------------------------*/
+
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/*------------------------------*\
+    # BUTTON
+\*------------------------------*/
+
+.button {
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background-color: #4ca7c1;
+  color: white;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: #4192a9;
+  cursor: pointer;
+}
