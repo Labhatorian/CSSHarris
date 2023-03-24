@@ -15,10 +15,7 @@ namespace CSSHarris.Data
         public DbSet<Chatlog> Chatlogs { get; set; }
         public DbSet<Room> Rooms { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
