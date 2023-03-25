@@ -1,0 +1,48 @@
+# This workflow will build and release the ASP.NET CORE project MHeet
+
+name: Build, Test and Release MHeet
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore ./Overkoepelend/CSSHarris/CSSHarris/CSSHarris.csproj
+      
+    - name: Build project
+      run: dotnet build --configuration Release --no-restore ./Overkoepelend/CSSHarris/CSSHarris/CSSHarris.csproj
+  
+  # Not finished yet
+   # - name: Test
+   #   run: dotnet test --no-restore --verbosity normal ./test/test.csproj
+      
+    - name: Publish project
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        dotnet publish -c Release -o ./publish ./Overkoepelend/CSSHarris/CSSHarris/CSSHarris.csproj
+        cd ./publish
+        zip -r ../release.zip .
+        
+    - name: Upload Release
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./release.zip
+        asset_name: release.zip
+        asset_content_type: application/zip
