@@ -39,25 +39,14 @@ jobs:
         cd ./publish
         zip -r ../release.zip .
         
-    - name: Get Release ID
-      id: release
-      uses: actions/create-release@v1.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v1.0.0
-        release_name: Release ${{ github.ref }}
-        body: |
-          Changes in this Release
-        draft: false
-        prerelease: false    
-        
     - name: Get Upload URL
       id: upload_url
       run: echo "::set-output name=upload_url::${{ steps.upload.outputs.upload_url }}"   
       
     - name: Upload Release
       uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./release.zip
