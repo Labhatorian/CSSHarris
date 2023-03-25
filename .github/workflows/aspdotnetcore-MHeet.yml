@@ -1,6 +1,6 @@
-# This workflow will build and release the ASP.NET CORE project MHeet.
+# This workflow will build and test the ASP.NET CORE project MHeet.
 
-name: Build, Test and Release MHeet
+name: Build and Test MHeet
 
 on:
   push:
@@ -31,24 +31,10 @@ jobs:
    # - name: Test
    #   run: dotnet test --no-restore --verbosity normal ./test/test.csproj
       
-    - name: Publish project
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        dotnet publish -c Release -o ./publish ./Overkoepelend/CSSHarris/CSSHarris/CSSHarris.csproj
-        cd ./publish
-        zip -r ../release.zip .
-        
-    - name: Get Upload URL
-      id: upload_url
-      run: echo "::set-output name=upload_url::${{ steps.upload.outputs.upload_url }}"   
-      
-    - name: Upload Release
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./release.zip
-        asset_name: release.zip
-        asset_content_type: application/zip
+    #- name: Publish project
+     # env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #  run: |
+    #    dotnet publish -c Release -o ./publish ./Overkoepelend/CSSHarris/CSSHarris/CSSHarris.csproj
+    #    cd ./publish
+     #   zip -r ../release.zip .
