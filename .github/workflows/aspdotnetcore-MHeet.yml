@@ -1,4 +1,4 @@
-# This workflow will build and release the ASP.NET CORE project MHeet
+# This workflow will build and release the ASP.NET CORE project MHeet.
 
 name: Build, Test and Release MHeet
 
