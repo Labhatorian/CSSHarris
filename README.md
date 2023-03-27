@@ -9,8 +9,8 @@
 ClientTech contains the HTML assignments on a week-to-week basis</br>
 ServerTech contains the C# assignments on a week-to-week basis</br>
 Security contains one of the test projects before the migration to ASP .NET Core project with authorization and Docker enabled</br>
-Overkoepelend will contain the main project that will use technology in all other folders</br>
+Overkoepelend will contain the main project that will use technology from all other folders</br>
 
-## CSSHarris Main Project
+## CSSHarris Main Project - MHeet
 As stated Overkoepelend will contain the main project. This project will create a website where users can chat with each other. In addition, they will be able to
 create an account and talk privately to friend.
