@@ -6,6 +6,10 @@
 version: 2
 updates:
   - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/Overkoepelend" # Location of package manifests
+    directory: "/Overkoepelend/CSSHarris/CSSHarris" # Location of package manifests
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "nuget" # See documentation for possible values
+    directory: "/Overkoepelend/CSSHarris/MHeetTesting" # Location of package manifests
     schedule:
       interval: "weekly"
