@@ -37,24 +37,4 @@ jobs:
       run: |
         dotnet publish -c Release -o ./publish ./Overkoepelend/CSSHarris/CSSHarris/CSSHarris.csproj
         cd ./publish
-        zip -r ../release.zip .
-     
-     
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.36.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: patch
-      - name: Create Release and Upload Artifacts
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "../release.zip"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          draft: false
-          generateReleaseNotes: true
+        zip -r ../release.zip
