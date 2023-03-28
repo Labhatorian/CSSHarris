@@ -12,7 +12,6 @@ using Message = CSSHarris.Models.ChatModels.Message;
 
 namespace CSSHarris.Hubs
 {
-    //TODO TESTING
     [AllowAnonymous]
     public class ChatHub : Hub<IConnectionHub>
     {
