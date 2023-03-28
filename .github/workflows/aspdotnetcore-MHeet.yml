@@ -27,6 +27,5 @@ jobs:
     - name: Build project
       run: dotnet build --configuration Release --no-restore ./Overkoepelend/CSSHarris/CSSHarris/CSSHarris.csproj
   
-  # Not finished yet
-   # - name: Test
-   #   run: dotnet test --no-restore --verbosity normal ./test/test.csproj
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal ./Overkoepelend/CSSHarris/MHeetTesting/MHeetTesting.csproj
