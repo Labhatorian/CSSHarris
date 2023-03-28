@@ -267,12 +267,12 @@ namespace CSSHarris.Hubs
             await RemoveFromGroup(roomToLeave.ID);
 
             callingUser.CurrentRoom = null;
+            await Clients.Caller.UpdateUserList(null);
 
             db.Update(callingUser);
             db.SaveChanges();
 
             await Clients.Group(roomToLeave.ID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToLeave).ToList());
-            await Clients.Caller.UpdateUserList(null);
             await Clients.Caller.UpdateRoomList(db.Rooms.ToList());
         }
 

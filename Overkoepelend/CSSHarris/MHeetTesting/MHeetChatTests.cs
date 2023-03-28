@@ -4,7 +4,6 @@ using CSSHarris.Models;
 using CSSHarris.Models.ChatModels;
 using MHeetTesting.Integration;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -45,11 +44,6 @@ namespace MHeetTesting
                 new Claim(ClaimTypes.Name, "TestUser"),
             }));
 
-            //Give moderator
-            //var identity = new ClaimsIdentity();
-            //identity.AddClaim(new Claim(ClaimTypes.Role, "Moderator"));
-            //ctx.HttpContext.User.AddIdentity(identity);
-
             //Hub
             Hub = new ChatHub(TestingDatabase, null);
             var mockClients = new Mock<IHubCallerClients<IConnectionHub>>();
@@ -66,18 +60,13 @@ namespace MHeetTesting
             Hub.Clients = mockClients.Object;
             Hub.Context = new FakeHubHTTPContext(ctx.HttpContext, "1");
 
-            //Test room
-           // if (TestRoom is not null)
-           // {
-                TestRoom = new()
-                {
-                    Owner = "TestUser",
-                    Title = "TestRoom",
-                    ID = "9999"
-                };
-                TestingDatabase.Rooms.Add(TestRoom);
-                //TestingDatabase.SaveChanges();
-            //}
+            TestRoom = new()
+            {
+                Owner = "TestUser",
+                Title = "TestRoom",
+                ID = "9999"
+            };
+            TestingDatabase.Rooms.Add(TestRoom);
         }
 
         [Fact]
@@ -109,7 +98,7 @@ namespace MHeetTesting
         }
 
         [Fact]
-        public void C_DeleteMessageFail() 
+        public void C_DeleteMessageFail()
         {
             bool deletePassed = false;
 
@@ -118,9 +107,9 @@ namespace MHeetTesting
 
             TestRoom.Chatlog.Messages.Add(new Message()
             {
-                ID= 9102,
-                Username="TestUser",
-                Content="Test"
+                ID = 9102,
+                Username = "TestUser",
+                Content = "Test"
             });
 
             Hub.DeleteMessage("9999", "9102");
@@ -129,24 +118,16 @@ namespace MHeetTesting
         }
 
         [Fact]
-        public void D_JoinRoomSuccess()
+        public void D_LeaveRoomSuccess()
         {
-            bool joinPassed = false;
+            bool leavePassed = false;
 
-            MockConnectionHub.Setup(m => m.ShowMessages(It.IsAny<List<Message>>()))
-                .Callback(() => joinPassed = true);
-            
-            Room TestRoomTwo = new()
-            {
-                Owner = "TestUser",
-                Title = "TestRoomTwo",
-                ID = "9997"
-            };
-            TestingDatabase.Rooms.Add(TestRoom);
+            MockConnectionHub.Setup(m => m.UpdateUserList(It.IsAny<List<ChatUser>>()))
+                .Callback(() => leavePassed = true);
 
-            Hub.JoinRoom("9997");
+            Hub.LeaveRoom();
 
-            Assert.True(joinPassed);
+            Assert.True(leavePassed);
         }
 
     }
