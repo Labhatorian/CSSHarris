@@ -20,9 +20,10 @@
                     <span asp-validation-for="Input.UserName" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
+                    <input id="PasswordField" asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" type="password" />
+                    <label asp-for="Input.Password" class="form-label">Password </label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    <input type="checkbox" onmousedown="showPassword()" onmouseup="showPassword()"> Unmask Password
                 </div>
                 <div class="checkbox mb-3">
                     <label asp-for="Input.RememberMe" class="form-label">
@@ -81,4 +82,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script defer src="~/js/unmaskpassword.js"></script>
 }

@@ -11,17 +11,17 @@
     {
         <li class="nav-item"><h3>Admin</h3></li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="RoleManager" asp-action="Index">Role Manager</a>
+            <a class="nav-link text-white btn btn-primary" asp-area="" asp-controller="RoleManager" asp-action="Index">Role Manager</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="UserRoles" asp-action="Index">User Role Manager</a>
+            <a class="nav-link text-white btn btn-primary" asp-area="" asp-controller="UserRoles" asp-action="Index">User Role Manager</a>
         </li>
     }
     @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Moderator") || User.IsInRole("Admin")))
     {
         <li class="nav-item"><h3>Mod</h3></li>
     <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="UserManager" asp-action="Index">User Manager</a>
+            <a class="nav-link text-white btn btn-primary" asp-area="" asp-controller="UserManager" asp-action="Index">User Manager</a>
         </li>
     }
     </ul>

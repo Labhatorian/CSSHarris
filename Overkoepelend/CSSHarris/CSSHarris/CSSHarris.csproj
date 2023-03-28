@@ -39,4 +39,8 @@
 	</None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\js\unmaskpassword.js" />
+  </ItemGroup>
+
 </Project>

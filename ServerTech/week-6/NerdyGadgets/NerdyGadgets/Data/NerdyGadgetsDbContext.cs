@@ -31,49 +31,55 @@ namespace NerdyGadgets.Data
                 .HasKey(pc => new { pc.ProductId, pc.CategoryId });
 
             ////Data seeding
-            //var usb_category = new Category()
-            //{
-            //    CategoryNumber = 1,
-            //    Name = "USB",
-            //};
-            //var tShirts_category = new Category()
-            //{
-            //    CategoryNumber = 2,
-            //    Name = "T-Shirt",
-            //};
+            var usb_category = new Category()
+            {
+                CategoryNumber = 1,
+                Name = "USB",
+            };
+            var tShirts_category = new Category()
+            {
+                CategoryNumber = 2,
+                Name = "T-Shirt",
+            };
 
-            //var usbTshirt_product = new Product()
-            //{
-            //    ProductId = 1,
-            //    Title = "USB Stick Tee Shirt",
-            //    Price = 10,
-            //    //Categories = new[] { usb_category,tShirts_category}
-            //};
+            var usbTshirt_product = new Product()
+            {
+                ProductId = 1,
+                Title = "USB Stick Tee Shirt",
+                Price = 10,
+                //Categories = new[] { usb_category,tShirts_category}
+            };
 
-            ////maak twee ProductCategories aan en stel de foreign keys in!
-            ////Voeg deze toe met HasData
-            //var ProductCategoryUSB = new ProductCategory()
-            //{
-            //    CategoryId = 1,
-            //    Category = usb_category,
-            //    Product = usbTshirt_product,
-            //    ProductId = 1,
-            //};
-            //var ProductCategoryTShirt = new ProductCategory()
-            //{
-            //    CategoryId = 2,
-            //    Category = tShirts_category,
-            //    Product = usbTshirt_product,
-            //    ProductId = 1,
-            //};
+            //maak twee ProductCategories aan en stel de foreign keys in!
+            //Voeg deze toe met HasData
+            var ProductCategoryUSB = new ProductCategory()
+            {
+                CategoryId = 1,
+                Category = usb_category,
+                Product = usbTshirt_product,
+                ProductId = 1,
+            };
+            var ProductCategoryTShirt = new ProductCategory()
+            {
+                CategoryId = 2,
+                Category = tShirts_category,
+                Product = usbTshirt_product,
+                ProductId = 1,
+            };
 
-            //usbTshirt_product.Categories = new List<Category>() { usb_category,tShirts_category};
-            //modelBuilder.Entity<Product>().HasData(usb_category, tShirts_category); niet nodig
-            
+            // usbTshirt_product.Categories = new List<Category>() { usb_category, tShirts_category };
+
             //modelBuilder.Entity<Product>().HasData(usbTshirt_product);
+            //modelBuilder.Entity<Product>().HasData(usb_category, tShirts_category); //niet nodig
+
+            //var usbUSB = new ProductCategory { ProductId = usbTshirt_product.ProductId, CategoryId = usb_category.CategoryNumber };
+            //var usbTshirt = new ProductCategory { ProductId = usbTshirt_product.ProductId, CategoryId = tShirts_category.CategoryNumber };
+
             //modelBuilder.Entity<Product>().HasData(ProductCategoryUSB);
             //modelBuilder.Entity<Product>().HasData(ProductCategoryTShirt);
 
+
+            //DEEEEEZE WEEEEEERKT
             modelBuilder.Entity<Product>().HasData(
                 new Product { ProductId = 1, Title = "USB Stick Tee Shirt", Price = 10, }
              );

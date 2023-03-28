@@ -1,7 +1,6 @@
 ﻿using CSSHarris.Data;
 using CSSHarris.Models;
 using CSSHarris.Models.ChatModels;
-using CSSHarris.Models.DeveloperModels;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -79,6 +78,13 @@ namespace CSSHarris.Hubs
                 ChatUser user = db.ChatUsers.Where(user => user.UserID == userId).FirstOrDefault();
                 if (user is null)
                 {
+                    if (db.ChatUsers.Where(user => user.UserName == username) is not null)
+                    {
+                        Random random = new Random();
+                        int randomNumber = random.Next(1, 10000);
+                        username = "User " + randomNumber;
+                    }
+
                     Guid guid = Guid.NewGuid();
                     user = new()
                     {

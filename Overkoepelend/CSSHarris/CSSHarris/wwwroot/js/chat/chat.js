@@ -4,7 +4,15 @@ import { ChatList } from "./maincomponents/listcomponent.js";
 customElements.define('chat-pane', ChatPane);
 customElements.define('chat-list', ChatList);
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub", (opts) => {
+    opts.HttpMessageHandlerFactory = (message) => {
+        if (message is HttpClientHandler clientHandler)
+// always verify the SSL certificate
+clientHandler.ServerCertificateCustomValidationCallback +=
+    (sender, certificate, chain, sslPolicyErrors) => { return true; };
+return message;
+    };
+}).build();
 var myUsername;
 var currentRoomId = "";
 
