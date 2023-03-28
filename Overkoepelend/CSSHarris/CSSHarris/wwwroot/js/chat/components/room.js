@@ -14,7 +14,7 @@ class Room extends HTMLElement {
     templateId = 'room-tpl';
 
     constructor() {
-        super(); // always call super() first in the ctor.
+        super();
         this.shadowRoot = this.attachShadow({ mode: 'open' });
 
         this._title = '';
@@ -39,37 +39,30 @@ class Room extends HTMLElement {
     }
 
     EditText() {
-        // Vind het p element met class title
         let div = this.shadowRoot.querySelector(".title");
-        // Wijs de titel toe aan het p element
         div.textContent = this._title;
     }
 
-    // a getter for the amount property
     get title() {
         return this._title;
     }
 
-    // a setter for the amount property
     set title(value) {
         this._title = value;
-        if (!this._setting) { // check if the flag is false
-            this._setting = true; // set the flag to true
-            this.setAttribute("data-title", value); // update the attribute as well
-            this._setting = false; // reset the flag to false
+        if (!this._setting) { 
+            this._setting = true; 
+            this.setAttribute("data-title", value); 
+            this._setting = false; 
         }
-
         this.EditText();
     }
 
-    // a callback for when an attribute changes
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === "data-title") {
-            this.title = newValue; // update the property as well
+            this.title = newValue; 
         }
     }
 
-    // a list of attributes to observe for changes
     static get observedAttributes() {
         return ["data-title"];
     }
@@ -79,8 +72,8 @@ class Room extends HTMLElement {
             console.log('Joining room...');
 
             var event = new CustomEvent("joinroom", {
-                composed: true, // Laat de gebeurtenis doordringen door schaduw-DOM grenzen
-                bubbles: true, // Laat de gebeurtenis opborrelen door DOM boom
+                composed: true, 
+                bubbles: true, 
             });
            event.roomid = this.getAttribute('data-rid');
 

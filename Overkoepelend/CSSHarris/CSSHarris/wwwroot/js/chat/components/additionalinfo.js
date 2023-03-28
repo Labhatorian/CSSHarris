@@ -11,7 +11,7 @@
     }
 
     constructor() {
-        super(); // always call super() first in the ctor.
+        super(); 
         this.shadowRoot = this.attachShadow({ mode: 'open' });
         this._amount = 0;
         this._maintext = "";
@@ -34,50 +34,42 @@
         this.shadowRoot.innerHTML = '<div>' + this._maintext + '<small id="additionalinfodata">' + this._amount + '</small></div>';
     }
 
-    // a getter for the maintext property
     get maintext() {
         return this._maintext;
     }
 
-    // a setter for the maintext property
     set maintext(value) {
         this._maintext = value;
-        if (!this._setting) { // check if the flag is false
-            this._setting = true; // set the flag to true
-            this.setAttribute("maintext", value); // update the attribute as well
-            this._setting = false; // reset the flag to false
+        if (!this._setting) { 
+            this._setting = true; 
+            this.setAttribute("maintext", value); 
+            this._setting = false;
         }
-
         this.EditText();
     }
 
-    // a getter for the amount property
     get amount() {
         return this._amount;
     }
 
-    // a setter for the amount property
     set amount(value) {
         this._amount = value;
-        if (!this._setting) { // check if the flag is false
-            this._setting = true; // set the flag to true
-            this.setAttribute("amount", value); // update the attribute as well
-            this._setting = false; // reset the flag to false
+        if (!this._setting) {
+            this._setting = true;
+            this.setAttribute("amount", value);
+            this._setting = false; 
         }
-
         this.EditText();
     }
 
-    // a callback for when an attribute changes
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === "maintext") {
-            this.maintext = newValue; // update the property as well
+            this.maintext = newValue;
         } else if (name === "amount") {
-            this.amount = newValue; // update the property as well
+            this.amount = newValue; 
         }
     }
 
-    // a list of attributes to observe for changes
     static get observedAttributes() {
         return ["maintext", "amount"];
     }

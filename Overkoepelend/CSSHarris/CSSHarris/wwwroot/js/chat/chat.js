@@ -1,6 +1,4 @@
-﻿//TODO convert o module
-import { User } from "./components/user.js";
-import { ChatPane } from "./maincomponents/chatpane.js";
+﻿import { ChatPane } from "./maincomponents/chatpane.js";
 import { ChatList } from "./maincomponents/listcomponent.js";
 
 customElements.define('chat-pane', ChatPane);
@@ -11,18 +9,8 @@ var myUsername;
 var currentRoomId = "";
 
 const initializeSignalR = () => {
-    connection.start().then(() => { console.log("SignalR: Connected"); generateRandomUsername(); }).catch(err => console.log(err));
-};
-
-const setUsername = (username) => {
-    connection.invoke("Join", username)
-    myUsername = username;
-    document.querySelector("chat-list[type = 'user']").setUser(username);
-};
-
-const generateRandomUsername = () => {
     let username = 'User ' + Math.floor((Math.random() * 10000) + 1);
-    setUsername(username);
+    connection.start().then(() => { console.log("SignalR: Connected"); connection.invoke("Join", username); }).catch(err => console.log(err));
 };
 
 $(document).ready(function () {
@@ -59,6 +47,22 @@ $(document).ready(function () {
     this.addEventListener("sendmessage", function (e) {
        if(currentRoomId != '' && currentRoomId != undefined) connection.invoke("SendMessage", currentRoomId, e.message);
     });
+
+    //Handler send message
+    this.addEventListener("deleteMessage", function (e) {
+        connection.invoke("DeleteMessage", currentRoomId, e.messageid);
+    });
+});
+
+// Hub Callback: Update user
+connection.on('Connected', (username) => {
+    myUsername = username;
+    document.querySelector("chat-list[type = 'user']").setUser(username);
+});
+
+// Hub Callback: Update users
+connection.on('updateUserList', (userList) => {
+    document.querySelector("chat-list[type = 'user']").updateUsers(userList, myUsername);
 });
 
 // Hub Callback: Update users
@@ -72,9 +76,14 @@ connection.on('updateRoomList', (roomList) => {
 });
 
 // Hub Callback: Room joined
-connection.on('roomJoined', (RoomTitle, IsOwner, Messages) => {
+connection.on('roomJoined', (RoomTitle, IsOwner) => {
     console.log('Room joined');
     document.querySelector("chat-list[type = 'room']").updateButtons(currentRoomId, IsOwner, RoomTitle);
+});
+
+// Hub Callback: ShowMessages
+connection.on('showMessages', (Messages) => {
+    console.log('Messages updated');
     document.querySelector("chat-pane").ShowMessages(Messages);
 });
 
@@ -88,6 +97,6 @@ connection.on('roomDeleted', () => {
 });
 
 // Hub Callback: Receive message
-connection.on("ReceiveMessage", function (user, message) {
-    document.querySelector("chat-pane").NewMessage(user, message);
+connection.on("ReceiveMessage", function (id, user, message) {
+    document.querySelector("chat-pane").NewMessage(id, user, message);
 });

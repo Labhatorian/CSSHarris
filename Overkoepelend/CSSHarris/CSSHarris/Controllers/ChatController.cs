@@ -1,19 +1,28 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CSSHarris.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSSHarris.Controllers
 {
+    /// <summary>
+    /// Brings useers to the chat page
+    /// </summary>
     [Authorize]
     public class ChatController : Controller
     {
-        [AllowAnonymous]
-        public IActionResult Global()
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ChatController(UserManager<ApplicationUser> userManager)
         {
-            return View();
+            _userManager = userManager;
         }
-        
-        public IActionResult Friends()
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Global()
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user is not null) TempData["Banned"] = user.Banned;
             return View();
         }
     }

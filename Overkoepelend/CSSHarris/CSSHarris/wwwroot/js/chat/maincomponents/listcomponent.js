@@ -33,8 +33,8 @@ const listTemplate = {
 class ChatList extends HTMLElement {
     shadowRoot;
 
-    constructor(Username) {
-        super(); // always call super() first in the ctor.
+    constructor() {
+        super();
         this.shadowRoot = this.attachShadow({ mode: 'open' })
         this.init();
 
@@ -43,13 +43,15 @@ class ChatList extends HTMLElement {
             this.initRoom();
         } else if (type === "user") {
             this.initUser();
+        } else if (type === "friend") {
+            this.initFriend();
         }
     }
 
     init() {
         const linkElem = document.createElement("link");
         linkElem.setAttribute("rel", "stylesheet");
-        linkElem.setAttribute("href", "../js/chat/css/list.css");
+        linkElem.setAttribute("href", "/css/components/list.css");
         this.shadowRoot.appendChild(linkElem);
 
         const linkElemBootstrap = document.createElement("link");
@@ -88,13 +90,22 @@ class ChatList extends HTMLElement {
         this.shadowRoot.querySelector("#component2").appendChild(info);
     }
 
+    initFriend() {
+        var type = this.getAttribute("myfriends");
+        const info = document.createElement("span");
+
+        if (type == 0) info.innerHTML = "Vriendverzoeken";
+        else if (type == 1) info.innerHTML = "Mijn vrienden";
+
+        this.shadowRoot.querySelector("#component1").appendChild(info);
+    }
+
     setUser(username) {
         const info = this.shadowRoot.querySelector("#component2").querySelector("additional-info");
         info.amount = username;
     }
 
     updateButtons(RoomTitle, IsOwner, currentRoomId) {
-        //Enable buttons
         if (currentRoomId != "" && currentRoomId != undefined) {
             this.shadowRoot.querySelector('#component2').querySelector("room-buttons").JoinRoom(currentRoomId, IsOwner, RoomTitle);
         }
@@ -126,7 +137,6 @@ class ChatList extends HTMLElement {
         }
     }
 
-    //todo secure connection ids
     updateUsers(userList, myUsername) {
         var type = this.getAttribute("type");
         if (type === "user") {
@@ -139,12 +149,35 @@ class ChatList extends HTMLElement {
             userinfo.setAttribute("amount", userList.length-1);
 
             $.each(userList, function (index) {
-                if (userList[index].username != myUsername) {
+                if (userList[index].userName != myUsername) {
                     const userNode = document.createElement('chat-user');
                     userNode.setAttribute("data-id", userList[index].connectionId);
-                    userNode.setAttribute("data-username", userList[index].username);
+                    userNode.setAttribute("data-username", userList[index].userName);
                     self.shadowRoot.querySelector('#chatlistdata').append(userNode);
                 }
+            });
+        }
+    }
+
+    updateFriendList(userList, type) {
+        var type = this.getAttribute("type");
+        const self = this;
+        if (type === "friend") {
+            $.each(userList, function (index) {
+                    const userNode = document.createElement('chat-user');
+                    userNode.setAttribute("data-id", userList[index].chatUserID);
+                userNode.setAttribute("data-username", userList[index].userName);
+
+                var usertype;
+                var myfriends = self.getAttribute("myfriends");
+                if (myfriends === '0'){
+                    usertype = "request";
+                } else {
+                    usertype = "friend";
+                }
+
+                userNode.setAttribute("type", usertype);
+                    self.shadowRoot.querySelector('#chatlistdata').append(userNode);
             });
         }
     }

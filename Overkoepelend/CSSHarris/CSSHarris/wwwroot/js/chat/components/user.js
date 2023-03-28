@@ -2,9 +2,7 @@
     id: 'user-tpl',
     template: `
     <li class="list-group-item user">
-                    <a href="#">
-                        <div class="username"></div>
-                    </a>
+                    <div class="username"></div>
                 </li>
     `
 }
@@ -15,7 +13,7 @@ class User extends HTMLElement {
     templateId = 'user-tpl';
 
     constructor() {
-        super(); // always call super() first in the ctor.
+        super();
         this.shadowRoot = this.attachShadow({ mode: 'open' });
 
         this._username = '';
@@ -39,40 +37,33 @@ class User extends HTMLElement {
     }
 
     EditText() {
-        // Vind het p element met class title
         let div = this.shadowRoot.querySelector(".username");
-        // Wijs de titel toe aan het p element
         div.textContent = this._username;
     }
 
-    // a getter for the amount property
     get username() {
         return this._username;
     }
 
-    // a setter for the amount property
     set username(value) {
         this._username = value;
-        if (!this._setting) { // check if the flag is false
-            this._setting = true; // set the flag to true
-            this.setAttribute("data-username", value); // update the attribute as well
-            this._setting = false; // reset the flag to false
+        if (!this._setting) { 
+            this._setting = true;
+            this.setAttribute("data-username", value); 
+            this._setting = false; 
         }
-
         this.EditText();
     }
 
-    // a callback for when an attribute changes
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === "data-username") {
-            this.username = newValue; // update the property as well
+            this.username = newValue;
         }
     }
 
-    // a list of attributes to observe for changes
     static get observedAttributes() {
         return ["data-username"];
     }
-}
+    }
 
 export { User };

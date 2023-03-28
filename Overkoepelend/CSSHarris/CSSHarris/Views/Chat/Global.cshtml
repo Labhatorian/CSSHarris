@@ -1,4 +1,10 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IAuthorizationService AuthorizationService
+
+@{
     ViewData["Title"] = "Global Chat";
 }
 
@@ -8,9 +14,25 @@
 
 <div class="text-center">
     <h1 class="display-4">Global Chat</h1>
+    @if (@TempData["Banned"] is not null)
+    {
+        if ((bool)@TempData["Banned"])
+        {
+            <div class="alert alert-danger" role="alert">
+                You have been banned and may no longer partake in chatting or create new rooms
+            </div>
+        }
+    }
     <div class="chat">
         <chat-list type="room"></chat-list>
-        <chat-pane></chat-pane>
+        @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Moderator") || User.IsInRole("Admin")))
+        {
+            <chat-pane moderator=true></chat-pane>
+        } else
+        {
+            <chat-pane></chat-pane>
+        }
+
         <chat-list type="user"></chat-list>
     </div>
 </div>

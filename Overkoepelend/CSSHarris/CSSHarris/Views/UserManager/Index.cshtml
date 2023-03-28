@@ -1,0 +1,43 @@
+﻿@using CSSHarris.Models.Management
+@model List<CSSHarris.Models.Management.UserManageViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>User Roles</h1>
+@if(@TempData["message"] is not null)
+{
+    <div class="alert alert-primary" role="alert">
+        @TempData["message"].ToString();
+    </div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Banned</th>
+            <th>Verified</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>@user.Banned</td>
+                <td>@user.Verified</td>
+                <td>@string.Join(", ", user.Roles.ToList())</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="UserManager" asp-action="BanUnban" asp-route-userId="@user.UserId">Ban/Unban</a>
+                    <a class="btn btn-primary" asp-controller="UserManager" asp-action="ResetPassword" asp-route-userId="@user.UserId">Reset Password</a>
+                    <a class="btn btn-primary" asp-controller="UserManager" asp-action="VerifyUser" asp-route-userId="@user.UserId">Verify</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

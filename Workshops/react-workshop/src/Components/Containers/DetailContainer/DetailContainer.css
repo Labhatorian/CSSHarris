@@ -1,0 +1,78 @@
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh;
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    color: #4c4c4c;
+    background-color: white;
+}
+
+.detail-image {
+    width: 100%;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+@media screen and (min-width: 768px) {
+    .detail-content {
+        align-items: flex-start;
+        flex-direction: row;
+    }
+}
+
+.detail-content__block {
+    min-width: 50%;
+}
+
+.detail-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #e4e4e4;
+}
+
+/*------------------------------*\
+    # TABS
+\*------------------------------*/
+
+.tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    box-shadow: 0 1px 2px 0 #4242421a, 0 2px 6px 3px #6464641a;
+}
+
+.tab {
+    display: flex;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-bottom: 2px solid  #e4e4e4;
+    cursor: pointer;
+}
+
+.tab:hover {
+    background-color: #e4e4e4;
+}
+
+.tab:not(.tab--active):hover {
+    border-bottom-color: #b8c7cb;
+}
+
+.tab--active {
+    border-bottom-color: #4ca7c1;
+}
+
+/*------------------------------*\
+    # INFO TABLE
+\*------------------------------*/
+
+.info-table td + td {
+    padding-left: 1rem;
+}

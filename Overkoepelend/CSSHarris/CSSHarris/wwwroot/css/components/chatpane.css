@@ -1,0 +1,21 @@
+﻿#chat {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    max-height: 75vh;
+}
+
+#chatpane {
+    flex: 1;
+    overflow-y: auto;
+}
+
+#context-menu {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+}
+
+ul {
+    padding-left: 0 !important;
+}

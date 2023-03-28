@@ -1,0 +1,62 @@
+#opdracht-1{
+    font-family: Arial;
+}
+
+ul{
+    list-style-type: none;
+    width: 300px;
+}
+
+ul li{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid darkgray;
+}
+
+
+ul li:nth-child(odd){
+
+/*student uitwerking*/
+    background-color: lightgray;
+}
+
+
+ul li:nth-child(1){
+    border-top: 1px solid darkgray;
+}
+
+ul li span {
+
+/*student uitwerking*/
+    background-color: black;
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+
+
+
+/*student uitwerking*/
+@media (min-width: 500px){
+ul li{
+    width: 480px;
+}
+} 
+
+@media (max-width: 400px){
+    ul li{
+     width: 100%;
+    }
+
+    ul li span {
+        display: none;
+    }
+    } 
