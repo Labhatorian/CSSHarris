@@ -19,6 +19,7 @@ namespace CSSHarris.Hubs
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
         private HtmlSanitizer sanitizer = new HtmlSanitizer();
+
         public ChatHub(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             this.db = db;
@@ -33,7 +34,8 @@ namespace CSSHarris.Hubs
         /// <returns></returns>
         public async Task SendMessage(string roomID, string message)
         {
-            var user = await _userManager.GetUserAsync(Context.User);
+            ApplicationUser user = null;
+            if (_userManager is not null) user = await _userManager.GetUserAsync(Context.User);
             if (user is not null && user.Banned) return;
 
             ChatUser signallingUser = db?.ChatUsers?.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
@@ -116,7 +118,8 @@ namespace CSSHarris.Hubs
         /// <returns></returns>
         public async Task CreateRoom(string title)
         {
-            var user = await _userManager.GetUserAsync(Context.User);
+            ApplicationUser user = null;
+            if (_userManager is not null) user = await _userManager.GetUserAsync(Context.User);
             if (user is not null && user.Banned) return;
             title = sanitizer.Sanitize(title);
 

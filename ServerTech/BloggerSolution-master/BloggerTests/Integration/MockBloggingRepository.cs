@@ -22,8 +22,6 @@ namespace BloggerTests.Integration
             authors = new List<Author>() {authorBernd };
         }
 
-
-
         public bool Create(Blog blog)
         {
             blogs.Add(blog);

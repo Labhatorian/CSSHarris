@@ -64,6 +64,7 @@ class ChatPane extends HTMLElement {
         this.shadowRoot.querySelector("#sendButton").addEventListener('click', (event) => {
             event.preventDefault();
             var message = this.shadowRoot.getElementById("messageInput").value;
+            this.shadowRoot.getElementById("messageInput").value = null;
 
             var messageevent = new CustomEvent("sendmessage", {
                 composed: true,

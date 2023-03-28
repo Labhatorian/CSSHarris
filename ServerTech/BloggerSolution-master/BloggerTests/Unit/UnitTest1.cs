@@ -32,6 +32,7 @@ namespace BloggerTests.Unit
         [Fact]
         public void UpdateBlogFail()
         {
+            /
             var mockRepo = new Mock<IBlogRepository>();
             mockRepo.Setup(r => new MockBloggingRepository());
 
@@ -40,8 +41,6 @@ namespace BloggerTests.Unit
             var authorID = 1;
             var otherAuthorID = 2;
             var authorBlog = blogService.GetBlog(authorID);
-
-            var success = blogService.UpdateBlog(authorID, authorBlog);
 
             Assert.Throws<InvalidOperationException>(() => blogService.UpdateBlog(otherAuthorID, authorBlog));
         }
