@@ -7,6 +7,9 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/Labhatorian/CSSWindesheim)
 
 ## Structure
+This semester took 8 weeks from week 7 to week 14 in 2023. Throughout the semester I learnt about ASP NET Core and Javascript. Everything I have done has been put in this repository for safekeeping. Alongside ClientTech and ServerTech there is also Security where I had to create a portfolio built upon OWASP ASVS. You can see some of this back in MHeet
+
+### Folders
 ClientTech contains all the Client Technology class assignments from during the semester. This uses Node.js and vanilla Javascript.</br>
 ServerTech contains all the Server Technology class assignments from during the semester. This uses C# in ASP NET 7.0 Core.</br>
 Security contains one of the test projects before the migration to ASP .NET Core project with authorization through local accounts in localdb.</br>
