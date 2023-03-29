@@ -9,11 +9,6 @@
         linkElemBootstrap.setAttribute("href", "/lib/bootstrap/dist/css/bootstrap.min.css");
         this.shadowRoot.appendChild(linkElemBootstrap);
 
-        const linkElem = document.createElement("link");
-        linkElem.setAttribute("rel", "stylesheet");
-        linkElem.setAttribute("href", "/css/components/message.css");
-        this.shadowRoot.appendChild(linkElem);
-
         let li = document.createElement("li");
         li.classList.add("list-group-item", "item");
         li.textContent = user + ": " + message;

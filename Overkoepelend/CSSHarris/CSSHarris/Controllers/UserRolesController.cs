@@ -100,7 +100,7 @@ namespace CSSHarris.Controllers
         /// Return to index
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Cancel()
+        public IActionResult Cancel()
         {
             return RedirectToAction("Index");
         }

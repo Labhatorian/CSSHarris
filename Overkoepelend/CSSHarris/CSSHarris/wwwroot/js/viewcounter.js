@@ -5,6 +5,7 @@
 //Replace text with viewcounter
 function DisplayViewcounter() {
     let counter = getCookie("PageViews");
+    if (counter === null) counter = 1;
     document.getElementsByClassName("content-gdpr-accept")[0].innerHTML = "Deze view is " + counter.toString() + " keer bekeken";
 }
 

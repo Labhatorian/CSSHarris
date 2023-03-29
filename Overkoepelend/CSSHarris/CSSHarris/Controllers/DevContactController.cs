@@ -1,10 +1,12 @@
-﻿using CSSHarris.Data;
+﻿using Azure;
+using CSSHarris.Data;
 using CSSHarris.Models.DeveloperModels;
 using Ganss.Xss;
 using Mailjet.Client;
 using Mailjet.Client.TransactionalEmails;
 using Microsoft.AspNetCore.Mvc;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CSSHarris.Controllers
 {
@@ -14,8 +16,6 @@ namespace CSSHarris.Controllers
     {
         private readonly IConfiguration Configuration;
         private readonly ApplicationDbContext db;
-
-        private readonly string GoogleCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
 
         private bool AcceptCaptcha = false;
         private bool AcceptEmail = false;
@@ -75,17 +75,11 @@ namespace CSSHarris.Controllers
             AcceptCaptcha = false;
 
             using HttpClient client = new();
-            var req = new HttpRequestMessage(HttpMethod.Post, GoogleCaptchaUrl);
-            req.Headers.Add("Accept", "application/x-www-form-urlencoded");
+            var url = string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}",
+                Configuration["SecretKeys:CaptchaSecret"], ResponseUser);
+            var response = await client.GetStringAsync(url);
 
-            req.Content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    { "secret", Configuration["SecretKeys:CaptchaSecret"] },
-                    { "response", ResponseUser }
-                });
-
-            HttpResponseMessage resp = await client.SendAsync(req);
-            AcceptCaptcha = (bool)resp.IsSuccessStatusCode;
+            AcceptCaptcha = (bool)JsonConvert.DeserializeObject<JObject>(response)["success"];
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ const chatpaneTemplate = {
                 </div>
             <br />
             <div class="bg-light" id="chatinput">
-                <div class=""><input type="text" class="w-100" id="messageInput" /></div>
+                <div class=""><input type="text" class="w-100" id="messageInput" maxlength="64" /></div>
                 <br />
                 <input type="button" id="sendButton" value="Send Message" />
             </div>

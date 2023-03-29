@@ -160,7 +160,7 @@ namespace CSSHarris.Hubs
             {
                 user.CurrentRoom = null;
                 db.Update(user);
-                Groups.RemoveFromGroupAsync(user.ConnectionId, roomID);
+                await Groups.RemoveFromGroupAsync(user.ConnectionId, roomID);
             }
 
             db.Remove(roomToDelete);
