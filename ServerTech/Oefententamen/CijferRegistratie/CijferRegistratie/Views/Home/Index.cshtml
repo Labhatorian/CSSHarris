@@ -1,0 +1,39 @@
+﻿@using CijferRegistratie.Models
+@model List<Vak>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Naam</th>
+                <th>EC</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vak in Model)
+            {
+                <tr>
+                    <td>@vak.Naam</td>
+                    <td>@vak.EC</td>
+                    @if (vak.Pogingen is null || vak.Pogingen.Count() == 0)
+                    {
+                        <td><a asp-controller="Poging" asp-action="CreateSpecial" asp-route-id="@vak.VakId">Poging toevoegen</a></td>
+                    }
+                    @if (vak.Pogingen is not null && vak.Pogingen.Where(p => p.Resultaat < 6).FirstOrDefault() is not null)
+                    {
+                        <td><a asp-controller="Poging" asp-action="CreateSpecial" asp-route-id="@vak.VakId">@vak.Pogingen.Where(p => p.Resultaat < 6).OrderByDescending(p => p.Resultaat).FirstOrDefault().Resultaat.ToString()</a></td>
+                    }
+                    @if (vak.Pogingen is not null && vak.Pogingen.Where(p => p.Resultaat >= 6).FirstOrDefault() is not null)
+                    {
+                        <td>Behaald</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
