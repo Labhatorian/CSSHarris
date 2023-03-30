@@ -29,6 +29,12 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <span asp-validation-for="StatusId" class="text-danger"></span>
+                <select asp-for="StatusId" class="form-control" asp-items="ViewBag.Statussen"></select>
+            </div>
+
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

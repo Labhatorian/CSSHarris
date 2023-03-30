@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,8 +22,28 @@ namespace TakenlijstManager.Controllers
         }
 
         // GET: Taken
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string zoekwaarde = "")
         {
+            var sessionZoekwaardesAsString = this.HttpContext.Session.GetString("zoekwardes");
+
+            if (sessionZoekwaardesAsString is null)
+            {
+                var zoekwaardes = new string[2];
+                zoekwaardes[0] = "a";
+                zoekwaardes[1] = "b";
+
+                this.HttpContext.Session.SetString("zoekwardes", JsonSerializer.Serialize(zoekwaardes));
+            } else
+            {
+               var zoekWaardesArray = JsonSerializer.Deserialize<string[]>(sessionZoekwaardesAsString);
+            }
+
+            if (zoekwaarde.Length > 0)
+            {
+                return _context.Taken != null ?
+                          View(await _context.Taken.Where(t => t.Naam.Contains(zoekwaarde)).ToListAsync()) :
+                          Problem("Entity set 'TakenManagerDbContext.Taken'  is null.");
+            }
               return _context.Taken != null ? 
                           View(await _context.Taken.ToListAsync()) :
                           Problem("Entity set 'TakenManagerDbContext.Taken'  is null.");
@@ -48,6 +70,8 @@ namespace TakenlijstManager.Controllers
         // GET: Taken/Create
         public IActionResult Create()
         {
+            ViewBag.Statussen = new SelectList(_context.Statussen.Select(x => new { Id = x.Id, Name = x.Name }).ToList(), "Id", "Name");
+            this.HttpContext.Session.SetString("time", DateTime.Now.TimeOfDay.ToString());
             return View();
         }
 
@@ -56,8 +80,11 @@ namespace TakenlijstManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Naam,Omvang,Prioriteit")] Taak taak)
+        public async Task<IActionResult> Create([Bind("Id,Naam,Omvang,Prioriteit,StatusId")] Taak taak)
         {
+            // this.HttpContext.Session.SetString("time", DateTime.Now.TimeOfDay.ToString());
+            var time = this.HttpContext.Session.GetString("time");
+
             if (ModelState.IsValid)
             {
                 _context.Add(taak);
