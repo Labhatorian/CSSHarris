@@ -35,7 +35,7 @@ namespace CSSHarris.Hubs
         {
             ApplicationUser user = null;
             if (_userManager is not null) user = await _userManager.GetUserAsync(Context.User);
-            if (user is not null && user.Banned) return;
+            if (user is not null && user.Banned || message == "") return;
 
             ChatUser signallingUser = db?.ChatUsers?.Where(item => item.ConnectionId == Context.ConnectionId).FirstOrDefault();
             Room room = db?.Rooms?.Where(r => r.ID == roomID).FirstOrDefault();
