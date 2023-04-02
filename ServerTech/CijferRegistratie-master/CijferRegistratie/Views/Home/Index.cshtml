@@ -1,0 +1,72 @@
+﻿@model VakkenListViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.VakListItems.FirstOrDefault().Naam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VakListItems.FirstOrDefault().EC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VakListItems.FirstOrDefault().Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.VakListItems) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Naam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EC)
+            </td>
+            <td>
+                    @if (item.Behaald)
+                    {
+                        @Html.DisplayNameFor(modelItem => item.Behaald)
+                    }
+                    else
+                    {                        
+                        <a asp-controller="Poging" asp-action="CreateSpecial" asp-route-vakId="@item.Id">@item.CreateSpecialLinkText</a>
+                    }
+
+                    @*                    
+                    @if (item.AantalPogingen > 0)
+                    {
+                        if (item.HoogsteResultaat >= 6)
+                        {
+                            @:Behaald
+                        }
+                        else
+                        {
+                            <a asp-controller="Poging" asp-action="CreateSpecial" asp-route-vakId="@item.Id">@item.HoogsteResultaat</a>
+                        }
+                    }
+                    else                    
+                    {
+                        <a asp-controller="Poging" asp-action="CreateSpecial" asp-route-vakId="@item.Id">Poging Toevoegen</a>                        
+                    }*@
+            </td>
+        </tr>
+}
+
+    </tbody>
+</table>
+
+<hr />
+<div class="text-success">
+    <label asp-for="Mutaties"></label>
+    <ul>
+        @foreach (var item in Model.Mutaties){
+            <li>@item</li>    
+        }
+    </ul>
+</div>
