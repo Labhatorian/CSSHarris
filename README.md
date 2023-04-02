@@ -28,4 +28,4 @@ MHeet has a workflow script to build and test the MHeet project and only the MHe
 Being considerend.
 
 ## Afterword
-This semester has been a chaos due to the absolute amount of work we have had to do with the unclear information that we had. The pressure has been high throughout the entire semester and I am dissatisfied with how it went. I am glad this is all over.
+This semester has not been the greatest due to amount of work that we had to do with barely any information. For the next time I wish for clearer requirements and explanation what exactly needs to be done and how. Especially with the Security portfolio and Tasker assignments I had the most trouble with.
