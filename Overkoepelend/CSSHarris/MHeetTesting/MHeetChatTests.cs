@@ -55,6 +55,7 @@ namespace MHeetTesting
             //Clients
             mockClients.Setup(c => c.Group(It.IsAny<string>()))
            .Returns(MockConnectionHub.Object);
+
             //Apply
             Hub.Groups = mockGroups.Object;
             Hub.Clients = mockClients.Object;
@@ -70,7 +71,7 @@ namespace MHeetTesting
         }
 
         [Fact]
-        public void A_SendMessageSuccess()
+        public void SendMessageSuccess()
         {
             bool sendCalled = false;
 
@@ -86,7 +87,7 @@ namespace MHeetTesting
         }
 
         [Fact]
-        public void B_SendMessageFail()
+        public void SendMessageFail()
         {
             bool sendCalled = false;
 
@@ -98,7 +99,7 @@ namespace MHeetTesting
         }
 
         [Fact]
-        public void C_DeleteMessageFail()
+        public void DeleteMessageFail()
         {
             bool deletePassed = false;
 
@@ -118,7 +119,7 @@ namespace MHeetTesting
         }
 
         [Fact]
-        public void D_LeaveRoomSuccess()
+        public void LeaveRoomSuccess()
         {
             bool leavePassed = false;
 
