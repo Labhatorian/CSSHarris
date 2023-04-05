@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="app.js"></script>
+</head>
+<body>
+
+<img id="mario" src="img/mario.png">
+<h1>Score</h1>
+<div id="score">
+    0
+</div>
+
+<div id="funboard">
+    <ul id="memes">
+
+    </ul>
+</div>
+
+<script>
+
+    $(function () {
+
+            class Meme {
+
+                memes = []
+                pointer = 0
+
+                constructor(memes) {
+
+                    this.memes = memes;
+
+                }
+
+                getNextMeme(){
+
+                    return this.memes[this.pointer];
+                    this.pointer++
+
+                }
+            }
+
+
+            $.get('meme-list.json').then(r => {
+                const memeInstance = new Meme(r.data.memes);
+                const setNextMeme = () => {
+                    const meme = memeInstance.getNextMeme();
+                    $('ul').append(
+                            `<li>
+                    <img class="meme-pic" src="${meme.url}">
+                    ${meme.name}
+                 </li>`
+                    );
+                };
+
+                Mario.init('img#mario', '#score', setNextMeme);
+            });
+    });
+
+</script>
+
+</body>
+</html>
