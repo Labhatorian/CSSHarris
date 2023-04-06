@@ -15,7 +15,7 @@ module.exports = {
 
 //student uitwerking
                 //glob werkend maken
-
+                'src/css/**/*.*',
                 'vendor/**/*.css'
 
         ],

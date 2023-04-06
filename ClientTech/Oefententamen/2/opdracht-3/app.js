@@ -10,8 +10,6 @@ $(() => {
 // console.log(tekorten);
 
 WinkelApp.runeverysecond();
-
-
 });
 
 //student uitwerking
