@@ -1,0 +1,55 @@
+#funboard ul{
+        list-style-type: none;
+
+}
+
+#score {
+    font-size: 40px;
+    font-weight: bold;
+    vertical-align: middle;
+    height: 60px;
+    width: 60px;
+}
+
+img#mario {
+    width: 100px;
+    height: 100px;
+    position: fixed;
+    left: 30%;
+        animation-name: mario;
+        animation-duration: 30s;
+        animation-iteration-count : infinite;
+
+}
+
+.meme-pic{
+    width: 100px;
+    height: 100px;
+}
+
+@keyframes mario {
+    0% {
+        left: 30%;
+        top: 0%;
+    }
+
+        25% {
+            top: 30%;
+        }
+
+        50% {
+            left: 90%;
+            top: 0%;
+        }
+
+        75% {
+            top: 30%;
+        }
+
+
+    100% {
+        left: 30%;
+        top: 0%;
+    }
+
+}

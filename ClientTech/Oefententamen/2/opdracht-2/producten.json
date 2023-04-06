@@ -1,0 +1,41 @@
+[
+  {
+    "winkel": "Zwolle",
+    "producten": [
+      {
+        "naam": "grasmaaier",
+        "aantal":  100
+      },
+      {
+        "naam": "boormachine",
+        "aantal": 1
+      }
+    ]
+  },
+  {
+    "winkel": "Zutphen",
+    "producten": [
+      {
+        "naam": "grasmaaier",
+        "aantal":  5
+      },
+      {
+        "naam": "boormachine",
+        "aantal": 2
+      }
+    ]
+  },
+  {
+    "winkel": "Apeldoorn",
+    "producten": [
+      {
+        "naam": "grasmaaier",
+        "aantal":  0
+      },
+      {
+        "naam": "boormachine",
+        "aantal": 37
+      }
+    ]
+  }
+]
