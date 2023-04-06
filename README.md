@@ -26,6 +26,3 @@ MHeet has a workflow script to build and test the MHeet project and only the MHe
 
 ### Design documents
 Being considerend.
-
-## Afterword
-This semester has not been the greatest due to amount of work that we had to do with barely any information. For the next time I wish for clearer requirements and explanation what exactly needs to be done and how. Especially with the Security portfolio and Tasker assignments I had the most trouble with.
