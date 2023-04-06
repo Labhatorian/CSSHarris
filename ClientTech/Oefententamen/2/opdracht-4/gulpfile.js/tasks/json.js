@@ -5,6 +5,12 @@ const json = function (filesJSON) {
 
 //student uitwerking
         //json taak werkend maken
+        return src(filesJSON)
+
+//student uitwerking
+                //javascript taak werkend maken
+
+                .pipe(dest('./dist/assets/memes/'));
     }
 };
 

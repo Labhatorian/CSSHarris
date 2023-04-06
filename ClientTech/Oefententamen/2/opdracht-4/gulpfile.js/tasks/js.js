@@ -10,7 +10,7 @@ const order = require('gulp-order');
 
 //student uitwerking
                 //javascript taak werkend maken
-
+                .pipe(concat('app.js'))
                 .pipe(dest('./dist'));
         }
 };
