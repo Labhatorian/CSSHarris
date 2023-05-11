@@ -77,7 +77,7 @@ namespace CSSHarris.Hubs
                 username = sanitizer.Sanitize(username);
 
                 ChatUser user = db.ChatUsers.Where(user => user.UserID == userId).FirstOrDefault();
-                if (user is null)
+                if (user.UserID is null)
                 {
                     if (db.ChatUsers.Where(user => user.UserName == username) is not null)
                     {
@@ -244,6 +244,7 @@ namespace CSSHarris.Hubs
             db.SaveChanges();
 
             await AddToGroup(RoomID);
+            var test = db.ChatUsers.Where(user => user.CurrentRoom.ID == roomToJoin.ID).ToList();
             await Clients.Group(RoomID).UpdateUserList(db.ChatUsers.Where(user => user.CurrentRoom == roomToJoin).ToList());
 
             await Clients.Caller.RoomJoined(roomToJoin.Title, IsOwner);

@@ -95,7 +95,7 @@ class ChatList extends HTMLElement {
         info.amount = username;
     }
 
-    updateButtons(RoomTitle, IsLoggedIn, currentRoomId) {
+    updateButtons(RoomTitle, IsOwner, currentRoomId) {
         if (currentRoomId != "" && currentRoomId != undefined) {
             this.shadowRoot.querySelector('#component2').querySelector("room-buttons").JoinRoom(currentRoomId, IsOwner, RoomTitle);
         }
